@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Chăm sóc sức khỏe phụ nữ</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(to right, #fce3ec, #e0f7fa);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .card {
+            border: none;
+            border-radius: 20px;
+            transition: transform 0.3s ease;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+        .card:hover {
+            transform: scale(1.03);
+        }
+        .card-img-top {
+            max-height: 160px;
+            object-fit: cover;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+        }
+        .btn {
+            border-radius: 50px;
+        }
+        .logout-link {
+            text-align: center;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1 class="text-danger fw-bold">💖 Trang quản trị - Chăm sóc sức khỏe phụ nữ</h1>
+        <p class="text-muted">Quản lý dịch vụ, người dùng và thống kê toàn hệ thống</p>
+    </div>
+
+    <div class="row g-4">
+        <!-- Quản lý người dùng -->
+        <div class="col-md-4">
+            <div class="card h-100">
+                <img src="/images/women-users.png" class="card-img-top" alt="Quản lý người dùng">
+                <div class="card-body text-center">
+                    <h5 class="card-title">👩‍⚕️ Quản lý người dùng</h5>
+                    <p class="card-text">Theo dõi và cập nhật thông tin khách hàng và tư vấn viên.</p>
+                    <a th:href="@{/admin/users}" class="btn btn-outline-danger mt-2">Vào quản lý</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dịch vụ xét nghiệm -->
+        <div class="col-md-4">
+            <div class="card h-100">
+                <img src="/images/sti-test.png" class="card-img-top" alt="Quản lý dịch vụ">
+                <div class="card-body text-center">
+                    <h5 class="card-title">🧪 Dịch vụ xét nghiệm</h5>
+                    <p class="card-text">Quản lý bảng giá và thông tin dịch vụ xét nghiệm.</p>
+                    <a th:href="@{/test-services/admin}" class="btn btn-outline-success mt-2">Vào dịch vụ</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Báo cáo thống kê -->
+        <div class="col-md-4">
+            <div class="card h-100">
+                <img src="/images/report-health.png" class="card-img-top" alt="Thống kê báo cáo">
+                <div class="card-body text-center">
+                    <h5 class="card-title">📊 Báo cáo thống kê</h5>
+                    <p class="card-text">Xem thống kê lượt đặt lịch và hiệu quả hệ thống.</p>
+                    <a th:href="@{/admin/reports/monthly}" class="btn btn-outline-primary mt-2">Xem báo cáo</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nút Đăng xuất -->
+    <div class="logout-link">
+        <a th:href="@{/logout}" class="btn btn-outline-dark mt-4">🚪 Đăng xuất</a>
+    </div>
+</div>
+
+</body>
+</html>
