@@ -21,4 +21,5 @@ public class ManagerController {
     @GetMapping("/reports/patient") 
     public String showPatientReports() {
         return "clinic/report_tracking"; 
+    }
 }
