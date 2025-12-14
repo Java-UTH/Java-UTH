@@ -17,4 +17,8 @@ public class ManagerController {
     public String upload() {
         return "clinic/upload"; 
     }
+
+    @GetMapping("/reports/patient") 
+    public String showPatientReports() {
+        return "clinic/report_tracking"; 
 }
