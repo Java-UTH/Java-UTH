@@ -21,17 +21,17 @@ public class DataSeeder implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         // NHỚ THAY ĐỔI CHỨC NĂNG CHO PHÙ HỢP VỚI WEB VÕNG MẠC
-        // createUserIfNotExists("admin@example.com", "123", Role.ADMIN);// QUẢN TRỊ VIÊN(ADMIN)
-        // createUserIfNotExists("manager@example.com", "123", Role.CLINIC); // PHÒNG KHÁM
-        // createUserIfNotExists("staff@example.com", "123", Role.DOCTOR); // BÁC SĨ
-        // createUserIfNotExists("customer@example.com", "123", Role.CUSTOMER);  // NGƯỜI DÙNG/ KHÁCH HÀNG
+        createUserIfNotExists("admin@example.com", "123", Role.ADMIN);// QUẢN TRỊ VIÊN(ADMIN)
+        createUserIfNotExists("manager@example.com", "123", Role.CLINIC); // PHÒNG KHÁM
+        createUserIfNotExists("staff@example.com", "123", Role.DOCTOR); // BÁC SĨ
+        createUserIfNotExists("customer@example.com", "123", Role.CUSTOMER);  // NGƯỜI DÙNG/ KHÁCH HÀNG
 
         // CỦA WEB CŨ 
-        createUserIfNotExists("admin@example.com", "123", Role.ADMIN);
-        createUserIfNotExists("clinic@example.com", "123", Role.CLINIC); //PHÒNG KHÁM
-        createUserIfNotExists("staff@example.com", "123", Role.STAFF);
-        createUserIfNotExists("consultant@example.com", "123", Role.CONSULTANT);
-        createUserIfNotExists("customer@example.com", "123", Role.CUSTOMER);
+        //createUserIfNotExists("admin@example.com", "123", Role.ADMIN);
+        //createUserIfNotExists("manager@example.com", "123", Role.MANAGER);
+        //createUserIfNotExists("staff@example.com", "123", Role.STAFF);
+        //createUserIfNotExists("consultant@example.com", "123", Role.CONSULTANT);
+        //createUserIfNotExists("customer@example.com", "123", Role.CUSTOMER);
     }
 
     private void createUserIfNotExists(String email, String rawPassword, Role role) {
