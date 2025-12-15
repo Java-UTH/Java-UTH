@@ -1,88 +1,349 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Trang chủ - Chăm sóc sức khỏe giới tính</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <head>
+    <meta charset="UTF-8" />
+    <title>AURA - Sàng lọc Sức khỏe Mạch máu Võng mạc bằng AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- Bootstrap 5 CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
 
     <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(to right, #f7f9fc, #eaf4f4);
-            padding-top: 40px;
-        }
+      /* Màu sắc chủ đạo: Xanh y tế đậm và Xanh công nghệ */
+      :root {
+        --primary-color: #0d6efd; /* Xanh dương Bootstrap standard */
+        --secondary-color: #2c3e50; /* Xanh đen đậm */
+        --accent-color: #00cba9; /* Xanh ngọc công nghệ */
+        --light-bg: #f8f9fa;
+      }
 
-        .container {
-            max-width: 1000px;
-        }
+      body {
+        font-family: "Segoe UI", Roboto, sans-serif;
+        color: var(--secondary-color);
+      }
 
-        .title {
-            text-align: center;
-            margin-bottom: 40px;
-            color: #2c3e50;
-        }
+      /* Hero Section: Phần đầu trang nổi bật */
+      .hero-section {
+        /* Ảnh nền minh họa AI và mắt (Bạn có thể thay link ảnh thật sau này) */
+        background: linear-gradient(
+            rgba(44, 62, 80, 0.85),
+            rgba(13, 110, 253, 0.85)
+          ),
+          url("https://source.unsplash.com/random/1600x900/?eye,technology,medical")
+            center/cover no-repeat fixed;
+        color: white;
+        padding: 100px 0;
+        text-align: center;
+      }
 
-        .table {
-            background-color: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-        }
+      .hero-title {
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
 
-        .table thead {
-            background-color: #1abc9c;
-            color: white;
-        }
+      .hero-subtitle {
+        font-size: 1.3rem;
+        margin-bottom: 40px;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+        font-weight: 300;
+      }
 
-        .action-links {
-            text-align: center;
-            margin-top: 40px;
-        }
+      /* Nút bấm tùy chỉnh */
+      .btn-cta {
+        padding: 12px 35px;
+        font-weight: 600;
+        border-radius: 30px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+      }
+      .btn-primary-cta {
+        background-color: var(--accent-color);
+        border: none;
+        color: white;
+      }
+      .btn-primary-cta:hover {
+        background-color: #00a88d;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 203, 169, 0.4);
+      }
 
-        .btn {
-            min-width: 150px;
-            margin: 10px;
-        }
+      /* Section: Lợi ích */
+      .benefit-card {
+        text-align: center;
+        padding: 40px 20px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s;
+        height: 100%;
+      }
+      .benefit-card:hover {
+        transform: translateY(-10px);
+      }
+      .icon-circle {
+        width: 80px;
+        height: 80px;
+        background: rgba(13, 110, 253, 0.1);
+        color: var(--primary-color);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        margin: 0 auto 25px;
+      }
+
+      /* Section: Quy trình */
+      .process-step {
+        position: relative;
+        padding: 20px;
+        background: white;
+        border-radius: 10px;
+        border-left: 5px solid var(--primary-color);
+        margin-bottom: 20px;
+      }
+      .step-number {
+        position: absolute;
+        top: -15px;
+        left: -15px;
+        width: 40px;
+        height: 40px;
+        background: var(--primary-color);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 1.2rem;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
+    <nav
+      class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm"
+    >
+      <div class="container">
+        <a class="navbar-brand fw-bold d-flex align-items-center" href="/">
+          <i class="bi bi-eye-fill text-primary fs-3 me-2"></i>
+          <span>AURA System</span>
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div
+          class="collapse navbar-collapse justify-content-end"
+          id="navbarNav"
+        >
+          <ul class="navbar-nav align-items-center">
+            <li class="nav-item me-2">
+              <a class="nav-link" href="#benefits">Lợi ích</a>
+            </li>
+            <li class="nav-item me-3">
+              <a class="nav-link" href="#process">Quy trình</a>
+            </li>
+            <li class="nav-item me-2">
+              <a
+                class="btn btn-outline-primary btn-sm px-4 rounded-pill"
+                th:href="@{/login}"
+                >Đăng nhập</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="btn btn-primary btn-sm px-4 rounded-pill"
+                th:href="@{/register}"
+                >Đăng ký ngay</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
 
-<div class="container">
-    <h1 class="title">👩‍⚕️ Hệ thống chăm sóc sức khỏe giới tính</h1>
+    <section class="hero-section d-flex align-items-center">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-10">
+            <h1 class="hero-title">
+              Tầm Soát Sớm Nguy Cơ Sức Khỏe Qua Đáy Mắt Bằng AI
+            </h1>
+            <p class="hero-subtitle">
+              Hệ thống AURA sử dụng trí tuệ nhân tạo tiên tiến để phân tích ảnh
+              mạch máu võng mạc, giúp phát hiện sớm các dấu hiệu của bệnh tiểu
+              đường, cao huyết áp và nguy cơ đột quỵ. Nhanh chóng, chính xác và
+              không xâm lấn.
+            </p>
+            <div class="d-flex justify-content-center gap-3">
+              <a class="btn btn-cta btn-primary-cta" th:href="@{/register}">
+                <i class="bi bi-rocket-takeoff-fill me-2"></i>Bắt đầu tầm soát
+              </a>
+              <a class="btn btn-cta btn-outline-light" th:href="@{/login}">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Đã có tài khoản
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <h4 class="mb-3">📋 Danh sách dịch vụ xét nghiệm</h4>
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover">
-            <thead>
-            <tr>
-                <th>Tên dịch vụ</th>
-                <th>Mô tả</th>
-                <th>Giá</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:if="${#lists.isEmpty(services)}">
-                <td colspan="3" class="text-center">Hiện chưa có dịch vụ nào.</td>
-            </tr>
-            <tr th:each="service : ${services}">
-                <td th:text="${service.serviceName}">Tên</td>
-                <td th:text="${service.description}">Mô tả</td>
-                <td th:text="|${service.price} đ|">Giá</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+    <section id="benefits" class="py-5 bg-light">
+      <div class="container py-5">
+        <div class="text-center mb-5">
+          <h6 class="text-primary fw-bold text-uppercase ls-2">
+            Tại sao chọn AURA?
+          </h6>
+          <h2 class="fw-bold">Công nghệ đột phá cho sức khỏe của bạn</h2>
+        </div>
+        <div class="row g-4">
+          <div class="col-md-4">
+            <div class="benefit-card">
+              <div class="icon-circle">
+                <i class="bi bi-cpu-fill"></i>
+              </div>
+              <h4>AI Chính Xác Cao</h4>
+              <p class="text-muted">
+                Mô hình Deep Learning được huấn luyện trên hàng ngàn ảnh y khoa,
+                phát hiện các tổn thương nhỏ nhất mà mắt thường có thể bỏ sót.
+              </p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="benefit-card">
+              <div class="icon-circle">
+                <i class="bi bi-speedometer2"></i>
+              </div>
+              <h4>Kết Quả Nhanh Chóng</h4>
+              <p class="text-muted">
+                Nhận kết quả phân tích và đánh giá mức độ rủi ro chỉ trong vài
+                giây sau khi tải ảnh lên, giúp tiết kiệm thời gian quý báu.
+              </p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="benefit-card">
+              <div class="icon-circle">
+                <i class="bi bi-shield-check-fill"></i>
+              </div>
+              <h4>An Toàn & Không Xâm Lấn</h4>
+              <p class="text-muted">
+                Chỉ cần hình ảnh chụp đáy mắt thông thường. Quy trình hoàn toàn
+                không gây đau đớn, an toàn tuyệt đối cho người sử dụng.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <div class="action-links">
-        <a class="btn btn-primary" th:href="@{/login}">Đăng nhập</a>
-        <a class="btn btn-success" th:href="@{/register}">Đăng ký</a>
-    </div>
-</div>
+    <section id="process" class="py-5">
+      <div class="container py-5">
+        <div class="row align-items-center">
+          <div class="col-lg-5 mb-4 mb-lg-0">
+            <img
+              src="https://source.unsplash.com/random/600x600/?doctor,tablet,analysis"
+              alt="Quy trình phân tích"
+              class="img-fluid rounded-4 shadow-lg"
+            />
+          </div>
+          <div class="col-lg-7 ps-lg-5">
+            <h6 class="text-primary fw-bold text-uppercase">
+              Quy trình đơn giản
+            </h6>
+            <h2 class="fw-bold mb-4">
+              Chỉ 3 bước để hiểu rõ sức khỏe mạch máu của bạn
+            </h2>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+            <div class="process-step ms-3">
+              <div class="step-number">1</div>
+              <h5>Tải ảnh đáy mắt lên hệ thống</h5>
+              <p class="mb-0 text-muted">
+                Người dùng hoặc bác sĩ tải hình ảnh chụp võng mạc (Fundus/OCT)
+                lên nền tảng đám mây bảo mật của AURA.
+              </p>
+            </div>
+
+            <div class="process-step ms-3 mt-4">
+              <div class="step-number">2</div>
+              <h5>AI phân tích và phát hiện bất thường</h5>
+              <p class="mb-0 text-muted">
+                Hệ thống tự động khoanh vùng các tổn thương như xuất huyết,
+                phình mạch và đánh giá mức độ rủi ro bệnh lý.
+              </p>
+            </div>
+
+            <div class="process-step ms-3 mt-4">
+              <div class="step-number">3</div>
+              <h5>Nhận báo cáo và tư vấn y khoa</h5>
+              <p class="mb-0 text-muted">
+                Xem báo cáo chi tiết kèm hình ảnh trực quan. Bác sĩ chuyên khoa
+                sẽ xem xét và đưa ra khuyến nghị điều trị chính xác.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-5 bg-primary text-white text-center">
+      <div class="container py-4">
+        <h2 class="fw-bold mb-3">
+          Sẵn sàng bảo vệ sức khỏe của bạn ngay hôm nay?
+        </h2>
+        <p class="lead mb-4 opacity-75">
+          Đừng để các bệnh lý nguy hiểm tiến triển thầm lặng. Phát hiện sớm là
+          chìa khóa của sự sống.
+        </p>
+        <a
+          class="btn btn-light btn-lg rounded-pill px-5 fw-bold text-primary"
+          th:href="@{/register}"
+        >
+          Tạo tài khoản miễn phí ngay <i class="bi bi-arrow-right ms-2"></i>
+        </a>
+      </div>
+    </section>
+
+    <footer class="py-4 bg-dark text-light text-center">
+      <div class="container">
+        <small
+          >&copy; 2025 AURA System - Dự án Sàng lọc Sức khỏe Mạch máu Võng mạc.
+          All rights reserved.</small
+        >
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Script nhỏ để đổi màu navbar khi cuộn trang
+      window.addEventListener("scroll", function () {
+        if (window.scrollY > 50) {
+          document
+            .querySelector(".navbar")
+            .classList.add("shadow-sm", "bg-white");
+          document.querySelector(".navbar").classList.remove("bg-transparent");
+        } else {
+          document
+            .querySelector(".navbar")
+            .classList.remove("shadow-sm", "bg-white");
+          // Nếu muốn navbar trong suốt ở đầu trang thì thêm class bg-transparent vào thẻ nav gốc và bỏ bg-white đi
+        }
+      });
+    </script>
+  </body>
 </html>
