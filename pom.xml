@@ -12,9 +12,9 @@
     </parent>
 
     <groupId>com.example</groupId>
-    <artifactId>GenderHealthCare</artifactId>
+    <artifactId>SP26SE025</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>GenderHealthCare</name>
+    <name>SP26SE025</name>
     <description>Gender Healthcare Management System</description>
 
     <properties>
