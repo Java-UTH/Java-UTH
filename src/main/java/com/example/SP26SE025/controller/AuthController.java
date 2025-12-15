@@ -52,10 +52,12 @@ public class AuthController {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String role = userDetails.getAuthorities().iterator().next().getAuthority().replace("ROLE_", "");
 
-            return switch (role) {
-                case "CUSTOMER" -> "redirect:/customer/home";
-                default -> "redirect:/login?error=true";
-            };
+          return switch (role) {
+    case "DOCTOR" -> "redirect:/doctor/dashboard";
+    case "CUSTOMER" -> "redirect:/customer/home";
+    default -> "redirect:/login?error=true";
+};
+
         } catch (Exception e) {
             e.printStackTrace(); // Thêm dòng này để in lỗi ra console
             return "redirect:/login?error=true";
