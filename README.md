@@ -1,1 +1,0 @@
-PHÒNG KHÁM , CLINIC
