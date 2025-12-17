@@ -1,0 +1,21 @@
+# Core
+numpy
+pandas
+
+# Image processing
+Pillow
+opencv-python
+
+# Machine Learning
+scikit-learn
+
+# Deep Learning (PyTorch CPU)
+torch
+torchvision
+
+# API service
+fastapi
+uvicorn
+
+# Utils
+tqdm
