@@ -13,9 +13,7 @@ venv/
 *.onnx
 
 # ===== Dataset =====
-dataset/
 data/
-raw_data/
 
 # ===== Generated =====
 outputs/
