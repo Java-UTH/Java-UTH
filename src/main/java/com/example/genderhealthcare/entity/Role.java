@@ -5,5 +5,7 @@ public enum Role {
     CONSULTANT,
     STAFF,
     MANAGER,
-    ADMIN
+    ADMIN,
+    CLINIC,
+    DOCTOR
 }

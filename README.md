@@ -12,9 +12,9 @@ Thêm hoặc cập nhật cấu hình sau:
 # ===============================
 # Database Configuration
 # ===============================
-spring.datasource.url=jdbc:sqlserver://localhost:1433;databaseName=YourDatabaseName;encrypt=true;trustServerCertificate=true;
-spring.datasource.username=YourUsername
-spring.datasource.password=YourPassword
+spring.datasource.url=jdbc:mysql://localhost:3306/javauth?useSSL=false&serverTimezone=UTCdatabaseName=YourDatabaseName;encrypt=true;trustServerCertificate=true;
+spring.datasource.username=root
+spring.datasource.password=locdeptrai12
 spring.datasource.driver-class-name=com.microsoft.sqlserver.jdbc.SQLServerDriver
 
 # ===============================
