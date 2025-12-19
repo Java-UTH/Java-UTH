@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Phân tích & Báo cáo Sức khỏe</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <h1 class="text-center mb-5 text-primary">Trung tâm Phân tích Sức khỏe</h1>
+
+        <div class="row">
+            <div class="col-md-5">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white">Tải lên ảnh phân tích</div>
+                    <div class="card-body">
+                        <form th:action="@{/customer/reports/upload}" method="post" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <input type="file" name="file" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn btn-success w-100">Gửi ảnh cho AI</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm">
+                    <div class="card-header bg-info text-white">Xu hướng sức khỏe của bạn</div>
+                    <div class="card-body">
+                        <canvas id="healthChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-7">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-dark text-white">Lịch sử bản ghi phân tích</div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Ngày</th>
+                                        <th>Ảnh</th>
+                                        <th>Kết quả AI (FR-3)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="item : ${historyList}">
+                                        <td th:text="${#temporals.format(item.createdAt, 'dd/MM/yyyy')}"></td>
+                                        <td>
+                                            <img th:src="${item.imageUrl}" class="img-thumbnail" style="width: 80px;">
+                                        </td>
+                                        <td th:text="${item.aiResult}" class="small"></td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(historyList)}">
+                                        <td colspan="3" class="text-center text-muted">Chưa có dữ liệu lịch sử.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Vẽ biểu đồ mẫu cho FR-4
+        const ctx = document.getElementById('healthChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4'],
+                datasets: [{
+                    label: 'Chỉ số sức khỏe tổng quát',
+                    data: [65, 78, 72, 85],
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }]
+            }
+        });
+    </script>
+</body>
+</html>

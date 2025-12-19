@@ -38,10 +38,9 @@
 
     <div class="row row-cols-1 row-cols-md-3 g-4">
 
-        <!-- Chu kỳ -->
         <div class="col">
             <div class="card h-100">
-                <img src="/images/cycle-tracker.png" class="card-img-top" alt="Chu kỳ">
+                <img th:src="@{/images/cycle-tracker.png}" class="card-img-top" alt="Chu kỳ">
                 <div class="card-body">
                     <h5 class="card-title">📅 Theo dõi chu kỳ</h5>
                     <p class="card-text">Theo dõi chu kỳ kinh nguyệt của bạn một cách thông minh.</p>
@@ -50,10 +49,9 @@
             </div>
         </div>
 
-        <!-- Đặt lịch tư vấn -->
         <div class="col">
             <div class="card h-100">
-                <img src="/images/consult-booking.png" class="card-img-top" alt="Tư vấn">
+                <img th:src="@{/images/consult-booking.png}" class="card-img-top" alt="Tư vấn">
                 <div class="card-body">
                     <h5 class="card-title">💬 Đặt lịch tư vấn</h5>
                     <p class="card-text">Chọn thời gian và tư vấn viên phù hợp để tư vấn sức khỏe.</p>
@@ -62,10 +60,9 @@
             </div>
         </div>
 
-        <!-- Đặt câu hỏi -->
         <div class="col">
             <div class="card h-100">
-                <img src="/images/question-women.png" class="card-img-top" alt="Hỏi tư vấn">
+                <img th:src="@{/images/question-women.png}" class="card-img-top" alt="Hỏi tư vấn">
                 <div class="card-body">
                     <h5 class="card-title">❓ Gửi câu hỏi</h5>
                     <p class="card-text">Bạn có thắc mắc? Gửi ngay cho chuyên gia tư vấn.</p>
@@ -74,10 +71,9 @@
             </div>
         </div>
 
-        <!-- Đặt lịch xét nghiệm -->
         <div class="col">
             <div class="card h-100">
-                <img src="/images/test-booking.png" class="card-img-top" alt="Xét nghiệm STIs">
+                <img th:src="@{/images/test-booking.png}" class="card-img-top" alt="Xét nghiệm STIs">
                 <div class="card-body">
                     <h5 class="card-title">🧪 Đặt xét nghiệm STIs</h5>
                     <p class="card-text">Chủ động bảo vệ sức khỏe sinh sản của bạn.</p>
@@ -86,22 +82,20 @@
             </div>
         </div>
 
-        <!-- Xem kết quả -->
         <div class="col">
             <div class="card h-100">
-                <img src="/images/my-results.png" class="card-img-top" alt="Xét nghiệm của tôi">
+                <img th:src="@{/images/my-results.png}" class="card-img-top" alt="Xét nghiệm của tôi">
                 <div class="card-body">
-                    <h5 class="card-title">📄 Kết quả xét nghiệm</h5>
-                    <p class="card-text">Xem lại kết quả các xét nghiệm đã thực hiện.</p>
-                    <a th:href="@{/my-tests}" class="btn btn-outline-info">Xem kết quả</a>
+                    <h5 class="card-title">📄 Phân tích & Báo cáo</h5>
+                    <p class="card-text">Xem lại kết quả các xét nghiệm và phân tích AI.</p>
+                    <a th:href="@{/customer/reports/analysis}" class="btn btn-outline-info">Xem báo cáo AI</a>
                 </div>
             </div>
         </div>
 
-        <!-- Dịch vụ -->
         <div class="col">
             <div class="card h-100">
-                <img src="/images/service-list.png" class="card-img-top" alt="Bảng giá dịch vụ">
+                <img th:src="@{/images/service-list.png}" class="card-img-top" alt="Bảng giá dịch vụ">
                 <div class="card-body">
                     <h5 class="card-title">📋 Bảng giá dịch vụ</h5>
                     <p class="card-text">Tham khảo bảng giá xét nghiệm và tư vấn mới nhất.</p>
