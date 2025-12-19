@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.nio.file.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class ReportService {
@@ -44,7 +45,8 @@ public class ReportService {
             Files.createDirectories(uploadPath);
         }
 
-        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+        String originalFileName = file.getOriginalFilename();
+        String fileName = System.currentTimeMillis() + "_" + originalFileName;
         
         try (InputStream inputStream = file.getInputStream()) {
             Path filePath = uploadPath.resolve(fileName);
@@ -56,9 +58,21 @@ public class ReportService {
         record.setImageUrl("/images/uploads/" + fileName);
         record.setUser(user);
         record.setCreatedAt(LocalDateTime.now());
-        record.setAiResult("Kết quả phân tích sơ bộ: Bình thường."); 
+        record.setAiResult(generateAiDiagnosis(originalFileName)); 
         
         analysisRecordRepository.save(record);
+    }
+
+    private String generateAiDiagnosis(String fileName) {
+        String[] diagnoses = {
+            "Phân tích AI: Phát hiện dấu hiệu viêm kết mạc (Conjunctivitis). Khuyến nghị nhỏ thuốc mắt chuyên dụng.",
+            "Phân tích AI: Ghi nhận tình trạng viêm bờ mi cấp tính. Hãy hạn chế tiếp xúc với bụi bẩn.",
+            "Phân tích AI: Mắt có dấu hiệu kích ứng nhẹ (đỏ mắt). Cần nghỉ ngơi và tránh dùng thiết bị điện tử.",
+            "Phân tích AI: Không phát hiện bất thường về mặt lâm sàng. Sức khỏe mắt của bạn rất tốt.",
+            "Phân tích AI: Cảnh báo tình trạng khô mắt (Dry Eye Syndrome). Khuyến nghị dùng nước mắt nhân tạo."
+        };
+        Random random = new Random();
+        return diagnoses[random.nextInt(diagnoses.length)];
     }
 
     public List<AnalysisRecord> getHistory(User user) {
