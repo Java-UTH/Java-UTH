@@ -22,4 +22,10 @@ class ClinicController {
     public String showPatientReports() {
         return "clinic/report_tracking"; 
     }
+
+    @GetMapping("/admin/users")
+    public String userManagement() {
+        return "clinic/user_management";
+    }
 }
+
