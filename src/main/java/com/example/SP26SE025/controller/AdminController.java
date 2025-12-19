@@ -59,8 +59,8 @@ public class AdminController {
 
             return switch (role) {
                 case "ADMIN" -> "redirect:/admin/home";
-                case "CLINIC" -> "redirect:/clinic/home";
-                case "DOCTOR" -> "redirect:/doctor/dashboard";
+                // case "CLINIC" -> "redirect:/clinic/home";
+                // case "DOCTOR" -> "redirect:/doctor/dashboard";
                 case "CONSULTANT" -> "redirect:/consultant/home";
                 default -> "redirect:/loginAdmin?error=true";
             };
