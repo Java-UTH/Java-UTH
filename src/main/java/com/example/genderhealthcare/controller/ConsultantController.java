@@ -1,9 +1,5 @@
-package com.example.genderhealthcare.controller;
+package com.example.SP26SE025.controller;
 
-import com.example.genderhealthcare.entity.ConsultationAppointment;
-import com.example.genderhealthcare.entity.Question;
-import com.example.genderhealthcare.service.ConsultationAppointmentService;
-import com.example.genderhealthcare.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model; // ✅ IMPORT ĐÚNG Ở ĐÂY
@@ -11,6 +7,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import com.example.SP26SE025.entity.ConsultationAppointment;
+import com.example.SP26SE025.entity.Question;
+import com.example.SP26SE025.service.ConsultationAppointmentService;
+import com.example.SP26SE025.service.QuestionService;
 
 import java.util.List;
 

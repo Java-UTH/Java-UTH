@@ -1,10 +1,11 @@
-package com.example.genderhealthcare.security;
+package com.example.SP26SE025.security;
 
-import com.example.genderhealthcare.entity.Role;
-import com.example.genderhealthcare.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.example.SP26SE025.entity.Role;
+import com.example.SP26SE025.entity.User;
 
 import java.util.Collection;
 import java.util.Collections;

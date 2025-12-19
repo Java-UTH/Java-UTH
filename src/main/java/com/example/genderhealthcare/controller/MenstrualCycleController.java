@@ -1,16 +1,17 @@
-package com.example.genderhealthcare.controller;
+package com.example.SP26SE025.controller;
 
-import com.example.genderhealthcare.entity.MenstrualCycle;
-import com.example.genderhealthcare.entity.User;
-import com.example.genderhealthcare.repository.MenstrualCycleRepository;
-import com.example.genderhealthcare.service.MenstrualCycleService;
-import com.example.genderhealthcare.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import com.example.SP26SE025.entity.MenstrualCycle;
+import com.example.SP26SE025.entity.User;
+import com.example.SP26SE025.repository.MenstrualCycleRepository;
+import com.example.SP26SE025.service.MenstrualCycleService;
+import com.example.SP26SE025.service.UserService;
 
 import java.time.LocalDate;
 import java.util.Map;

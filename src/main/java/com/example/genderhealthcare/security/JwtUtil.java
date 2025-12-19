@@ -1,4 +1,4 @@
-package com.example.genderhealthcare.security;
+package com.example.SP26SE025.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;

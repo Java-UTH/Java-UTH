@@ -1,10 +1,11 @@
-package com.example.genderhealthcare.service;
+package com.example.SP26SE025.service;
 
-import com.example.genderhealthcare.entity.STITest;
-import com.example.genderhealthcare.entity.User;
-import com.example.genderhealthcare.repository.STITestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.example.SP26SE025.entity.STITest;
+import com.example.SP26SE025.entity.User;
+import com.example.SP26SE025.repository.STITestRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;

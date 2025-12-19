@@ -1,9 +1,5 @@
-package com.example.genderhealthcare.controller;
+package com.example.SP26SE025.controller;
 
-import com.example.genderhealthcare.entity.STITest;
-import com.example.genderhealthcare.entity.User;
-import com.example.genderhealthcare.security.CustomUserDetails;
-import com.example.genderhealthcare.service.STITestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
@@ -11,6 +7,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import com.example.SP26SE025.entity.STITest;
+import com.example.SP26SE025.entity.User;
+import com.example.SP26SE025.security.CustomUserDetails;
+import com.example.SP26SE025.service.STITestService;
 
 import java.time.LocalDateTime;
 import java.util.List;

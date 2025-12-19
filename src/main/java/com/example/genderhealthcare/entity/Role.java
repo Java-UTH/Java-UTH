@@ -1,9 +1,9 @@
-package com.example.genderhealthcare.entity;
+package com.example.SP26SE025.entity;
 
 public enum Role {
     CUSTOMER,
     CONSULTANT,
-    STAFF,
-    MANAGER,
+    DOCTOR,
+    CLINIC,
     ADMIN
 }

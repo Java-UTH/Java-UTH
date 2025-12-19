@@ -1,10 +1,11 @@
-package com.example.genderhealthcare.controller;
+package com.example.SP26SE025.controller;
 
-import com.example.genderhealthcare.service.TestServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import com.example.SP26SE025.service.TestServiceService;
 
 @Controller
 public class WelcomeController {

@@ -1,9 +1,10 @@
-package com.example.genderhealthcare.service;
+package com.example.SP26SE025.service;
 
-import com.example.genderhealthcare.entity.MenstrualCycle;
-import com.example.genderhealthcare.repository.MenstrualCycleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.example.SP26SE025.entity.MenstrualCycle;
+import com.example.SP26SE025.repository.MenstrualCycleRepository;
 
 import java.time.LocalDate;
 import java.util.HashMap;

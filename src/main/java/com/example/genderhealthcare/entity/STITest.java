@@ -1,4 +1,4 @@
-package com.example.genderhealthcare.entity;
+package com.example.SP26SE025.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;

@@ -1,7 +1,8 @@
-package com.example.genderhealthcare.repository;
+package com.example.SP26SE025.repository;
 
-import com.example.genderhealthcare.entity.TestService;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.example.SP26SE025.entity.TestService;
 
 public interface TestServiceRepository extends JpaRepository<TestService, Long> {
 }

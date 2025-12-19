@@ -1,6 +1,5 @@
-package com.example.genderhealthcare.security;
+package com.example.SP26SE025.security;
 
-import com.example.genderhealthcare.service.CustomUserDetailsService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +8,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.example.SP26SE025.service.CustomUserDetailsService;
+
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 
 import java.io.IOException;

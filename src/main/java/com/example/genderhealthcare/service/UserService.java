@@ -1,10 +1,11 @@
-package com.example.genderhealthcare.service;
+package com.example.SP26SE025.service;
 
-import com.example.genderhealthcare.entity.User;
-import com.example.genderhealthcare.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.example.SP26SE025.entity.User;
+import com.example.SP26SE025.repository.UserRepository;
 
 import java.util.List;
 

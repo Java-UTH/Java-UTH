@@ -1,8 +1,5 @@
-package com.example.genderhealthcare.controller;
+package com.example.SP26SE025.controller;
 
-import com.example.genderhealthcare.security.CustomUserDetails;
-import com.example.genderhealthcare.security.JwtUtil;
-import com.example.genderhealthcare.service.CustomUserDetailsService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +12,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.example.SP26SE025.security.CustomUserDetails;
+import com.example.SP26SE025.security.JwtUtil;
+import com.example.SP26SE025.service.CustomUserDetailsService;
 
 @Controller
 public class AuthController {

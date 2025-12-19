@@ -1,7 +1,5 @@
-package com.example.genderhealthcare.config;
+package com.example.SP26SE025.config;
 
-import com.example.genderhealthcare.security.JwtFilter;
-import com.example.genderhealthcare.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +12,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.example.SP26SE025.security.JwtFilter;
+import com.example.SP26SE025.service.CustomUserDetailsService;
 
 @Configuration
 public class SecurityConfig {
@@ -56,7 +57,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**", "/js/**", "/", "/login", "/register", "/authenticate").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/manager/**").hasRole("MANAGER")
+                        .requestMatchers("/clinic/**").hasRole("CLINIC")
                         .requestMatchers("/consultant/**").hasRole("CONSULTANT")
                         .requestMatchers("/customer/**").hasRole("CUSTOMER")
                         .requestMatchers("/staff/**").hasRole("STAFF")

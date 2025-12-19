@@ -1,8 +1,9 @@
-package com.example.genderhealthcare.repository;
+package com.example.SP26SE025.repository;
 
-import com.example.genderhealthcare.entity.MenstrualCycle;
-import com.example.genderhealthcare.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.example.SP26SE025.entity.MenstrualCycle;
+import com.example.SP26SE025.entity.User;
 
 import java.util.List;
 

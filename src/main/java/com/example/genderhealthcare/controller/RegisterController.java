@@ -1,13 +1,14 @@
-package com.example.genderhealthcare.controller;
+package com.example.SP26SE025.controller;
 
-import com.example.genderhealthcare.entity.Role;
-import com.example.genderhealthcare.entity.User;
-import com.example.genderhealthcare.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import com.example.SP26SE025.entity.Role;
+import com.example.SP26SE025.entity.User;
+import com.example.SP26SE025.repository.UserRepository;
 
 @Controller
 public class RegisterController {

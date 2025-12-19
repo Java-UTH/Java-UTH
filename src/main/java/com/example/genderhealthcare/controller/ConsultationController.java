@@ -1,9 +1,5 @@
-package com.example.genderhealthcare.controller;
+package com.example.SP26SE025.controller;
 
-import com.example.genderhealthcare.entity.ConsultationAppointment;
-import com.example.genderhealthcare.entity.User;
-import com.example.genderhealthcare.security.CustomUserDetails;
-import com.example.genderhealthcare.service.ConsultationAppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,6 +8,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.example.SP26SE025.entity.ConsultationAppointment;
+import com.example.SP26SE025.entity.User;
+import com.example.SP26SE025.security.CustomUserDetails;
+import com.example.SP26SE025.service.ConsultationAppointmentService;
 
 @Controller
 @RequestMapping("/customer/consultation")

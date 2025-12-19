@@ -1,4 +1,4 @@
-package com.example.genderhealthcare.dtos;
+package com.example.SP26SE025.dtos;
 
 public class MonthlyCountDTO {
     private String month; // định dạng "yyyy-MM"

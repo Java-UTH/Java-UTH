@@ -1,13 +1,5 @@
-package com.example.genderhealthcare.controller;
+package com.example.SP26SE025.controller;
 
-import com.example.genderhealthcare.entity.ConsultationAppointment;
-import com.example.genderhealthcare.entity.Question;
-import com.example.genderhealthcare.entity.STITest;
-import com.example.genderhealthcare.entity.User;
-import com.example.genderhealthcare.security.CustomUserDetails;
-import com.example.genderhealthcare.service.ConsultationAppointmentService;
-import com.example.genderhealthcare.service.QuestionService;
-import com.example.genderhealthcare.service.STITestService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -16,6 +8,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.example.SP26SE025.entity.ConsultationAppointment;
+import com.example.SP26SE025.entity.Question;
+import com.example.SP26SE025.entity.STITest;
+import com.example.SP26SE025.entity.User;
+import com.example.SP26SE025.security.CustomUserDetails;
+import com.example.SP26SE025.service.ConsultationAppointmentService;
+import com.example.SP26SE025.service.QuestionService;
+import com.example.SP26SE025.service.STITestService;
 
 import java.util.List;
 

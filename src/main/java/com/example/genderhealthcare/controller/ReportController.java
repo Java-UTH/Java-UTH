@@ -1,12 +1,13 @@
-package com.example.genderhealthcare.controller;
+package com.example.SP26SE025.controller;
 
-import com.example.genderhealthcare.dtos.MonthlyCountDTO;
-import com.example.genderhealthcare.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.example.SP26SE025.dtos.MonthlyCountDTO;
+import com.example.SP26SE025.service.ReportService;
 
 import java.util.List;
 

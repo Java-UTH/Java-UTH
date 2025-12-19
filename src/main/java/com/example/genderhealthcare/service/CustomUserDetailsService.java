@@ -1,14 +1,15 @@
-package com.example.genderhealthcare.service;
+package com.example.SP26SE025.service;
 
-import com.example.genderhealthcare.entity.User;
-import com.example.genderhealthcare.repository.UserRepository;
-import com.example.genderhealthcare.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import com.example.SP26SE025.entity.User;
+import com.example.SP26SE025.repository.UserRepository;
+import com.example.SP26SE025.security.CustomUserDetails;
 
 import java.util.Collections;
 
