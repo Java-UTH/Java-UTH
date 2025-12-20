@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách dịch vụ xét nghiệm</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f4f4f4;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        a.add-button {
+            display: inline-block;
+            margin-bottom: 15px;
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        a.add-button:hover {
+            background-color: #45a049;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        td a {
+            color: #e74c3c;
+            text-decoration: none;
+        }
+
+        td a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<h2>Danh sách dịch vụ xét nghiệm</h2>
+<a class="add-button" th:href="@{/test-services/new}">+ Thêm mới</a>
+
+<table>
+    <thead>
+    <tr>
+        <th>Tên</th>
+        <th>Mô tả</th>
+        <th>Giá</th>
+        <th>Thao tác</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="service : ${services}">
+        <td th:text="${service.serviceName}">Tên dịch vụ</td>
+        <td th:text="${service.description}">Mô tả</td>
+        <td th:text="${service.price + ' đ'}">0 đ</td>
+        <td>
+            <form th:action="@{'/test-services/delete/' + ${service.id}}" method="post" onsubmit="return confirm('Bạn có chắc muốn xoá?')">
+                <input type="hidden" name="_method" value="delete"/>
+                <button type="submit" class="btn btn-sm btn-danger">Xoá</button>
+            </form>
+
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
