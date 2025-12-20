@@ -54,8 +54,6 @@ public class AuthController {
 
             return switch (role) {
                 case "CUSTOMER" -> "redirect:/customer/home";
-                case "CLINIC" -> "redirect:/clinic/home";
-                case "DOCTOR" -> "redirect:/doctor/dashboard";
                 default -> "redirect:/login?error=true";
             };
         } catch (Exception e) {
