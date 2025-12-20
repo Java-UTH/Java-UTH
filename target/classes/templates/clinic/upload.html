@@ -128,11 +128,13 @@
         const startAnalysisBtn = document.getElementById('startAnalysisBtn');
         let selectedFiles = [];
 
+        // Kích hoạt input file khi click vào drop zone
         dropZone.addEventListener('click', () => fileInput.click());
 
+        // Xử lý kéo thả
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
             dropZone.addEventListener(eventName, preventDefaults, false);
-            document.body.addEventListener(eventName, preventDefaults, false); 
+            document.body.addEventListener(eventName, preventDefaults, false); // Ngăn chặn mở file trong trình duyệt
         });
 
         function preventDefaults(e) {
@@ -148,10 +150,12 @@
             handleFiles(files);
         }
 
+        // Xử lý chọn file qua input
         fileInput.addEventListener('change', (e) => {
             handleFiles(e.target.files);
         });
         
+        // Cập nhật danh sách file và trạng thái nút
         function handleFiles(files) {
             if (files.length > 20) {
                 alert("Chỉ được phép tải tối đa 20 ảnh mỗi lần.");
@@ -189,6 +193,7 @@
             startAnalysisBtn.disabled = false;
         }
 
+        // Xử lý khi nhấn nút Gửi Ảnh và Phân tích AI
         startAnalysisBtn.addEventListener('click', () => {
             const patientId = document.getElementById('patientId').value.trim();
             if (!patientId) {
@@ -206,12 +211,15 @@
             startAnalysisBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Đang gửi ảnh...';
 
             // *** GỌI API BACKEND TẠI ĐÂY ***
+            // Sử dụng fetch() hoặc Axios để gửi selectedFiles và patientId đến endpoint /api/images/upload/bulk
             console.log(`Gửi ${selectedFiles.length} file cho BN: ${patientId}`);
             
+            // Mô phỏng quá trình tải lên thành công và chuyển hướng
             setTimeout(() => {
                 alert("Tải lên thành công! Hình ảnh đã được gửi đến hàng đợi phân tích AI.");
+                // Chuyển hướng người dùng đến trang theo dõi báo cáo ([FR-25])
                 window.location.href = `/reports/patient?id=${patientId}`;
-            }, 3000);
+            }, 3000); // 3 giây mô phỏng
         });
     });
 </script>

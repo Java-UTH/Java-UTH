@@ -22,3 +22,4 @@ public class ManagerController {
     public String showPatientReports() {
         return "clinic/report_tracking"; 
 }
+}
