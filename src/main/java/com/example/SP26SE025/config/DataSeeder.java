@@ -28,8 +28,8 @@ public class DataSeeder implements CommandLineRunner {
 
         // CỦA WEB CŨ 
         createUserIfNotExists("admin@example.com", "123", Role.ADMIN);
-        createUserIfNotExists("clinic@example.com", "123", Role.CLINIC); //PHÒNG KHÁM
-        createUserIfNotExists("staff@example.com", "123", Role.STAFF);
+        createUserIfNotExists("clinic@example.com", "123", Role.CLINIC); 
+        createUserIfNotExists("doctor@example.com", "123", Role.DOCTOR);
         createUserIfNotExists("consultant@example.com", "123", Role.CONSULTANT);
         createUserIfNotExists("customer@example.com", "123", Role.CUSTOMER);
     }

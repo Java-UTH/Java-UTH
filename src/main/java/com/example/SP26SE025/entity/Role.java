@@ -3,7 +3,7 @@ package com.example.SP26SE025.entity;
 public enum Role {
     CUSTOMER,
     CONSULTANT,
-    STAFF,
+    DOCTOR,
     CLINIC,
     ADMIN
 }

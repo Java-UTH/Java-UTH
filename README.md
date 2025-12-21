@@ -26,9 +26,9 @@ spring.jpa.show-sql=true
 
 📌 **Lưu ý quan trọng**:
 
-- Thay `YourDatabaseName` bằng tên database SQL Server của bạn
-- Thay `YourUsername` và `YourPassword` bằng tài khoản SQL Server tương ứng
-- Đảm bảo SQL Server đang chạy và cho phép kết nối qua cổng **1433**
+* Thay `YourDatabaseName` bằng tên database SQL Server của bạn
+* Thay `YourUsername` và `YourPassword` bằng tài khoản SQL Server tương ứng
+* Đảm bảo SQL Server đang chạy và cho phép kết nối qua cổng **1433**
 
 ---
 
