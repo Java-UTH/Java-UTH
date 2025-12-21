@@ -10,17 +10,25 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "UserId")
     private Long id;
+
     @Column(name = "Username")
     private String username;
+
     @Column(name = "PasswordHash")
     private String password;
+
     @Column(name = "FullName")
     private String fullName;
+
     private String email;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "Role")
-    private Role role; // Guest, Customer, ...
+    private Role role;
+
+    // SỬA DÒNG NÀY ĐỂ FIX LỖI SQL SERVER
+    @Column(name = "Enabled", nullable = false, columnDefinition = "bit DEFAULT 1")
+    private boolean enabled = true;
 
     // Constructors
     public User() {}
@@ -44,11 +52,13 @@ public class User {
     public Role getRole() { return role; }
     public void setRole(Role role) { this.role = role; }
 
-    public User orElseThrow(Object userNotFound) {
-        return null;
+    public boolean isEnabled() {
+        return enabled;
     }
 
-    public boolean isEmpty() {
-        return false;
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
+
+    // Đã xóa 2 method lạ không cần thiết như bạn gợi ý
 }

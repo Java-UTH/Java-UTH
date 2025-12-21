@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Thông tin người dùng</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f1f1f1;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 500px;
+            margin: 50px auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2 th:text="${user.id == null ? 'Thêm người dùng' : 'Chỉnh sửa người dùng'}"></h2>
+    <form th:action="@{/admin/users}" th:object="${user}" method="post">
+        <input type="hidden" th:field="*{id}"/>
+
+        <label>Họ tên:</label>
+        <input type="text" th:field="*{fullName}" placeholder="Nhập họ tên" required/>
+
+        <label>Email:</label>
+        <input type="email" th:field="*{email}" placeholder="Nhập email" required/>
+
+        <label>Password:</label>
+        <input type="password" th:field="*{password}" placeholder="Nhập mật khẩu" required/>
+
+        <label>Vai trò:</label>
+        <select th:field="*{role}">
+            <option th:each="r : ${roles}" th:value="${r}" th:text="${r}"></option>
+        </select>
+
+        <button type="submit">Lưu</button>
+    </form>
+    <a href="/admin/users" class="back-link">← Quay lại danh sách</a>
+</div>
+</body>
+</html>
