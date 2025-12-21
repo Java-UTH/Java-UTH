@@ -3,16 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <title>Đăng nhập - Gender Healthcare</title>
-    <!-- Bootstrap 5 -->
+
+    <!-- Bootstrap -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <!-- Font Awesome cho icon Google & Facebook -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    />
+
     <style>
       body {
         min-height: 100vh;
@@ -21,6 +18,7 @@
         align-items: center;
         justify-content: center;
       }
+
       .login-wrapper {
         background: #fff;
         border-radius: 15px;
@@ -29,68 +27,36 @@
         width: 100%;
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
       }
+
       .login-left {
         background: linear-gradient(to bottom right, #2193b0, #6dd5ed);
         color: #fff;
         padding: 40px;
       }
+
       .login-left h2 {
         font-weight: 700;
-        font-size: 2.5rem;
       }
-      .login-left p {
-        font-size: 1.1rem;
-        opacity: 0.9;
-      }
+
       .login-right {
         padding: 40px;
       }
+
       .form-control {
         border-radius: 10px;
-        padding: 12px 16px;
-        font-size: 1rem;
+        padding: 12px;
       }
+
       .btn-login {
         border-radius: 10px;
         padding: 12px;
         font-weight: 600;
-        font-size: 1.1rem;
-      }
-      .social-btn {
-        border-radius: 10px;
-        padding: 12px;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        transition: all 0.3s;
-      }
-      .social-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-      }
-      .divider {
-        display: flex;
-        align-items: center;
-        text-align: center;
-        margin: 25px 0;
-        color: #6c757d;
-      }
-      .divider::before,
-      .divider::after {
-        content: "";
-        flex: 1;
-        border-bottom: 1px solid #dee2e6;
-      }
-      .divider span {
-        padding: 0 15px;
       }
     </style>
   </head>
   <body>
     <div class="login-wrapper row g-0">
-      <!-- LEFT SIDE: Giới thiệu -->
+      <!-- LEFT SIDE (theo UI zip) -->
       <div
         class="col-md-6 login-left d-flex flex-column justify-content-center"
       >
@@ -98,42 +64,28 @@
         <p class="mt-3">
           Hệ thống chăm sóc sức khỏe toàn diện, đồng hành cùng bạn mỗi ngày.
         </p>
-        <p class="mt-4 small opacity-75">
-          Tư vấn sức khỏe sinh sản • Xét nghiệm STI • Theo dõi chu kỳ kinh
-          nguyệt • Báo cáo AI thông minh
-        </p>
       </div>
 
-      <!-- RIGHT SIDE: Form đăng nhập -->
+      <!-- RIGHT SIDE -->
       <div class="col-md-6 login-right">
-        <h3 class="text-center mb-4 fw-bold">Đăng nhập</h3>
+        <h3 class="text-center mb-4">Đăng nhập</h3>
 
-        <!-- Thông báo lỗi / thành công -->
-        <div class="alert alert-danger text-center" th:if="${param.error}">
-          Sai email hoặc mật khẩu.
-        </div>
-        <div class="alert alert-success text-center" th:if="${param.logout}">
-          Bạn đã đăng xuất thành công.
-        </div>
-        <div class="alert alert-info text-center" th:if="${param.oauth2_error}">
-          Đăng nhập bằng tài khoản xã hội thất bại. Vui lòng thử lại.
-        </div>
-
-        <!-- Form đăng nhập email/mật khẩu -->
+        <!-- GIỮ NGUYÊN LOGIC -->
         <form th:action="@{/authenticate}" method="post">
           <div class="mb-3">
-            <label class="form-label fw-medium">Email</label>
+            <label class="form-label">Email</label>
             <input
-              type="email"
+              type="text"
               class="form-control"
               id="username"
               name="username"
-              placeholder="Nhập email của bạn"
+              placeholder="Nhập email"
               required
             />
           </div>
-          <div class="mb-4">
-            <label class="form-label fw-medium">Mật khẩu</label>
+
+          <div class="mb-3">
+            <label class="form-label">Mật khẩu</label>
             <input
               type="password"
               class="form-control"
@@ -143,28 +95,22 @@
               required
             />
           </div>
-          <div class="d-grid">
+
+          <div class="d-grid mt-4">
             <button type="submit" class="btn btn-primary btn-login">
               Đăng nhập
             </button>
           </div>
         </form>
 
-        <!-- Divider -->
-        <div class="divider">
-          <span>Hoặc</span>
+        <!-- MESSAGE -->
+        <div class="mt-3 text-center text-danger" th:if="${param.error}">
+          Sai email hoặc mật khẩu.
         </div>
 
-        <!-- Link đăng ký -->
-        <p class="text-center mt-4 mb-0">
-          Chưa có tài khoản?
-          <a
-            th:href="@{/register}"
-            class="fw-bold text-primary text-decoration-none"
-          >
-            Đăng ký ngay
-          </a>
-        </p>
+        <div class="mt-3 text-center text-success" th:if="${param.logout}">
+          Bạn đã đăng xuất thành công.
+        </div>
       </div>
     </div>
 
