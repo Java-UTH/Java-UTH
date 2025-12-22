@@ -12,7 +12,7 @@
     <style>
         body {
             font-family: 'Nunito', sans-serif;
-            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+            background: linear-gradient(to right, #f8f9fa, #e9ecef); 
             padding: 40px;
         }
         .header-section {
@@ -49,7 +49,7 @@
         .logout-btn {
             margin-top: 50px;
         }
-       
+        
         .btn-warning-custom {
             background-color: #f39c12; 
             border-color: #f39c12;
@@ -95,7 +95,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Báo cáo & Rủi ro Bệnh nhân</h5>
                     <p class="card-text">Theo dõi báo cáo phân tích chi tiết và dữ liệu rủi ro tổng hợp.</p>
-                    <a th:href="@{/reports/patient}" class="btn btn-outline-danger mt-2">Xem Báo cáo</a>
+                    <a th:href="@{/clinic/reports/patient}" class="btn btn-outline-danger mt-2">Xem Báo cáo</a>
                 </div>
             </div>
         </div>
@@ -120,7 +120,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Thống kê Sàng lọc & Xuất (CSV)</h5>
                     <p class="card-text">Tạo báo cáo chiến dịch sàng lọc và xuất số liệu tóm tắt cho nghiên cứu.</p>
-                    <a th:href="@{/reports/summary}" class="btn btn-outline-secondary mt-2">Xem Thống kê</a>
+                    <a th:href="@{/clinic/reports/summary}" class="btn btn-outline-secondary mt-2">Xem Thống kê</a>
                 </div>
             </div>
         </div>
@@ -133,7 +133,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Theo dõi Gói dịch vụ & Gia hạn</h5>
                     <p class="card-text">Theo dõi số lượng ảnh đã phân tích và quản lý việc mua/gia hạn gói.</p>
-                    <a th:href="@{/subscription}" class="btn btn-outline-info mt-2">Quản lý Gói dịch vụ</a>
+                    <a th:href="@{/clinic/subscription}" class="btn btn-outline-info mt-2">Quản lý Gói dịch vụ</a>
                 </div>
             </div>
         </div>
