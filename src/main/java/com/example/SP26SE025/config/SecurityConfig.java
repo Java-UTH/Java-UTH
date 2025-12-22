@@ -27,7 +27,6 @@ public class SecurityConfig {
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
-    // Chỉ inject UserRepository qua constructor
     private final UserRepository userRepository;
 
     public SecurityConfig(UserRepository userRepository) {
@@ -57,7 +56,6 @@ public class SecurityConfig {
         return config.getAuthenticationManager();
     }
 
-    // Tạo mới BCryptPasswordEncoder trực tiếp, không dùng field injection
     @Bean
     public CustomOAuth2UserService customOAuth2UserService() {
         return new CustomOAuth2UserService(userRepository, new BCryptPasswordEncoder());
@@ -75,9 +73,11 @@ public class SecurityConfig {
                     "/css/**", "/js/**", "/images/**", "/fonts/**",
                     "/authenticate", "/oauth2/**", "/login/oauth2/**")
                 .permitAll()
+                // Phân quyền truy cập các đường dẫn
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/clinic/**").hasRole("CLINIC")
                 .requestMatchers("/consultant/**").hasRole("CONSULTANT")
+                .requestMatchers("/doctor/**").hasRole("DOCTOR") // Thêm quyền cho Doctor
                 .requestMatchers("/staff/**").hasRole("STAFF")
                 .requestMatchers("/customer/**", "/profile", "/test-services/**", "/menstrual_cycle/**")
                 .hasRole("CUSTOMER")
@@ -87,7 +87,34 @@ public class SecurityConfig {
             .formLogin(form -> form
                 .loginPage("/login")
                 .loginProcessingUrl("/authenticate")
-                .defaultSuccessUrl("/home", true)
+                
+                .successHandler((request, response, authentication) -> {
+                    var authorities = authentication.getAuthorities();
+                    String redirectUrl = "/login?error=true"; // Mặc định nếu lỗi
+
+                    for (var authority : authorities) {
+                        String roleName = authority.getAuthority();
+
+                        if (roleName.equals("ROLE_CLINIC")) {
+                            redirectUrl = "/clinic/home";
+                            break;
+                        } else if (roleName.equals("ROLE_DOCTOR")) {
+                            redirectUrl = "/doctor/home";
+                            break;
+                        } else if (roleName.equals("ROLE_CONSULTANT")) {
+                            redirectUrl = "/consultant/home";
+                            break;
+                        } else if (roleName.equals("ROLE_CUSTOMER")) {
+                            redirectUrl = "/customer/home";
+                            break;
+                        } else if (roleName.equals("ROLE_ADMIN")) {
+                            redirectUrl = "/admin/users";
+                            break;
+                        } 
+                    }
+                    response.sendRedirect(redirectUrl);
+                })
+
                 .failureUrl("/login?error=true")
                 .permitAll()
             )
