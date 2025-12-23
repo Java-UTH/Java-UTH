@@ -9,7 +9,7 @@ from torch.utils.data import Dataset
 class RetinaDataset(Dataset):
     def __init__(self, csv_path, image_dir, transform=None):
         """
-        csv_path: đường dẫn tới file csv (train_split.csv hoặc val.csv)
+        csv_path: đường dẫn tới file csv (train / val / test)
         image_dir: thư mục chứa ảnh
         transform: torchvision transform
         """
@@ -18,7 +18,10 @@ class RetinaDataset(Dataset):
         self.transform = transform
 
         # Cột nhãn = tất cả cột trừ filename
-        self.label_cols = self.df.columns[1:].tolist()
+        self.label_cols = [col for col in self.df.columns if col != "filename"]
+
+        # Check dataset type
+        self.has_labels = len(self.label_cols) > 0
 
     def __len__(self):
         return len(self.df)
@@ -26,15 +29,18 @@ class RetinaDataset(Dataset):
     def __getitem__(self, idx):
         row = self.df.iloc[idx]
 
-        # Đường dẫn ảnh
         img_path = os.path.join(self.image_dir, row["filename"])
         image = Image.open(img_path).convert("RGB")
 
         if self.transform:
             image = self.transform(image)
 
-        # Label dạng tensor float (multi-label)
-        labels = row[self.label_cols].astype(float).values
-        label = torch.tensor(labels, dtype=torch.float32)
+        # TRAIN / VAL
+        if self.has_labels:
+            labels = row[self.label_cols].astype(float).values
+            labels = torch.tensor(labels, dtype=torch.float32)
+        else:
+            # TEST: dummy label
+            labels = torch.zeros(1, dtype=torch.float32)
 
-        return image, label
+        return image, labels
