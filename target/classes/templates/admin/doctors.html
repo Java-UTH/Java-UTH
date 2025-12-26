@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Doctor Management</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/doctors.css">
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>ADMIN</h2>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="users.html">Users</a>
+    <a href="doctors.html" class="active">Doctors</a>
+    <a href="clinics.html">Clinics</a>
+    <a href="packages.html">Packages</a>
+    <a href="ai-management.html">AI Management</a>
+    <a href="reports.html">Reports</a>
+</div>
+
+<div class="main">
+    <h1>Doctor Management</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Clinic</th>
+                <th>Patients</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="doctorTable"></tbody>
+    </table>
+</div>
+
+<script src="js/doctors.js"></script>
+</body>
+</html>

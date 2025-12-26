@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Reports & Statistics</title>
+    <link rel="stylesheet" href="css/report.css">
+    <link rel="stylesheet" href="css/base.css">
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>ADMIN</h2>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="users.html">Users</a>
+    <a href="clinics.html">Clinics</a>
+    <a href="packages.html">Packages</a>
+    <a href="ai-management.html">AI Management</a>
+    <a href="reports.html" class="active">Reports</a>
+</div>
+
+<div class="main">
+    <h1>Reports & Statistics</h1>
+
+    <div class="cards">
+        <div class="card">Total Images<br><b>1340</b></div>
+        <div class="card">High Risk<br><b>320</b></div>
+        <div class="card">Medium Risk<br><b>540</b></div>
+        <div class="card">Low Risk<br><b>480</b></div>
+    </div>
+
+    <h3>Export Reports</h3>
+    <button onclick="exportCSV()">Export CSV</button>
+    <button onclick="exportPDF()">Export PDF</button>
+
+    <h3 style="margin-top:20px;">Recent Analysis</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Clinic</th>
+                <th>Risk Level</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>AN-001</td>
+                <td>Vision Care</td>
+                <td>High</td>
+                <td>25/12/2025</td>
+            </tr>
+            <tr>
+                <td>AN-002</td>
+                <td>Eye Health</td>
+                <td>Medium</td>
+                <td>26/12/2025</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="js/report.js"></script>
+</body>
+</html>
