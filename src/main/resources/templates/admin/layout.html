@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}">Admin</title>
+
+    <!-- CSS dùng PATH TUYỆT ĐỐI -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>ADMIN</h2>
+
+    <a th:href="@{/admin/home}">Dashboard</a>
+    <a th:href="@{/admin/users/list}">Users</a>
+    <a th:href="@{/admin/clinics/list}">Clinics</a>
+    <a th:href="@{/admin/packages}">Packages</a>
+    <a th:href="@{/admin/reports}">Reports</a>
+    <a th:href="@{/logout}">Logout</a>
+</div>
+
+<div class="main">
+    <!-- 👇 chỗ này sẽ thay đổi nội dung -->
+    <div th:replace="${content}"></div>
+</div>
+
+</body>
+</html>

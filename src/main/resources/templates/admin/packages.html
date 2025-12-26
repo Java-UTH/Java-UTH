@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Service Packages</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/packages.css">
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>ADMIN</h2>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="packages.html" class="active">Packages</a>
+</div>
+
+<div class="main">
+    <h1>Service Packages</h1>
+
+    <button onclick="addPackage()">+ Add Package</button>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Package Name</th>
+                <th>Price</th>
+                <th>Credits</th>
+                <th>Duration</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>PK01</td>
+                <td>Basic</td>
+                <td>500,000 VND</td>
+                <td>100 images</td>
+                <td>30 days</td>
+                <td>
+                    <button>Edit</button>
+                    <button class="danger">Delete</button>
+                </td>
+            </tr>
+            <tr>
+                <td>PK02</td>
+                <td>Premium</td>
+                <td>2,000,000 VND</td>
+                <td>500 images</td>
+                <td>90 days</td>
+                <td>
+                    <button>Edit</button>
+                    <button class="danger">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="js/packages.js"></script>
+</body>
+</html>
