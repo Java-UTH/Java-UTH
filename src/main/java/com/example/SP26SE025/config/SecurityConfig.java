@@ -76,7 +76,6 @@ public class SecurityConfig {
                 // Phân quyền truy cập các đường dẫn
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/clinic/**").hasRole("CLINIC")
-                .requestMatchers("/consultant/**").hasRole("CONSULTANT")
                 .requestMatchers("/doctor/**").hasRole("DOCTOR") // Thêm quyền cho Doctor
                 .requestMatchers("/staff/**").hasRole("STAFF")
                 .requestMatchers("/customer/**", "/profile", "/test-services/**", "/menstrual_cycle/**")
@@ -100,9 +99,6 @@ public class SecurityConfig {
                             break;
                         } else if (roleName.equals("ROLE_DOCTOR")) {
                             redirectUrl = "/doctor/home";
-                            break;
-                        } else if (roleName.equals("ROLE_CONSULTANT")) {
-                            redirectUrl = "/consultant/home";
                             break;
                         } else if (roleName.equals("ROLE_CUSTOMER")) {
                             redirectUrl = "/customer/home";
