@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/doctor")
 public class DoctorViewController {
 
-    @GetMapping("/dashboard")
+    @GetMapping("/home")
     public String showDashboard() {
-        return "doctor/doctor_dashboard";
+        return "doctor/home";
     }
 
     @GetMapping("/review")
