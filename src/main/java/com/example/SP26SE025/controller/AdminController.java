@@ -59,13 +59,12 @@ public class AdminController {
 
             return switch (role) {
                 case "ADMIN" -> "redirect:/admin/home";
-                case "CLINIC" -> "redirect:/clinic/home";
-                case "DOCTOR" -> "redirect:/doctor/dashboard";
-                case "CONSULTANT" -> "redirect:/consultant/home";
+                // case "CLINIC" -> "redirect:/clinic/home";
+                // case "DOCTOR" -> "redirect:/doctor/dashboard";
                 default -> "redirect:/loginAdmin?error=true";
             };
         } catch (Exception e) {
-            e.printStackTrace(); 
+            e.printStackTrace(); // Thêm dòng này để in lỗi ra console
             return "redirect:/loginAdmin?error=true";
         }
     }

@@ -11,29 +11,36 @@ public class User {
     @Column(name = "UserId")
     private Long id;
 
-    @Column(name = "Username")
+    @Column(name = "Username", unique = true, nullable = false)
     private String username;
 
-    @Column(name = "PasswordHash")
+    @Column(name = "PasswordHash", nullable = false)
     private String password;
 
     @Column(name = "FullName")
     private String fullName;
 
+    @Column(name = "Email")
     private String email;
 
+    // Các trường dành riêng cho Bác sĩ (Role = DOCTOR)
+    @Column(name = "Specialist")
+    private String specialist; 
+
+    @Column(name = "PhoneNumber")
+    private String phoneNumber;
+
+    // Enum Role
     @Enumerated(EnumType.STRING)
     @Column(name = "Role")
     private Role role;
 
-    // SỬA DÒNG NÀY ĐỂ FIX LỖI SQL SERVER
-    @Column(name = "Enabled", nullable = false, columnDefinition = "bit DEFAULT 1")
+    @Column(name = "Enabled", columnDefinition = "bit DEFAULT 1")
     private boolean enabled = true;
 
-    // Constructors
     public User() {}
 
-    // Getters và Setters
+    // Getters & Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -49,16 +56,15 @@ public class User {
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
 
+    public String getSpecialist() { return specialist; }
+    public void setSpecialist(String specialist) { this.specialist = specialist; }
+
+    public String getPhoneNumber() { return phoneNumber; }
+    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+
     public Role getRole() { return role; }
     public void setRole(Role role) { this.role = role; }
 
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    // Đã xóa 2 method lạ không cần thiết như bạn gợi ý
+    public boolean isEnabled() { return enabled; }
+    public void setEnabled(boolean enabled) { this.enabled = enabled; }
 }
