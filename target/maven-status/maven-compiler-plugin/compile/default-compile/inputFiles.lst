@@ -1,46 +1,28 @@
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/entity/Role.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/config/DataSeeder.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/config/SecurityConfig.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/controller/ClinicController.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/controller/ReportController.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/repository/ConsultationAppointmentRepository.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/controller/AuthController.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/repository/STITestRepository.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/service/STITestService.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/controller/CustomerController.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/service/TestServiceService.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/controller/DoctorViewController.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/controller/StaffController.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/service/MenstrualCycleService.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/controller/WelcomeController.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/entity/MenstrualCycle.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/entity/TestService.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/controller/AdminController.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/service/UserService.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/controller/RegisterController.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/controller/TestServiceController.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/security/JwtUtil.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/entity/Question.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/entity/STITest.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/controller/UserController.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/controller/ConsultantController.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/service/ConsultationAppointmentService.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/repository/UserRepository.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/controller/MenstrualCycleController.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/security/CustomUserDetails.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/service/CustomUserDetailsService.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/controller/QuestionController.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/repository/QuestionRepository.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/entity/User.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/controller/STITestController.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/security/JwtFilter.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/controller/ConsultationController.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/repository/MenstrualCycleRepository.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/repository/TestServiceRepository.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/dtos/RegisterRequest.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/security/CustomOAuth2UserService.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/SP26SE025Application.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/service/QuestionService.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/entity/ConsultationAppointment.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/dtos/MonthlyCountDTO.java
-/Users/huynhngocbinh/Documents/Lập trình java/UTH/src/main/java/com/example/SP26SE025/service/ReportService.java
+E:\LTJava\BTL\SP26SE025\src\main\java\com\example\SP26SE025\controller\AdminController.java
+E:\LTJava\BTL\SP26SE025\src\main\java\com\example\SP26SE025\repository\UserRepository.java
+E:\LTJava\BTL\SP26SE025\src\main\java\com\example\SP26SE025\service\CustomUserDetailsService.java
+E:\LTJava\BTL\SP26SE025\src\main\java\com\example\SP26SE025\entity\Patient.java
+E:\LTJava\BTL\SP26SE025\src\main\java\com\example\SP26SE025\repository\PatientRepository.java
+E:\LTJava\BTL\SP26SE025\src\main\java\com\example\SP26SE025\config\DataSeeder.java
+E:\LTJava\BTL\SP26SE025\src\main\java\com\example\SP26SE025\entity\Role.java
+E:\LTJava\BTL\SP26SE025\src\main\java\com\example\SP26SE025\repository\AnalysisRecordRepository.java
+E:\LTJava\BTL\SP26SE025\src\main\java\com\example\SP26SE025\security\JwtFilter.java
+E:\LTJava\BTL\SP26SE025\src\main\java\com\example\SP26SE025\service\UserService.java
+E:\LTJava\BTL\SP26SE025\src\main\java\com\example\SP26SE025\entity\User.java
+E:\LTJava\BTL\SP26SE025\src\main\java\com\example\SP26SE025\dtos\RegisterRequest.java
+E:\LTJava\BTL\SP26SE025\src\main\java\com\example\SP26SE025\entity\AnalysisRecord.java
+E:\LTJava\BTL\SP26SE025\src\main\java\com\example\SP26SE025\controller\UserController.java
+E:\LTJava\BTL\SP26SE025\src\main\java\com\example\SP26SE025\controller\ClinicController.java
+E:\LTJava\BTL\SP26SE025\src\main\java\com\example\SP26SE025\security\CustomOAuth2UserService.java
+E:\LTJava\BTL\SP26SE025\src\main\java\com\example\SP26SE025\config\SecurityConfig.java
+E:\LTJava\BTL\SP26SE025\src\main\java\com\example\SP26SE025\controller\AuthController.java
+E:\LTJava\BTL\SP26SE025\src\main\java\com\example\SP26SE025\security\JwtUtil.java
+E:\LTJava\BTL\SP26SE025\src\main\java\com\example\SP26SE025\controller\CustomerController.java
+E:\LTJava\BTL\SP26SE025\src\main\java\com\example\SP26SE025\SP26SE025Application.java
+E:\LTJava\BTL\SP26SE025\src\main\java\com\example\SP26SE025\service\ClinicAdminService.java
+E:\LTJava\BTL\SP26SE025\src\main\java\com\example\SP26SE025\controller\DoctorViewController.java
+E:\LTJava\BTL\SP26SE025\src\main\java\com\example\SP26SE025\controller\RegisterController.java
+E:\LTJava\BTL\SP26SE025\src\main\java\com\example\SP26SE025\entity\STITest.java
+E:\LTJava\BTL\SP26SE025\src\main\java\com\example\SP26SE025\service\ReportService.java
+E:\LTJava\BTL\SP26SE025\src\main\java\com\example\SP26SE025\security\CustomUserDetails.java
+E:\LTJava\BTL\SP26SE025\src\main\java\com\example\SP26SE025\dtos\DoctorRegistrationDto.java
