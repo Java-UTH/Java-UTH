@@ -17,4 +17,9 @@ public class DoctorViewController {
     public String showReview() {
         return "doctor/doctor_review";
     }
+
+    @GetMapping("/result")
+    public String showResult() {
+        return "doctor/doctor_result";
+    }
 }
