@@ -35,8 +35,9 @@ public class User {
     @Column(name = "Role")
     private Role role;
 
+    // --- SỬA Ở ĐÂY: Đổi boolean -> Boolean ---
     @Column(name = "Enabled", columnDefinition = "bit DEFAULT 1")
-    private boolean enabled = true;
+    private Boolean enabled = true; 
 
     public User() {}
 
@@ -65,6 +66,13 @@ public class User {
     public Role getRole() { return role; }
     public void setRole(Role role) { this.role = role; }
 
-    public boolean isEnabled() { return enabled; }
-    public void setEnabled(boolean enabled) { this.enabled = enabled; }
+    // --- SỬA Ở ĐÂY: Trả về true nếu enabled là true, trả về false nếu enabled là null hoặc false ---
+    public boolean isEnabled() { 
+        return Boolean.TRUE.equals(this.enabled); 
+    }
+    
+    // --- SỬA Ở ĐÂY: Nhận tham số Boolean ---
+    public void setEnabled(Boolean enabled) { 
+        this.enabled = enabled; 
+    }
 }
