@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Tải lên & Phân tích AI | Hệ thống AI Võng mạc</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+            padding: 20px;
+        }
+        .container-upload {
+            max-width: 1100px;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .drop-zone {
+            border: 3px dashed #3498db;
+            border-radius: 10px;
+            padding: 50px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .drop-zone:hover {
+            background-color: #f0f8ff;
+        }
+        .file-list-container {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            margin-top: 20px;
+            padding: 15px;
+        }
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .progress-bar-container {
+            width: 150px;
+        }
+        .btn-start-analysis {
+            font-size: 1.1rem;
+            padding: 12px 30px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container container-upload">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-success"><i class="fas fa-microscope me-2"></i> Tải lên & Phân tích AI</h2>
+        <a th:href="@{/clinic/home}" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-1"></i> Về Dashboard</a>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light fw-bold">
+            1. Xác định Bệnh nhân và Chi tiết Lần Khám
+        </div>
+        <div class="card-body row g-3">
+            <div class="col-md-6">
+                <label for="patientId" class="form-label">Mã Bệnh nhân (Patient ID) *</label>
+                <input type="text" class="form-control" id="patientId" placeholder="Nhập mã BN (ví dụ: BN-20250012)">
+                <div class="form-text">Mã này sẽ được liên kết với tất cả các ảnh tải lên.</div>
+            </div>
+            <div class="col-md-6">
+                <label for="doctorName" class="form-label">Bác sĩ Chỉ định / Thực hiện</label>
+                <select id="doctorName" class="form-select">
+                    <option selected>Chọn Bác sĩ (Ví dụ: Bác sĩ A)</option>
+                    <option value="dr_a">Bác sĩ A (ID: 101)</option>
+                    <option value="dr_b">Bác sĩ B (ID: 102)</option>
+                </select>
+            </div>
+            <div class="col-12">
+                <label for="notes" class="form-label">Ghi chú (Tùy chọn)</label>
+                <textarea class="form-control" id="notes" rows="2" placeholder="Nhập các ghi chú đặc biệt về bệnh nhân hoặc quá trình chụp..."></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light fw-bold">
+            2. Tải lên Hình ảnh Võng mạc (.jpg, .png)
+        </div>
+        <div class="card-body">
+            
+            <div class="drop-zone" id="dropZone">
+                <i class="fas fa-cloud-arrow-up fa-3x text-info mb-2"></i>
+                <p class="mb-0 fw-bold text-muted">Kéo & Thả các file ảnh vào đây, hoặc nhấn để chọn file.</p>
+                <p class="text-secondary" style="font-size: 0.85rem;">Hỗ trợ tải lên hàng loạt (tối đa 20 ảnh/lần). Kích thước tối đa: 10MB/ảnh.</p>
+                <input type="file" id="fileInput" multiple accept=".jpg,.jpeg,.png" style="display: none;">
+            </div>
+
+            <div class="file-list-container" id="fileList">
+                <p class="text-center text-muted m-0">Danh sách các file ảnh đã chọn sẽ hiển thị ở đây.</p>
+                </div>
+
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <button id="startAnalysisBtn" class="btn btn-success btn-start-analysis" disabled>
+            <i class="fas fa-robot me-2"></i> Gửi Ảnh và Bắt đầu Phân tích AI
+        </button>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const fileList = document.getElementById('fileList');
+        const startAnalysisBtn = document.getElementById('startAnalysisBtn');
+        let selectedFiles = [];
+
+        // Kích hoạt input file khi click vào drop zone
+        dropZone.addEventListener('click', () => fileInput.click());
+
+        // Xử lý kéo thả
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+            document.body.addEventListener(eventName, preventDefaults, false); // Ngăn chặn mở file trong trình duyệt
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        dropZone.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles(files);
+        }
+
+        // Xử lý chọn file qua input
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+        
+        // Cập nhật danh sách file và trạng thái nút
+        function handleFiles(files) {
+            if (files.length > 20) {
+                alert("Chỉ được phép tải tối đa 20 ảnh mỗi lần.");
+                return;
+            }
+
+            selectedFiles = [...files].filter(file => file.type.match('image.*'));
+            displayFiles();
+        }
+
+        function displayFiles() {
+            fileList.innerHTML = '';
+            if (selectedFiles.length === 0) {
+                fileList.innerHTML = '<p class="text-center text-muted m-0">Danh sách các file ảnh đã chọn sẽ hiển thị ở đây.</p>';
+                startAnalysisBtn.disabled = true;
+                return;
+            }
+            
+            selectedFiles.forEach((file, index) => {
+                const item = document.createElement('div');
+                item.className = 'file-item';
+                item.innerHTML = `
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-image me-2 text-primary"></i>
+                        <span class="text-truncate" style="max-width: 300px;">${file.name}</span>
+                        <span class="badge bg-secondary ms-3">${(file.size / 1024 / 1024).toFixed(2)} MB</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <span class="text-muted" style="font-size: 0.8rem;">Chờ gửi...</span>
+                    </div>
+                `;
+                fileList.appendChild(item);
+            });
+            
+            startAnalysisBtn.disabled = false;
+        }
+
+        // Xử lý khi nhấn nút Gửi Ảnh và Phân tích AI
+        startAnalysisBtn.addEventListener('click', () => {
+            const patientId = document.getElementById('patientId').value.trim();
+            if (!patientId) {
+                alert("Vui lòng nhập Mã Bệnh nhân trước khi bắt đầu phân tích.");
+                document.getElementById('patientId').focus();
+                return;
+            }
+
+            if (selectedFiles.length === 0) {
+                alert("Vui lòng chọn ít nhất một ảnh để phân tích.");
+                return;
+            }
+            
+            startAnalysisBtn.disabled = true;
+            startAnalysisBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Đang gửi ảnh...';
+
+            // *** GỌI API BACKEND TẠI ĐÂY ***
+            // Sử dụng fetch() hoặc Axios để gửi selectedFiles và patientId đến endpoint /api/images/upload/bulk
+            console.log(`Gửi ${selectedFiles.length} file cho BN: ${patientId}`);
+            
+            // Mô phỏng quá trình tải lên thành công và chuyển hướng
+            setTimeout(() => {
+                alert("Tải lên thành công! Hình ảnh đã được gửi đến hàng đợi phân tích AI.");
+                // Chuyển hướng người dùng đến trang theo dõi báo cáo ([FR-25])
+                window.location.href = `/reports/patient?id=${patientId}`;
+            }, 3000); // 3 giây mô phỏng
+        });
+    });
+</script>
+
+</body>
+</html>
