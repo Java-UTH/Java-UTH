@@ -1,6 +1,7 @@
 com\example\SP26SE025\SP26SE025Application.class
 com\example\SP26SE025\entity\AnalysisRecord.class
 com\example\SP26SE025\repository\UserRepository.class
+com\example\SP26SE025\controller\CustomerController$AnalysisHistory.class
 com\example\SP26SE025\repository\PatientRepository.class
 com\example\SP26SE025\entity\Role.class
 com\example\SP26SE025\controller\CustomerController.class
