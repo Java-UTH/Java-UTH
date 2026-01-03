@@ -1,0 +1,10 @@
+# Maven
+target/
+*.jar
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
