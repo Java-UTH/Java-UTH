@@ -10,7 +10,7 @@ public class UserProfileDTO {
     private String phone;
     private LocalDate dob;           // Ngày sinh
     private String diabetesType;     // Loại tiểu đường: NONE, TYPE_1, TYPE_2, GESTATIONAL
-    private boolean hypertension;    // Cao huyết áp: true (Có), false (Không)
+    private Boolean hypertension;    // Cao huyết áp: true (Có), false (Không), null (Chưa xác định)
     private String medicalHistory;   // Tiền sử bệnh án
 
     // 2. Constructor mặc định (No-args constructor)
@@ -78,12 +78,11 @@ public class UserProfileDTO {
     }
 
     // --- Hypertension (Boolean) ---
-    // Lưu ý: Với kiểu boolean nguyên thủy, getter thường đặt tên là "is..." thay vì "get..."
-    public boolean isHypertension() {
+    public Boolean getHypertension() {
         return hypertension;
     }
 
-    public void setHypertension(boolean hypertension) {
+    public void setHypertension(Boolean hypertension) {
         this.hypertension = hypertension;
     }
 

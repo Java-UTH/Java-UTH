@@ -72,4 +72,27 @@ public class UserService {
         
         return null;
     }
+
+    // ======================================================
+    // CẬP NHẬT MỚI: QUẢN LÝ PROFILE
+    // ======================================================
+
+    /**
+     * Cập nhật thông tin profile từ UserProfileDTO sang User Entity
+     * @param user User cần cập nhật
+     * @return User đã được cập nhật
+     */
+    public User updateProfile(User user) {
+        // Không mã hóa password khi update profile (vì không thay đổi password)
+        return userRepository.save(user);
+    }
+
+    /**
+     * Lấy User theo ID
+     * @param id User ID
+     * @return Optional<User>
+     */
+    public Optional<User> findUserById(Long id) {
+        return userRepository.findById(id);
+    }
 }
