@@ -2,6 +2,11 @@ package com.example.SP26SE025.controller;
 
 import com.example.SP26SE025.dtos.NotificationDTO;
 import com.example.SP26SE025.dtos.UserProfileDTO;
+import com.example.SP26SE025.entity.User;
+import com.example.SP26SE025.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +22,9 @@ import java.util.List;
 @Controller
 public class CustomerController {
 
+    @Autowired
+    private UserService userService;
+
     // --- 1. DASHBOARD ---
     @GetMapping("/customer/home")
     public String customerHome() {
@@ -27,24 +35,57 @@ public class CustomerController {
     // --- 2. [FR-8] QUẢN LÝ HỒ SƠ ---
     @GetMapping("/customer/profile")
     public String showProfile(Model model) {
-        // Dữ liệu giả lập từ Database
-        UserProfileDTO mockProfile = new UserProfileDTO(
-            "Nguyễn Văn A", 
-            "nguyenvana@gmail.com", 
-            "0909123456", 
-            LocalDate.of(1990, 5, 20), 
-            "TYPE_2", 
-            true, 
-            "Đã phẫu thuật Lasik năm 2020"
-        );
-        model.addAttribute("userProfile", mockProfile);
+        // Lấy user hiện tại từ Security Context
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+        
+        User user = userService.findByEmail(email);
+        
+        if (user == null) {
+            // Nếu không tìm thấy user, sử dụng dữ liệu mặc định
+            user = new User();
+            user.setFullName("Người dùng mới");
+            user.setEmail(email);
+        }
+
+        // Chuyển đổi từ User Entity sang UserProfileDTO
+        UserProfileDTO userProfile = new UserProfileDTO();
+        userProfile.setFullName(user.getFullName());
+        userProfile.setEmail(user.getEmail());
+        userProfile.setPhone(user.getPhoneNumber());
+        userProfile.setDob(user.getDob());
+        userProfile.setDiabetesType(user.getDiabetesType());
+        userProfile.setHypertension(user.getHypertension());
+        userProfile.setMedicalHistory(user.getMedicalHistory());
+
+        model.addAttribute("userProfile", userProfile);
         return "customer/profile";
     }
 
     @PostMapping("/customer/profile/update")
     public String updateProfile(@ModelAttribute UserProfileDTO userProfile) {
-        // Logic lưu xuống DB sẽ viết ở đây
-        System.out.println("Đang cập nhật: " + userProfile.getFullName());
+        // Lấy user hiện tại từ Security Context
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+        
+        User user = userService.findByEmail(email);
+        
+        if (user != null) {
+            // Cập nhật thông tin từ DTO sang Entity
+            user.setFullName(userProfile.getFullName());
+            user.setPhoneNumber(userProfile.getPhone());
+            user.setDob(userProfile.getDob());
+            user.setDiabetesType(userProfile.getDiabetesType());
+            user.setHypertension(userProfile.getHypertension());
+            user.setMedicalHistory(userProfile.getMedicalHistory());
+            
+            // Lưu vào database
+            userService.updateProfile(user);
+            
+            System.out.println(">>> Đã cập nhật profile cho user: " + email);
+        } else {
+            System.out.println(">>> LỖI: Không tìm thấy user để cập nhật: " + email);
+        }
         
         // Quay lại trang profile kèm thông báo thành công
         return "redirect:/customer/profile?success";

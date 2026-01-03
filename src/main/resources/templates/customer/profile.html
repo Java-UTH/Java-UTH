@@ -71,7 +71,15 @@
         th:action="@{/customer/profile/update}"
         th:object="${userProfile}"
         method="post"
+        accept-charset="UTF-8"
       >
+        <input
+          type="hidden"
+          th:if="${_csrf}"
+          th:name="${_csrf.parameterName}"
+          th:value="${_csrf.token}"
+        />
+
         <div class="alert alert-success" th:if="${param.success}">
           <i class="fa-solid fa-check-circle me-2"></i> Cập nhật hồ sơ thành
           công!
@@ -82,7 +90,7 @@
             <div class="glass-panel p-4 h-100 text-center">
               <div class="position-relative d-inline-block mb-3">
                 <img
-                  src="https://ui-avatars.com/api/?name=User+Name&background=0d6efd&color=fff&size=150"
+                  th:src="@{'https://ui-avatars.com/api/?name=' + ${userProfile.fullName != null ? userProfile.fullName : 'User'} + '&background=0d6efd&color=fff&size=150'}"
                   class="rounded-circle shadow-sm"
                   alt="Avatar"
                 />
@@ -119,7 +127,12 @@
                 </div>
                 <div class="mb-3">
                   <label class="form-label">Ngày sinh</label>
-                  <input type="date" class="form-control" th:field="*{dob}" />
+                  <input
+                    type="date"
+                    class="form-control"
+                    th:field="*{dob}"
+                    th:value="${userProfile.dob}"
+                  />
                 </div>
               </div>
             </div>
