@@ -165,12 +165,28 @@
             <div class="text-muted" style="font-size: 0.8rem">Xin chào,</div>
             <div
               class="fw-bold text-dark"
-              th:text="${session.fullName != null ? session.fullName : 'Khách hàng'}"
+              th:text="${currentUser.fullName != null ? currentUser.fullName : 'Khách hàng'}"
             >
               User Name
             </div>
           </div>
-          <div class="user-avatar"><i class="fa-solid fa-user"></i></div>
+          <div class="user-avatar">
+            <img
+              th:if="${currentUser.avatarPath != null}"
+              th:src="${currentUser.avatarPath}"
+              style="
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                object-fit: cover;
+              "
+              alt="Avatar"
+            />
+            <i
+              th:if="${currentUser.avatarPath == null}"
+              class="fa-solid fa-user"
+            ></i>
+          </div>
           <form th:action="@{/logout}" method="post" class="m-0">
             <button
               type="submit"

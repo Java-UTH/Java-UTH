@@ -1,6 +1,7 @@
 package com.example.SP26SE025.entity;
 
 import jakarta.persistence.*;
+import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
 
 @Entity
@@ -18,23 +19,25 @@ public class User {
     @Column(name = "PasswordHash", nullable = false)
     private String password;
 
-    // --- FIX LỖI TIẾNG VIỆT Ở ĐÂY ---
-    // Thêm columnDefinition = "nvarchar(255)" để lưu Unicode
     @Column(name = "FullName", columnDefinition = "nvarchar(255)")
     private String fullName;
 
     @Column(name = "Email")
     private String email;
 
-    // Trường này cũng có thể chứa tiếng Việt (ví dụ: "Tim mạch", "Nội khoa")
     @Column(name = "Specialist", columnDefinition = "nvarchar(255)")
     private String specialist; 
 
     @Column(name = "PhoneNumber")
     private String phoneNumber;
 
+    // Avatar - đường dẫn file ảnh đại diện
+    @Column(name = "AvatarPath")
+    private String avatarPath;
+
     // Các trường cho Profile sức khỏe
     @Column(name = "DateOfBirth")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dob;
 
     @Column(name = "DiabetesType")
@@ -78,6 +81,9 @@ public class User {
 
     public String getPhoneNumber() { return phoneNumber; }
     public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+
+    public String getAvatarPath() { return avatarPath; }
+    public void setAvatarPath(String avatarPath) { this.avatarPath = avatarPath; }
 
     public Role getRole() { return role; }
     public void setRole(Role role) { this.role = role; }
