@@ -14,7 +14,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.example.SP26SE025.repository.UserRepository;
-import com.example.SP26SE025.security.CustomOAuth2UserService;
 import com.example.SP26SE025.security.JwtFilter;
 import com.example.SP26SE025.service.CustomUserDetailsService;
 
@@ -32,6 +31,10 @@ public class SecurityConfig {
     public SecurityConfig(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
+
+    // =========================
+    // AUTHENTICATION BEANS
+    // =========================
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -56,57 +59,80 @@ public class SecurityConfig {
         return config.getAuthenticationManager();
     }
 
+    /*
+    // =========================
+    // OAUTH2 – TẠM THỜI TẮT
+    // =========================
     @Bean
     public CustomOAuth2UserService customOAuth2UserService() {
         return new CustomOAuth2UserService(userRepository, new BCryptPasswordEncoder());
     }
+    */
+
+    // =========================
+    // SECURITY FILTER CHAIN
+    // =========================
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         http
             .csrf(csrf -> csrf.disable())
+
             .sessionManagement(sess -> sess
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+
             .authenticationProvider(authenticationProvider())
+
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/home", "/login", "/register",
+                .requestMatchers(
+                    "/", "/home", "/login", "/register",
                     "/css/**", "/js/**", "/images/**", "/fonts/**",
-                    "/authenticate", "/oauth2/**", "/login/oauth2/**")
-                .permitAll()
-                // Phân quyền truy cập các đường dẫn
+                    "/authenticate"
+                ).permitAll()
+
+                // ROLE-BASED ACCESS CONTROL
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/clinic/**").hasRole("CLINIC")
-                .requestMatchers("/doctor/**").hasRole("DOCTOR") // Thêm quyền cho Doctor
+                .requestMatchers("/doctor/**").hasRole("DOCTOR")
                 .requestMatchers("/staff/**").hasRole("STAFF")
-                .requestMatchers("/customer/**", "/profile", "/test-services/**", "/menstrual_cycle/**")
-                .hasRole("CUSTOMER")
-                .requestMatchers("/authenticateAdmin", "/loginAdmin").permitAll()
+                .requestMatchers(
+                    "/customer/**",
+                    "/profile",
+                    "/test-services/**",
+                    "/menstrual_cycle/**"
+                ).hasRole("CUSTOMER")
+
                 .anyRequest().authenticated()
             )
-           .formLogin(form -> form
+
+            // =========================
+            // FORM LOGIN
+            // =========================
+            .formLogin(form -> form
                 .loginPage("/login")
                 .loginProcessingUrl("/authenticate")
-                
+
                 .successHandler((request, response, authentication) -> {
                     var authorities = authentication.getAuthorities();
-                    String redirectUrl = "/login?error=true"; // Mặc định nếu lỗi
+                    String redirectUrl = "/login?error=true";
 
                     for (var authority : authorities) {
-                        String roleName = authority.getAuthority();
+                        String role = authority.getAuthority();
 
-                        if (roleName.equals("ROLE_CLINIC")) {
-                            redirectUrl = "/clinic/home";
-                            break;
-                        } else if (roleName.equals("ROLE_DOCTOR")) {
-                            redirectUrl = "/doctor/home";
-                            break;
-                        } else if (roleName.equals("ROLE_CUSTOMER")) {
-                            redirectUrl = "/customer/home";
-                            break;
-                        } else if (roleName.equals("ROLE_ADMIN")) {
+                        if (role.equals("ROLE_ADMIN")) {
                             redirectUrl = "/admin/users";
                             break;
-                        } 
+                        } else if (role.equals("ROLE_CLINIC")) {
+                            redirectUrl = "/clinic/home";
+                            break;
+                        } else if (role.equals("ROLE_DOCTOR")) {
+                            redirectUrl = "/doctor/home";
+                            break;
+                        } else if (role.equals("ROLE_CUSTOMER")) {
+                            redirectUrl = "/customer/home";
+                            break;
+                        }
                     }
                     response.sendRedirect(redirectUrl);
                 })
@@ -114,20 +140,28 @@ public class SecurityConfig {
                 .failureUrl("/login?error=true")
                 .permitAll()
             )
-            
-             .oauth2Login(oauth2 -> oauth2
-                 .loginPage("/login")
-                .userInfoEndpoint(userInfo -> userInfo
-                  .userService(customOAuth2UserService())
+
+            /*
+            // =========================
+            // OAUTH2 LOGIN – TẠM TẮT
+            // =========================
+            .oauth2Login(oauth2 -> oauth2
+                .loginPage("/login")
+                .userInfoEndpoint(userInfo ->
+                    userInfo.userService(customOAuth2UserService())
                 )
-                .successHandler((request, response, authentication) -> {
-                     response.sendRedirect("/customer/home");
-                 })
-                 .failureHandler((request, response, exception) -> {
-                     response.sendRedirect("/login?oauth2_error=true");
-                 })
-             )
-           
+                .successHandler((request, response, authentication) ->
+                    response.sendRedirect("/customer/home")
+                )
+                .failureHandler((request, response, exception) ->
+                    response.sendRedirect("/login?oauth2_error=true")
+                )
+            )
+            */
+
+            // =========================
+            // LOGOUT
+            // =========================
             .logout(logout -> logout
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout=true")
@@ -136,7 +170,9 @@ public class SecurityConfig {
                 .permitAll()
             );
 
+        // JWT FILTER
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 }
