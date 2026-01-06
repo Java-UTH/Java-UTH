@@ -165,11 +165,14 @@
             <div class="text-muted" style="font-size: 0.8rem">Xin chào,</div>
             <div
               class="fw-bold text-dark"
+
               th:text="${currentUser.fullName != null ? currentUser.fullName : 'Khách hàng'}"
+
             >
               User Name
             </div>
           </div>
+
           <div class="user-avatar">
             <img
               th:if="${currentUser.avatarPath != null}"
@@ -187,6 +190,8 @@
               class="fa-solid fa-user"
             ></i>
           </div>
+
+
           <form th:action="@{/logout}" method="post" class="m-0">
             <button
               type="submit"

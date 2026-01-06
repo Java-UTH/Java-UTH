@@ -83,7 +83,7 @@ public class SecurityConfig {
                 .requestMatchers("/authenticateAdmin", "/loginAdmin").permitAll()
                 .anyRequest().authenticated()
             )
-            .formLogin(form -> form
+           .formLogin(form -> form
                 .loginPage("/login")
                 .loginProcessingUrl("/authenticate")
                 
@@ -114,18 +114,20 @@ public class SecurityConfig {
                 .failureUrl("/login?error=true")
                 .permitAll()
             )
-            .oauth2Login(oauth2 -> oauth2
-                .loginPage("/login")
+            
+             .oauth2Login(oauth2 -> oauth2
+                 .loginPage("/login")
                 .userInfoEndpoint(userInfo -> userInfo
-                    .userService(customOAuth2UserService())
+                  .userService(customOAuth2UserService())
                 )
                 .successHandler((request, response, authentication) -> {
-                    response.sendRedirect("/customer/home");
-                })
-                .failureHandler((request, response, exception) -> {
-                    response.sendRedirect("/login?oauth2_error=true");
-                })
-            )
+                     response.sendRedirect("/customer/home");
+                 })
+                 .failureHandler((request, response, exception) -> {
+                     response.sendRedirect("/login?oauth2_error=true");
+                 })
+             )
+           
             .logout(logout -> logout
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout=true")
