@@ -164,14 +164,20 @@
                 </div>
                 <div class="mb-3">
                   <label class="form-label">Ngày sinh</label>
-                  <input type="date" class="form-control" th:field="*{dob}" />
+                  <input
+                    type="date"
+                    class="form-control"
+                    th:field="*{dob}"
+                    placeholder="yyyy-MM-dd"
+                  />
                   <small
                     class="text-danger d-block"
                     th:if="${#fields.hasErrors('dob')}"
                     th:errors="*{dob}"
                   ></small>
                   <small class="text-muted"
-                    >(Không bắt buộc) Nếu nhập phải là ngày trong quá khứ</small
+                    >(Không bắt buộc) Format: DD/MM/YYYY (ví dụ:
+                    05/01/2026)</small
                   >
                 </div>
               </div>
