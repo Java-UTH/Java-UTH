@@ -6,6 +6,7 @@ C:\Persional\Java-UTH\Java-UTH\src\main\java\com\example\genderhealthcare\reposi
 C:\Persional\Java-UTH\Java-UTH\src\main\java\com\example\genderhealthcare\service\QuestionService.java
 C:\Persional\Java-UTH\Java-UTH\src\main\java\com\example\genderhealthcare\controller\MenstrualCycleController.java
 C:\Persional\Java-UTH\Java-UTH\src\main\java\com\example\genderhealthcare\service\STITestService.java
+C:\Persional\Java-UTH\Java-UTH\src\main\java\com\example\genderhealthcare\dtos\UserUpdateRequest.java
 C:\Persional\Java-UTH\Java-UTH\src\main\java\com\example\genderhealthcare\controller\WelcomeController.java
 C:\Persional\Java-UTH\Java-UTH\src\main\java\com\example\genderhealthcare\controller\StaffController.java
 C:\Persional\Java-UTH\Java-UTH\src\main\java\com\example\genderhealthcare\entity\STITest.java
@@ -15,6 +16,7 @@ C:\Persional\Java-UTH\Java-UTH\src\main\java\com\example\genderhealthcare\contro
 C:\Persional\Java-UTH\Java-UTH\src\main\java\com\example\genderhealthcare\entity\TestService.java
 C:\Persional\Java-UTH\Java-UTH\src\main\java\com\example\genderhealthcare\GenderHealthCareApplication.java
 C:\Persional\Java-UTH\Java-UTH\src\main\java\com\example\genderhealthcare\entity\ConsultationAppointment.java
+C:\Persional\Java-UTH\Java-UTH\src\main\java\com\example\genderhealthcare\controller\AdminUserController.java
 C:\Persional\Java-UTH\Java-UTH\src\main\java\com\example\genderhealthcare\security\CustomUserDetails.java
 C:\Persional\Java-UTH\Java-UTH\src\main\java\com\example\genderhealthcare\entity\User.java
 C:\Persional\Java-UTH\Java-UTH\src\main\java\com\example\genderhealthcare\controller\ConsultationController.java

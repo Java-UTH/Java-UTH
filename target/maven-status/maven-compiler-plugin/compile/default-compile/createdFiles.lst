@@ -12,7 +12,9 @@ com\example\genderhealthcare\service\ReportService.class
 com\example\genderhealthcare\controller\ReportController.class
 com\example\genderhealthcare\controller\WelcomeController.class
 com\example\genderhealthcare\controller\ConsultationController.class
+com\example\genderhealthcare\controller\AdminUserController.class
 com\example\genderhealthcare\controller\QuestionController.class
+com\example\genderhealthcare\dtos\UserUpdateRequest.class
 com\example\genderhealthcare\repository\TestServiceRepository.class
 com\example\genderhealthcare\controller\TestServiceController.class
 com\example\genderhealthcare\controller\ManagerController.class
