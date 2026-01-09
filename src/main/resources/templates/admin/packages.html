@@ -3,25 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Doctor Management</title>
-    <link rel="stylesheet" href="../../static/admin/css/base.css">
-    <link rel="stylesheet" href="../../static/admin/css/packages.css">
-</head>
+    <link rel="stylesheet" th:href="@{/admin/css/base.css}">
+   <link rel="stylesheet" th:href="@{/admin/css/packages.css}">
 <body>
-
 <div class="sidebar">
     <h2>ADMIN</h2>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="packages.html" class="active">Packages</a>
-</div>
-<div class="sidebar">
-    <h2>ADMIN</h2>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="users.html">Users</a>
-    <a href="doctors.html" class="active">Doctors</a>
-    <a href="clinics.html">Clinics</a>
-    <a href="packages.html">Packages</a>
-    <a href="ai-management.html">AI Management</a>
-    <a href="reports.html">Reports</a>
+   <a href="http://localhost:8080/admin/home">Dashboard</a>
+    <a href="http://localhost:8080/admin/users">Users</a>
+    <a href="http://localhost:8080/admin/doctors" class="active">Doctors</a>
+    <a href="http://localhost:8080/admin/clinics">Clinics</a>
+    <a href="http://localhost:8080/admin/packages">Packages</a>
+    <a href="http://localhost:8080/admin/ai">AI Management</a>
+    <a href="http://localhost:8080/admin/reports">Reports</a>
 </div>
 <div class="main">
     <h1>Service Packages</h1>

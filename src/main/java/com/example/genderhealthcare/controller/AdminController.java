@@ -40,7 +40,7 @@ public class AdminController {
         model.addAttribute("title", "Admin Dashboard");
         model.addAttribute("content", "admin/dashboard :: content");
         // dashboard dùng dashboard.css → không cần pageCss
-        return "admin/users";
+        return "admin/dashboard";
     }
 
     // ================= USERS =================
