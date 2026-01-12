@@ -20,7 +20,7 @@ public class DataSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        createUserIfNotExists("admin@example.com", "123", Role.ADMIN);
+        createUserIfNotExists("loc08122004@gmail.com", "123", Role.ADMIN);
         createUserIfNotExists("clinic@example.com", "123", Role.CLINIC); 
         createUserIfNotExists("doctor@example.com", "123", Role.DOCTOR);
         createUserIfNotExists("customer@example.com", "123", Role.CUSTOMER);
@@ -31,7 +31,6 @@ public class DataSeeder implements CommandLineRunner {
             User user = new User();
             String username = email.substring(0, email.indexOf("@")); 
             user.setUsername(username);
-
             user.setEmail(email);
             user.setPassword(passwordEncoder.encode(rawPassword)); 
             user.setRole(role);
