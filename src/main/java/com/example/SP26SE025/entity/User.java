@@ -1,6 +1,8 @@
 package com.example.SP26SE025.entity;
 
 import jakarta.persistence.*;
+import org.springframework.format.annotation.DateTimeFormat;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "Users")
@@ -17,18 +19,36 @@ public class User {
     @Column(name = "PasswordHash", nullable = false)
     private String password;
 
-    @Column(name = "FullName")
+    @Column(name = "FullName", columnDefinition = "nvarchar(255)")
     private String fullName;
 
     @Column(name = "Email")
     private String email;
 
-    // Các trường dành riêng cho Bác sĩ (Role = DOCTOR)
-    @Column(name = "Specialist")
+    @Column(name = "Specialist", columnDefinition = "nvarchar(255)")
     private String specialist; 
 
     @Column(name = "PhoneNumber")
     private String phoneNumber;
+
+    // Avatar - đường dẫn file ảnh đại diện
+    @Column(name = "AvatarPath")
+    private String avatarPath;
+
+    // Các trường cho Profile sức khỏe
+    @Column(name = "DateOfBirth")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dob;
+
+    @Column(name = "DiabetesType")
+    private String diabetesType; // NONE, TYPE_1, TYPE_2, GESTATIONAL
+
+    @Column(name = "Hypertension")
+    private Boolean hypertension;
+
+    // Sửa TEXT thành nvarchar(MAX) để hỗ trợ tiếng Việt dài
+    @Column(name = "MedicalHistory", columnDefinition = "nvarchar(MAX)")
+    private String medicalHistory;
 
     // Enum Role
     @Enumerated(EnumType.STRING)
@@ -62,9 +82,24 @@ public class User {
     public String getPhoneNumber() { return phoneNumber; }
     public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
 
+    public String getAvatarPath() { return avatarPath; }
+    public void setAvatarPath(String avatarPath) { this.avatarPath = avatarPath; }
+
     public Role getRole() { return role; }
     public void setRole(Role role) { this.role = role; }
 
     public boolean isEnabled() { return enabled; }
     public void setEnabled(boolean enabled) { this.enabled = enabled; }
+
+    public LocalDate getDob() { return dob; }
+    public void setDob(LocalDate dob) { this.dob = dob; }
+
+    public String getDiabetesType() { return diabetesType; }
+    public void setDiabetesType(String diabetesType) { this.diabetesType = diabetesType; }
+
+    public Boolean getHypertension() { return hypertension; }
+    public void setHypertension(Boolean hypertension) { this.hypertension = hypertension; }
+
+    public String getMedicalHistory() { return medicalHistory; }
+    public void setMedicalHistory(String medicalHistory) { this.medicalHistory = medicalHistory; }
 }

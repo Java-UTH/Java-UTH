@@ -74,18 +74,34 @@
         <a th:href="@{/clinic/home}" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-1"></i> Về Dashboard</a>
     </div>
 
+    <div th:if="${param.success}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>
+        <span th:if="${param.success[0] == 'info'}">Cập nhật thông tin thành công!</span>
+        <span th:if="${param.success[0] == 'verify'}">Đã gửi hồ sơ xác minh. Vui lòng chờ duyệt!</span>
+        <span th:if="${param.success[0] == 'password'}">Đổi mật khẩu thành công!</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${param.error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>
+        <span th:if="${param.error[0] == 'password'}">Mật khẩu hiện tại không đúng!</span>
+        <span th:if="${param.error[0] == 'upload'}">Lỗi khi tải lên tệp tin. Vui lòng thử lại!</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
     <div class="profile-header">
         <div class="clinic-logo-placeholder">
             <i class="fas fa-clinic-medical"></i>
         </div>
         <div class="flex-grow-1">
-            <h3 class="fw-bold mb-1">Phòng khám Đa khoa Quốc tế (Demo)</h3>
-            <p class="text-muted mb-2">ID: CL-2025-001</p>
+            <h3 class="fw-bold mb-1" th:text="${clinicProfile.clinicName != null ? clinicProfile.clinicName : 'Chưa đặt tên phòng khám'}">Phòng khám Demo</h3>
+            <p class="text-muted mb-2">ID: <span th:text="${clinicProfile.id}">CL-001</span></p>
             
-            <span class="verification-badge pending">
-                <i class="fas fa-clock me-1"></i> Đang chờ xác minh (Pending Verification)
+            <span class="verification-badge" 
+                  th:classappend="${clinicProfile.verificationStatus == 'VERIFIED' ? 'verified' : (clinicProfile.verificationStatus == 'PENDING' ? 'pending' : 'unverified')}">
+                <i class="fas" th:classappend="${clinicProfile.verificationStatus == 'VERIFIED' ? 'fa-check-circle' : (clinicProfile.verificationStatus == 'PENDING' ? 'fa-clock' : 'fa-times-circle')}"></i>
+                <span th:text="${clinicProfile.verificationStatus == 'VERIFIED' ? 'Đã Xác Minh' : (clinicProfile.verificationStatus == 'PENDING' ? 'Đang Chờ Duyệt' : 'Chưa Xác Minh')}">Trạng thái</span>
             </span>
-            </div>
+        </div>
         <div>
             <button class="btn btn-outline-primary btn-sm">Thay đổi Logo</button>
         </div>
@@ -110,31 +126,31 @@
             <div class="tab-content" id="settingTabsContent">
                 
                 <div class="tab-pane fade show active" id="general">
-                    <form>
+                    <form th:action="@{/clinic/settings/update-info}" th:object="${clinicProfile}" method="post">
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Tên Phòng khám</label>
-                                <input type="text" class="form-control" value="Phòng khám Đa khoa Quốc tế" required>
+                                <input type="text" class="form-control" th:field="*{clinicName}" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Người đại diện pháp luật</label>
-                                <input type="text" class="form-control" value="Nguyễn Văn A">
+                                <input type="text" class="form-control" th:field="*{representativeName}">
                             </div>
                             <div class="col-12">
                                 <label class="form-label fw-bold">Địa chỉ trụ sở</label>
-                                <input type="text" class="form-control" value="123 Đường Nguyễn Văn Cừ, Quận 5, TP.HCM">
+                                <input type="text" class="form-control" th:field="*{address}">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Số điện thoại liên hệ</label>
-                                <input type="tel" class="form-control" value="0909123456">
+                                <input type="tel" class="form-control" th:field="*{phone}">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Website</label>
-                                <input type="url" class="form-control" value="https://phongkhamdemo.com">
+                                <input type="url" class="form-control" th:field="*{website}">
                             </div>
                             <div class="col-12">
                                 <label class="form-label fw-bold">Mô tả giới thiệu</label>
-                                <textarea class="form-control" rows="3">Phòng khám chuyên khoa mắt với trang thiết bị hiện đại...</textarea>
+                                <textarea class="form-control" rows="3" th:field="*{description}"></textarea>
                             </div>
                             <div class="col-12 text-end mt-4">
                                 <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Lưu Thay đổi</button>
@@ -148,68 +164,65 @@
                         <i class="fas fa-info-circle fa-2x me-3"></i>
                         <div>
                             <strong>Yêu cầu xác minh danh tính tổ chức:</strong><br>
-                            Vui lòng tải lên các tài liệu pháp lý (Giấy phép kinh doanh, Giấy phép hoạt động khám chữa bệnh) để mở khóa đầy đủ tính năng.
+                            Vui lòng tải lên các tài liệu pháp lý để mở khóa đầy đủ tính năng.
                         </div>
                     </div>
 
-                    <form>
+                    <form th:action="@{/clinic/settings/verify}" method="post" enctype="multipart/form-data">
                         <div class="mb-4">
-                            <label class="form-label fw-bold">1. Giấy phép Đăng ký Kinh doanh (Business License)</label>
-                            <input type="file" class="form-control" accept=".pdf,.jpg,.png">
+                            <label class="form-label fw-bold">1. Giấy phép Đăng ký Kinh doanh</label>
+                            <input type="file" name="file1" class="form-control" accept=".pdf,.jpg,.png">
                             <div class="form-text">Định dạng PDF, JPG hoặc PNG. Tối đa 5MB.</div>
                         </div>
 
                         <div class="mb-4">
                             <label class="form-label fw-bold">2. Chứng chỉ Hành nghề Y / Giấy phép Hoạt động</label>
-                            <input type="file" class="form-control" accept=".pdf,.jpg,.png">
+                            <input type="file" name="file2" class="form-control" accept=".pdf,.jpg,.png">
                         </div>
 
                         <div class="mb-4">
                             <label class="form-label fw-bold">3. Mã số Thuế (Tax ID)</label>
-                            <input type="text" class="form-control" placeholder="Nhập mã số thuế...">
+                            <input type="text" name="taxId" class="form-control" th:value="${clinicProfile.taxId}" placeholder="Nhập mã số thuế...">
                         </div>
 
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <button type="button" class="btn btn-success px-4"><i class="fas fa-upload me-2"></i>Gửi Hồ sơ Xác minh</button>
+                            <button type="submit" class="btn btn-success px-4"><i class="fas fa-upload me-2"></i>Gửi Hồ sơ Xác minh</button>
                         </div>
                     </form>
 
                     <hr class="my-4">
                     
-                    <h6 class="fw-bold mb-3">Lịch sử Gửi hồ sơ</h6>
-                    <table class="table table-bordered table-sm text-center">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Ngày gửi</th>
-                                <th>Tài liệu</th>
-                                <th>Trạng thái</th>
-                                <th>Ghi chú từ Admin</th>
-                            </tr>
-                        </thead>
+                    <h6 class="fw-bold mb-3">Thông tin hồ sơ đã lưu</h6>
+                    <table class="table table-bordered table-sm">
                         <tbody>
                             <tr>
-                                <td>10/12/2025</td>
-                                <td>GPKD_BanSao.pdf</td>
-                                <td><span class="badge bg-warning text-dark">Đang duyệt</span></td>
-                                <td>-</td>
+                                <th class="bg-light w-25">Mã số thuế</th>
+                                <td th:text="${clinicProfile.taxId != null ? clinicProfile.taxId : 'Chưa cập nhật'}"></td>
+                            </tr>
+                            <tr>
+                                <th class="bg-light">Trạng thái</th>
+                                <td class="fw-bold" 
+                                    th:classappend="${clinicProfile.verificationStatus == 'VERIFIED' ? 'text-success' : 'text-warning'}"
+                                    th:text="${clinicProfile.verificationStatus}">
+                                </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
 
                 <div class="tab-pane fade" id="security">
-                    <form>
+                    <form th:action="@{/clinic/settings/password}" method="post">
                         <div class="mb-3">
                             <label class="form-label fw-bold">Mật khẩu hiện tại</label>
-                            <input type="password" class="form-control">
+                            <input type="password" name="currentPass" class="form-control" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Mật khẩu mới</label>
-                            <input type="password" class="form-control">
+                            <input type="password" name="newPass" class="form-control" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Xác nhận mật khẩu mới</label>
-                            <input type="password" class="form-control">
+                            <input type="password" class="form-control" required>
                         </div>
                         <button type="submit" class="btn btn-danger">Đổi Mật khẩu</button>
                     </form>
