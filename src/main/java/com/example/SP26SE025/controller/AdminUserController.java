@@ -1,9 +1,15 @@
-package com.example.genderhealthcare.controller;
+// package com.example.genderhealthcare.controller;
 
-import com.example.genderhealthcare.dtos.UserUpdateRequest;
-import com.example.genderhealthcare.entity.Role;
-import com.example.genderhealthcare.entity.User;
-import com.example.genderhealthcare.repository.UserRepository;
+// import com.example.genderhealthcare.dtos.UserUpdateRequest;
+// import com.example.genderhealthcare.entity.Role;
+// import com.example.genderhealthcare.entity.User;
+// import com.example.genderhealthcare.repository.UserRepository;
+package com.example.SP26SE025.controller;
+
+import com.example.SP26SE025.dtos.UserProfileDTO;
+import com.example.SP26SE025.entity.Role;
+import com.example.SP26SE025.entity.User;
+import com.example.SP26SE025.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +42,7 @@ public class AdminUserController {
  @PutMapping("/{id}")
 public ResponseEntity<?> updateUser(
         @PathVariable Long id,
-        @RequestBody UserUpdateRequest req) {
+        @RequestBody UserProfileDTO req) {
 
     User u = userRepository.findById(id).orElseThrow();
 
