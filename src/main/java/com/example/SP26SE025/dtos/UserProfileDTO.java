@@ -11,8 +11,7 @@ public class UserProfileDTO {
     private String email;
     private String avatarPath;  // Đường dẫn ảnh đại diện
     
-    
-    @Pattern(regexp = "^(0[0-9]{9})?$", message = "Số điện thoại phải đúng 10 ký tự, bắt đầu bằng số 0")
+    @Pattern(regexp = "^$|^0[0-9]{9}$", message = "Số điện thoại phải đúng 10 ký tự, bắt đầu bằng số 0 (hoặc để trống)")
     private String phone;
     
     
