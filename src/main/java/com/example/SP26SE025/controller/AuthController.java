@@ -53,6 +53,7 @@ public class AuthController {
             String role = userDetails.getAuthorities().iterator().next().getAuthority().replace("ROLE_", "");
 
             return switch (role) {
+                case "ADMIN" -> "redirect:/admin/home";
                 case "CUSTOMER" -> "redirect:/customer/home";
                 case "CLINIC" -> "redirect:/clinic/home";
                 case "DOCTOR" -> "redirect:/doctor/dashboard";

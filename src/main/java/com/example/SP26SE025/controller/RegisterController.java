@@ -56,6 +56,7 @@ public class RegisterController {
         }
 
         // Thiết lập thông tin mặc định cho user mới
+        user.setUsername(user.getEmail());  // Dùng email làm username
         user.setPassword(passwordEncoder.encode(user.getPassword()));  // ĐÃ SỬA DÒNG NÀY
         user.setRole(Role.CUSTOMER);
         user.setEnabled(true);
