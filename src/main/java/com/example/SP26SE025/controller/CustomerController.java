@@ -129,6 +129,12 @@ public class CustomerController {
         return "redirect:/customer/profile?success";
     }
 
+    // GET handler để redirect nếu access trực tiếp
+    @GetMapping("/customer/profile/update")
+    public String getUpdateProfile() {
+        return "redirect:/customer/profile";
+    }
+
     /**
      * Upload avatar file
      */
