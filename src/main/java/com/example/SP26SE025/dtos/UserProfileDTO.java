@@ -11,11 +11,11 @@ public class UserProfileDTO {
     private String email;
     private String avatarPath;  // Đường dẫn ảnh đại diện
     
-    @NotBlank(message = "Số điện thoại không được để trống")
-    @Pattern(regexp = "^0[0-9]{9}$", message = "Số điện thoại phải đúng 10 ký tự, bắt đầu bằng số 0")
+    
+    @Pattern(regexp = "^(0[0-9]{9})?$", message = "Số điện thoại phải đúng 10 ký tự, bắt đầu bằng số 0")
     private String phone;
     
-    @Past(message = "Ngày sinh phải là ngày trong quá khứ")
+    
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dob;           // Ngày sinh - optional
     

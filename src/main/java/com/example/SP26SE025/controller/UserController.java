@@ -22,7 +22,7 @@ public class UserController {
     public String listUsers(Model model) {
         List<User> users = userService.findAll();
         model.addAttribute("users", users);
-        return "admin/userManager/listUser";
+        return "admin/users";
     }
 
 
