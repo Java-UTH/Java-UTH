@@ -12,7 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.ui.Model;
 import com.example.SP26SE025.security.CustomUserDetails;
 import com.example.SP26SE025.security.JwtUtil;
 import com.example.SP26SE025.service.CustomUserDetailsService;
@@ -36,8 +36,59 @@ public class AdminController {
 
     @GetMapping("/admin/home")
     public String home() {
-        return "admin/home";
+        return "admin/dashboard";
     }
+    @GetMapping("/admin/users")
+    public String users(Model model) {
+        model.addAttribute("title", "Users Management");
+        model.addAttribute("content", "admin/users :: content");
+        model.addAttribute("pageCss", "/css/users.css");
+        return "admin/users";
+    }
+    @GetMapping("/admin/clinics")
+    public String clinics(Model model) {
+        model.addAttribute("title", "Clinics Management");
+        model.addAttribute("content", "admin/clinics :: content");
+        model.addAttribute("pageCss", "/css/clinics.css");
+        return "admin/clinics";
+    }
+
+    // ================= DOCTORS =================
+    @GetMapping("/admin/doctors")
+    public String doctors(Model model) {
+        model.addAttribute("title", "Doctors Management");
+        model.addAttribute("content", "admin/doctors :: content");
+        model.addAttribute("pageCss", "/css/doctors.css");
+        return "admin/doctors";
+    }
+
+    // ================= PACKAGES =================
+    @GetMapping("/admin/packages")
+    public String packages(Model model) {
+        model.addAttribute("title", "Service Packages");
+        model.addAttribute("content", "admin/packages :: content");
+        model.addAttribute("pageCss", "/css/packages.css");
+        return "admin/packages";
+    }
+
+    // ================= AI MANAGEMENT =================
+    @GetMapping("/admin/ai")
+    public String ai(Model model) {
+        model.addAttribute("title", "AI Management");
+        model.addAttribute("content", "admin/ai :: content");
+        model.addAttribute("pageCss", "/css/ai.css");
+        return "admin/ai-management";
+    }
+
+    // ================= REPORTS =================
+    @GetMapping("/admin/reports")
+    public String reports(Model model) {
+        model.addAttribute("title", "Reports");
+        model.addAttribute("content", "admin/reports :: content");
+        model.addAttribute("pageCss", "/css/reports.css");
+        return "admin/reports";
+    }
+ 
 
     @PostMapping("/authenticateAdmin")
     public String authenticate(@RequestParam String username,
