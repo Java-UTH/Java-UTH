@@ -1,7 +1,6 @@
 C:\UTH\src\main\java\com\example\SP26SE025\controller\CustomerController.java
 C:\UTH\src\main\java\com\example\SP26SE025\controller\DoctorViewController.java
 C:\UTH\src\main\java\com\example\SP26SE025\entity\User.java
-C:\UTH\src\main\java\com\example\SP26SE025\repository\ClinicRepository.java
 C:\UTH\src\main\java\com\example\SP26SE025\repository\UserRepository.java
 C:\UTH\src\main\java\com\example\SP26SE025\repository\NotificationRepository.java
 C:\UTH\src\main\java\com\example\SP26SE025\controller\AdminController.java
@@ -12,9 +11,7 @@ C:\UTH\src\main\java\com\example\SP26SE025\entity\Notification.java
 C:\UTH\src\main\java\com\example\SP26SE025\dtos\NotificationDTO.java
 C:\UTH\src\main\java\com\example\SP26SE025\controller\ClinicController.java
 C:\UTH\src\main\java\com\example\SP26SE025\entity\AnalysisRecord.java
-C:\UTH\src\main\java\com\example\SP26SE025\entity\Clinic.java
 C:\UTH\src\main\java\com\example\SP26SE025\config\DataSeeder.java
-C:\UTH\src\main\java\com\example\SP26SE025\entity\ClinicStatus.java
 C:\UTH\src\main\java\com\example\SP26SE025\service\ClinicAdminService.java
 C:\UTH\src\main\java\com\example\SP26SE025\config\SecurityConfig.java
 C:\UTH\src\main\java\com\example\SP26SE025\dtos\DoctorRegistrationDto.java
@@ -33,7 +30,7 @@ C:\UTH\src\main\java\com\example\SP26SE025\service\CustomUserDetailsService.java
 C:\UTH\src\main\java\com\example\SP26SE025\entity\Role.java
 C:\UTH\src\main\java\com\example\SP26SE025\security\CustomOAuth2UserService.java
 C:\UTH\src\main\java\com\example\SP26SE025\controller\RegisterController.java
+C:\UTH\src\main\java\com\example\SP26SE025\dtos\UserUpdateRequest.java
 C:\UTH\src\main\java\com\example\SP26SE025\service\ReportService.java
-C:\UTH\src\main\java\com\example\SP26SE025\controller\AdminClinicController.java
 C:\UTH\src\main\java\com\example\SP26SE025\controller\UserController.java
 C:\UTH\src\main\java\com\example\SP26SE025\dtos\UserProfileDTO.java
