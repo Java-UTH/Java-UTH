@@ -38,7 +38,7 @@ public class AdminController {
     public String home() {
         return "admin/dashboard";
     }
-    @GetMapping("/admin/users")
+    @GetMapping("/admin/users1")
     public String users(Model model) {
         model.addAttribute("title", "Users Management");
         model.addAttribute("content", "admin/users :: content");
