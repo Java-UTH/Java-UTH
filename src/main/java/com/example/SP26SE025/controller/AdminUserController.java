@@ -6,7 +6,7 @@
 // import com.example.genderhealthcare.repository.UserRepository;
 package com.example.SP26SE025.controller;
 
-import com.example.SP26SE025.dtos.UserProfileDTO;
+import com.example.SP26SE025.dtos.UserUpdateRequest;
 import com.example.SP26SE025.entity.Role;
 import com.example.SP26SE025.entity.User;
 import com.example.SP26SE025.repository.UserRepository;
@@ -42,7 +42,7 @@ public class AdminUserController {
  @PutMapping("/{id}")
 public ResponseEntity<?> updateUser(
         @PathVariable Long id,
-        @RequestBody UserProfileDTO req) {
+        @RequestBody UserUpdateRequest req) {
 
     User u = userRepository.findById(id).orElseThrow();
 
