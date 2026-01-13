@@ -10,7 +10,6 @@ public class UserProfileDTO {
     private String fullName;
     private String email;
     private String avatarPath;  
-    private String role;
     
     @NotBlank(message = "Số điện thoại không được để trống")
     @Pattern(regexp = "^0[0-9]{9}$", message = "Số điện thoại phải đúng 10 ký tự, bắt đầu bằng số 0")
@@ -104,15 +103,6 @@ public class UserProfileDTO {
     public void setMedicalHistory(String medicalHistory) {
         this.medicalHistory = medicalHistory;
     }
-    
-    public String getRole() {
-        return role;
-    }
-    
-    public void setRole(String role) {
-        this.role = role;
-    }
-
     @Override
     public String toString() {
         return "UserProfileDTO{" +
