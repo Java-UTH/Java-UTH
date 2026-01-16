@@ -9,14 +9,12 @@ public class UserProfileDTO {
     // 1. Khai báo các thuộc tính (Fields)
     private String fullName;
     private String email;
-    private String avatarPath;  
-    private String role;
+    private String avatarPath;  // Đường dẫn ảnh đại diện
     
-    @NotBlank(message = "Số điện thoại không được để trống")
-    @Pattern(regexp = "^0[0-9]{9}$", message = "Số điện thoại phải đúng 10 ký tự, bắt đầu bằng số 0")
+    @Pattern(regexp = "^$|^0[0-9]{9}$", message = "Số điện thoại phải đúng 10 ký tự, bắt đầu bằng số 0 (hoặc để trống)")
     private String phone;
     
-    @Past(message = "Ngày sinh phải là ngày trong quá khứ")
+    
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dob;           // Ngày sinh - optional
     
@@ -103,14 +101,6 @@ public class UserProfileDTO {
 
     public void setMedicalHistory(String medicalHistory) {
         this.medicalHistory = medicalHistory;
-    }
-    
-    public String getRole() {
-        return role;
-    }
-    
-    public void setRole(String role) {
-        this.role = role;
     }
 
     @Override

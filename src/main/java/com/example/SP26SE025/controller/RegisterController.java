@@ -55,7 +55,14 @@ public class RegisterController {
             return "register";
         }
 
+        // Kiểm tra họ tên có để trống không
+        if (user.getFullName() == null || user.getFullName().trim().isEmpty()) {
+            bindingResult.rejectValue("fullName", "error.user", "Họ và tên không được để trống!");
+            return "register";
+        }
+
         // Thiết lập thông tin mặc định cho user mới
+        user.setUsername(user.getEmail());  // Dùng email làm username
         user.setPassword(passwordEncoder.encode(user.getPassword()));  // ĐÃ SỬA DÒNG NÀY
         user.setRole(Role.CUSTOMER);
         user.setEnabled(true);

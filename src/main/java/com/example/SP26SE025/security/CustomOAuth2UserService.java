@@ -41,6 +41,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         User user = userRepository.findByEmail(email).orElseGet(() -> {
             User newUser = new User();
             newUser.setEmail(email);
+            newUser.setUsername(email);
             newUser.setFullName(name != null ? name : "User");
             newUser.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
             newUser.setRole(Role.CUSTOMER);

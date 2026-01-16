@@ -2,217 +2,366 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Gói dịch vụ & Thanh toán | Hệ thống AI Võng mạc</title>
+    <title>Quản lý Gói Dịch vụ | Hệ thống Phòng khám</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        body {
-            font-family: 'Nunito', sans-serif;
-            background: linear-gradient(to right, #f8f9fa, #e9ecef);
-            padding: 20px;
+        :root {
+            --primary-color: #4e73df;
+            --secondary-bg: #f8f9fc;
+            --text-color: #5a5c69;
+            --heading-color: #2c3e50;
         }
-        .container-sub {
-            max-width: 1200px;
+        body { 
+            font-family: 'Nunito', sans-serif; 
+            background-color: var(--secondary-bg); 
+            color: var(--text-color);
+            padding-bottom: 50px;
         }
+        .container-service { max-width: 1250px; padding-top: 30px; }
         
-        /* Card Gói hiện tại */
-        .current-plan-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            overflow: hidden;
-            border-left: 5px solid #0d6efd;
+        /* Package Cards */
+        .pkg-card { 
+            background: white; 
+            border: none; 
+            border-radius: 20px; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05); 
+            overflow: hidden; 
+            position: relative; 
+            height: 100%; 
+            display: flex; flex-direction: column;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
         }
+        .pkg-card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
         
-        /* Bảng giá (Pricing Tables) */
-        .pricing-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            transition: transform 0.3s;
-            border: 1px solid #eee;
-            position: relative;
-            overflow: hidden;
+        /* Gói HOT */
+        .pkg-card.popular { 
+            border: 2px solid var(--primary-color); 
+            transform: scale(1.02);
+            z-index: 1;
         }
-        .pricing-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-            border-color: #0d6efd;
-        }
-        .pricing-header {
-            padding: 20px;
-            text-align: center;
-            background-color: #f8f9fa;
-            border-bottom: 1px solid #eee;
-        }
-        .price-tag {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #2c3e50;
-        }
-        .feature-list {
-            list-style: none;
-            padding: 20px;
-            margin: 0;
-        }
-        .feature-list li {
-            padding: 10px 0;
-            border-bottom: 1px dashed #eee;
-        }
-        .feature-list li:last-child {
-            border-bottom: none;
-        }
+        .pkg-card.popular:hover { transform: scale(1.05); }
         
-        /* Gói Nổi bật (Recommended) */
-        .pricing-card.popular {
-            border: 2px solid #0d6efd;
+        .pkg-header { 
+            padding: 25px 25px 15px; 
+            background: linear-gradient(to bottom, #ffffff, #f8f9fc);
+            border-bottom: 1px solid #eaecf4;
         }
+        .pkg-body { padding: 20px 25px 25px; flex-grow: 1; display: flex; flex-direction: column; }
+        
+        .pkg-price { 
+            font-size: 2.2rem; 
+            font-weight: 800; 
+            color: var(--heading-color); 
+            margin: 15px 0; 
+        }
+        .pkg-period { font-size: 1rem; color: #858796; font-weight: 600; }
+        
+        .feature-item { 
+            padding: 10px 0; 
+            border-bottom: 1px dashed #eaecf4; 
+            color: var(--text-color); font-size: 0.95rem; 
+        }
+        .feature-item:last-child { border-bottom: none; }
+
+        /* Badge Styles */
         .badge-popular {
             position: absolute;
-            top: 15px;
-            right: -30px;
-            background: #0d6efd;
+            top: 15px; right: 15px;
+            background: #f6c23e; color: #fff;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem; font-weight: 800;
+            box-shadow: 0 2px 5px rgba(246, 194, 62, 0.4);
+            z-index: 10;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Table Section */
+        .table-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            border: none;
+            overflow: hidden;
+        }
+        .table thead th {
+            background-color: #f8f9fc;
+            color: #4e73df;
+            font-weight: 700;
+            border-bottom: 2px solid #e3e6f0;
+            padding: 15px;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+        .table tbody td { padding: 15px; vertical-align: middle; border-bottom: 1px solid #eaecf4; }
+        .table-hover tbody tr:hover { background-color: #f8f9fc; }
+        .avatar-sm { 
+            width: 40px; height: 40px; 
+            background-color: #eaecf4; 
+            border-radius: 50%; 
+            display: inline-flex; align-items: center; justify-content: center; 
+            font-weight: 700; color: #4e73df; 
+            margin-right: 15px;
+            font-size: 1rem;
+        }
+        
+        /* Buttons */
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        .btn-primary:hover {
+            background-color: #2e59d9;
+            border-color: #2653d4;
+        }
+        .btn-outline-primary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
             color: white;
-            padding: 5px 30px;
-            transform: rotate(45deg);
-            font-size: 0.8rem;
-            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
-<div class="container container-sub">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold text-primary"><i class="fas fa-credit-card me-2"></i> Gói dịch vụ & Thanh toán</h2>
-        <a th:href="@{/clinic/home}" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-1"></i> Về Dashboard</a>
-    </div>
-
-    <div class="card current-plan-card mb-5">
-        <div class="card-body p-4">
-            <div class="row align-items-center">
-                <div class="col-md-5 border-end">
-                    <h5 class="text-muted text-uppercase small mb-1">Gói dịch vụ hiện tại</h5>
-                    <div class="d-flex align-items-center mb-2">
-                        <h2 class="mb-0 fw-bold text-primary me-3">PREMIUM PLAN</h2>
-                        <span class="badge bg-success">Đang hoạt động</span>
-                    </div>
-                    <p class="text-muted mb-0"><i class="far fa-calendar-alt me-2"></i>Ngày hết hạn: <strong>15/06/2026</strong> (Còn 180 ngày)</p>
-                </div>
-                
-                <div class="col-md-7 ps-md-5">
-                    <div class="d-flex justify-content-between mb-2">
-                        <span class="fw-bold">Mức sử dụng Phân tích AI</span>
-                        <span class="fw-bold text-primary">1,250 / 5,000 Ảnh</span>
-                    </div>
-                    <div class="progress" style="height: 25px; border-radius: 12px; background-color: #e9ecef;">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" 
-                             role="progressbar" 
-                             style="width: 25%;" 
-                             aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
-                    </div>
-                    <p class="text-muted small mt-2 mb-0">Bạn còn có thể tải lên và phân tích <strong>3,750</strong> ảnh nữa trong kỳ này.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <h4 class="fw-bold mb-4 text-center">Gia hạn hoặc Nâng cấp Gói dịch vụ</h4>
+<div class="container container-service">
     
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <h3 class="fw-bold text-dark mb-1"><i class="fas fa-cubes me-2 text-primary"></i>Quản lý Dịch vụ</h3>
+            <p class="text-muted small mb-0">Thiết lập các gói khám & Theo dõi bệnh nhân đăng ký</p>
+        </div>
+        <div>
+            <!-- <button class="btn btn-primary rounded-pill px-4 shadow-sm fw-bold me-2" onclick="openCreateModal()">
+                <i class="fas fa-plus me-2"></i>Thêm Gói Mới
+            </button> -->
+            <a th:href="@{/clinic/home}" class="btn btn-white border shadow-sm rounded-pill px-4 fw-bold text-secondary bg-white">
+                <i class="fas fa-arrow-left me-2"></i>Dashboard
+            </a>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-end mb-4">
+        <h4 class="fw-bold text-gray-800 m-0 border-start border-4 border-primary ps-3">Danh mục Gói khám</h4>
+    </div>
+
     <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
-        
-        <div class="col">
-            <div class="card pricing-card h-100">
-                <div class="pricing-header">
-                    <h4 class="fw-bold text-muted">BASIC</h4>
-                    <div class="price-tag">500k<span class="fs-6 text-muted fw-normal">/tháng</span></div>
+        <div class="col" th:each="pkg : ${packages}">
+            <div class="pkg-card" th:classappend="${pkg.popular} ? 'popular' : ''">
+                
+                <div class="badge-popular" th:if="${pkg.popular}">
+                    <i class="fas fa-star me-1"></i>POPULAR
                 </div>
-                <ul class="feature-list text-center">
-                    <li><i class="fas fa-check text-success me-2"></i><strong>500</strong> Ảnh phân tích/tháng</li>
-                    <li><i class="fas fa-check text-success me-2"></i>Hỗ trợ qua Email</li>
-                    <li><i class="fas fa-check text-success me-2"></i>Báo cáo cơ bản</li>
-                    <li class="text-muted text-decoration-line-through">Cảnh báo rủi ro tức thì</li>
-                </ul>
-                <div class="card-body text-center mt-auto">
-                    <button class="btn btn-outline-primary rounded-pill px-4">Chọn Gói này</button>
-                </div>
-            </div>
-        </div>
 
-        <div class="col">
-            <div class="card pricing-card popular h-100">
-                <div class="badge-popular">KHUYÊN DÙNG</div>
-                <div class="pricing-header bg-primary text-white">
-                    <h4 class="fw-bold">STANDARD</h4>
-                    <div class="price-tag text-white">1.5 Triệu<span class="fs-6 text-white-50 fw-normal">/tháng</span></div>
+                <div class="pkg-header text-center">
+                    <div class="mb-2">
+                        <span class="badge rounded-pill px-3 py-2" 
+                              th:classappend="${pkg.active} ? 'bg-light text-primary border' : 'bg-danger bg-opacity-10 text-danger'"
+                              th:text="${pkg.active} ? 'Đang hoạt động' : 'Đã ẩn'">
+                        </span>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-0" th:text="${pkg.packageName}">Gói Cơ Bản</h5>
+                    <div class="pkg-price">
+                        <span th:text="${#numbers.formatDecimal(pkg.price, 0, 'COMMA', 0, 'POINT')}">0</span>
+                        <span class="fs-6 fw-normal text-muted">đ</span>
+                        <span class="pkg-period" th:text="${pkg.period}">/lần</span>
+                    </div>
                 </div>
-                <ul class="feature-list text-center">
-                    <li><i class="fas fa-check text-success me-2"></i><strong>2,000</strong> Ảnh phân tích/tháng</li>
-                    <li><i class="fas fa-check text-success me-2"></i>Hỗ trợ ưu tiên 24/7</li>
-                    <li><i class="fas fa-check text-success me-2"></i>Báo cáo & Thống kê chi tiết</li>
-                    <li><i class="fas fa-check text-success me-2"></i>Cảnh báo rủi ro (FR-29)</li>
-                </ul>
-                <div class="card-body text-center mt-auto">
-                    <button class="btn btn-primary btn-lg rounded-pill px-5 shadow">Nâng cấp Ngay</button>
-                </div>
-            </div>
-        </div>
 
-        <div class="col">
-            <div class="card pricing-card h-100" style="background-color: #f8f9fa; border-style: dashed;">
-                <div class="pricing-header bg-transparent">
-                    <h4 class="fw-bold text-dark">PREMIUM</h4>
-                    <div class="price-tag">3 Triệu<span class="fs-6 text-muted fw-normal">/tháng</span></div>
-                </div>
-                <ul class="feature-list text-center">
-                    <li><i class="fas fa-check text-success me-2"></i><strong>5,000+</strong> Ảnh phân tích/tháng</li>
-                    <li><i class="fas fa-check text-success me-2"></i>Tất cả tính năng Standard</li>
-                    <li><i class="fas fa-check text-success me-2"></i>API tích hợp riêng</li>
-                    <li><i class="fas fa-check text-success me-2"></i>Tư vấn chuyên gia 1-1</li>
-                </ul>
-                <div class="card-body text-center mt-auto">
-                    <button class="btn btn-secondary rounded-pill px-4" disabled>Gói hiện tại của bạn</button>
-                    <div class="mt-2"><a href="#" class="small text-primary">Gia hạn thêm 1 năm?</a></div>
+                <div class="pkg-body">
+                    <ul class="list-unstyled mb-4 mt-2">
+                        <li class="feature-item d-flex align-items-start" th:each="feature : ${pkg.featureList}">
+                            <i class="fas fa-check-circle text-success mt-1 me-3"></i>
+                            <span th:text="${feature}">Tính năng</span>
+                        </li>
+                    </ul>
+                    
+                    <div class="mt-auto row g-2">
+                        <div class="col-8">
+                            <button class="btn btn-outline-primary w-100 rounded-pill fw-bold py-2"
+                                    th:onclick="editPackage([[${pkg.id}]], [[${pkg.packageName}]], [[${pkg.price}]], [[${pkg.period}]], [[${pkg.features}]], [[${pkg.popular}]])">
+                                <i class="fas fa-edit me-1"></i> Chỉnh sửa
+                            </button>
+                        </div>
+                        <div class="col-4">
+                            <a class="btn w-100 rounded-pill border py-2 d-flex align-items-center justify-content-center" 
+                               th:classappend="${pkg.active} ? 'btn-white text-danger hover-danger' : 'btn-success text-white'"
+                               th:href="@{'/clinic/subscription/toggle/' + ${pkg.id}}"
+                               th:title="${pkg.active} ? 'Ngừng cung cấp' : 'Kích hoạt lại'">
+                                <i class="fas" th:classappend="${pkg.active} ? 'fa-eye-slash' : 'fa-check'"></i>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="card shadow-sm">
-        <div class="card-header bg-white fw-bold">
-            <i class="fas fa-history me-2"></i> Lịch sử Giao dịch
+    <div class="card table-card mb-5">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-bottom-0">
+            <h5 class="m-0 fw-bold text-primary"><i class="fas fa-list me-2"></i>Lịch sử Đăng ký gần đây</h5>
+            <div class="input-group shadow-sm" style="width: 300px;">
+                <input type="text" class="form-control bg-light border-0 small" placeholder="Tìm kiếm bệnh nhân...">
+                <button class="btn btn-primary" type="button"><i class="fas fa-search"></i></button>
+            </div>
         </div>
         <div class="card-body p-0">
-            <table class="table table-striped mb-0">
-                <thead>
-                    <tr>
-                        <th>Mã GD</th>
-                        <th>Ngày</th>
-                        <th>Gói dịch vụ</th>
-                        <th>Số tiền</th>
-                        <th>Trạng thái</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>TXN-882910</td>
-                        <td>15/06/2025</td>
-                        <td>Gia hạn Premium (1 năm)</td>
-                        <td>30.000.000 đ</td>
-                        <td><span class="badge bg-success">Thành công</span></td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="table table-hover mb-0 align-middle">
+                    <thead>
+                        <tr>
+                            <th class="ps-4">Bệnh nhân</th>
+                            <th>Gói đăng ký</th>
+                            <th>Ngày bắt đầu</th>
+                            <th>Ngày hết hạn</th>
+                            <th>Thanh toán</th>
+                            <th>Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="sub : ${subscriptions}">
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <span class="avatar-sm shadow-sm" th:text="${#strings.substring(sub.user.fullName, 0, 1)}">A</span>
+                                    <div>
+                                        <div class="fw-bold text-dark" th:text="${sub.user.fullName}">Nguyen Van A</div>
+                                        <div class="small text-muted" style="font-size: 0.8rem;">ID: <span th:text="${sub.user.id}">#123</span></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-10 px-3 py-2 rounded-pill fw-bold" 
+                                      th:text="${sub.planName}">Gói VIP</span>
+                            </td>
+                            <td class="text-muted small fw-bold" th:text="${#temporals.format(sub.startDate, 'dd/MM/yyyy')}"></td>
+                            <td class="text-muted small fw-bold" th:text="${#temporals.format(sub.endDate, 'dd/MM/yyyy')}"></td>
+                            <td class="fw-bold text-success">
+                                <span th:text="${#numbers.formatDecimal(sub.price, 0, 'COMMA', 0, 'POINT')}"></span> đ
+                            </td>
+                            <td>
+                                <span class="badge rounded-pill px-3 py-2" 
+                                      th:classappend="${sub.status == 'ACTIVE'} ? 'bg-success bg-opacity-75' : 'bg-secondary bg-opacity-75'" 
+                                      th:text="${sub.status == 'ACTIVE' ? 'Đang hiệu lực' : 'Hết hạn'}">
+                                </span>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(subscriptions)}">
+                            <td colspan="6" class="text-center py-5 text-muted">
+                                <div class="py-4">
+                                    <i class="fas fa-folder-open fa-3x mb-3 text-gray-300"></i>
+                                    <p class="mb-0 fw-bold">Chưa có dữ liệu đăng ký nào.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
 </div>
 
+<div class="modal fade" id="editPackageModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <form th:action="@{/clinic/subscription/update}" method="post">
+                <div class="modal-header bg-primary text-white rounded-top-4 py-3">
+                    <h5 class="modal-title fw-bold" id="modalTitle"><i class="fas fa-edit me-2"></i>Cập nhật Gói</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 bg-light bg-opacity-50">
+                    <input type="hidden" id="pkgId" name="id">
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-secondary small text-uppercase">Tên gói dịch vụ</label>
+                        <input type="text" class="form-control form-control-lg border-0 shadow-sm" id="pkgName" name="packageName" required placeholder="VD: Gói Cơ Bản">
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-7 mb-3">
+                            <label class="form-label fw-bold text-secondary small text-uppercase">Giá tiền (VNĐ)</label>
+                            <div class="input-group shadow-sm">
+                                <input type="number" class="form-control form-control-lg border-0" id="pkgPrice" name="price" required>
+                                <span class="input-group-text border-0 bg-white fw-bold">đ</span>
+                            </div>
+                        </div>
+                        <div class="col-md-5 mb-3">
+                            <label class="form-label fw-bold text-secondary small text-uppercase">Chu kỳ</label>
+                            <input type="text" class="form-control form-control-lg border-0 shadow-sm" id="pkgPeriod" name="period" placeholder="/ lần">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-secondary small text-uppercase">Quyền lợi (Ngăn cách bằng dấu | )</label>
+                        <textarea class="form-control border-0 shadow-sm" id="pkgFeatures" name="features" rows="4" 
+                                  placeholder="Khám tổng quát | Soi đáy mắt | Tư vấn AI..."></textarea>
+                    </div>
+                    
+                    <div class="form-check form-switch p-3 bg-white rounded-3 shadow-sm border">
+                        <input type="hidden" id="pkgPopularHidden" name="popular">
+                        
+                        <input class="form-check-input" type="checkbox" id="pkgPopular" 
+                               onchange="document.getElementById('pkgPopularHidden').value = this.checked"
+                               style="cursor: pointer;">
+                               
+                        <label class="form-check-label fw-bold ms-2 text-dark" for="pkgPopular" style="cursor: pointer;">
+                            Đánh dấu là Gói Phổ Biến (HOT)
+                        </label>
+                    </div>
+
+                </div>
+                <div class="modal-footer border-0 pt-0 bg-light bg-opacity-50 pb-4 pe-4">
+                    <button type="button" class="btn btn-light rounded-pill px-4 fw-bold text-secondary" data-bs-dismiss="modal">Hủy bỏ</button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm fw-bold"><i class="fas fa-save me-2"></i>Lưu thay đổi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    function editPackage(id, name, price, period, features, isPopular) {
+        document.getElementById('pkgId').value = id;
+        document.getElementById('pkgName').value = name;
+        document.getElementById('pkgPrice').value = price;
+        document.getElementById('pkgPeriod').value = period;
+        document.getElementById('pkgFeatures').value = features;
+        
+        // --- LOGIC ĐỒNG BỘ CHECKBOX ---
+        // 1. Cập nhật giao diện (checked/unchecked)
+        document.getElementById('pkgPopular').checked = isPopular;
+        // 2. Cập nhật giá trị thực gửi đi (true/false)
+        document.getElementById('pkgPopularHidden').value = isPopular;
+        
+        document.getElementById('modalTitle').innerHTML = '<i class="fas fa-edit me-2"></i>Cập nhật Gói Dịch vụ';
+        new bootstrap.Modal(document.getElementById('editPackageModal')).show();
+    }
+
+    function openCreateModal() {
+        document.getElementById('pkgId').value = ""; 
+        document.getElementById('pkgName').value = "";
+        document.getElementById('pkgPrice').value = "";
+        document.getElementById('pkgPeriod').value = "";
+        document.getElementById('pkgFeatures').value = "";
+        
+        // --- RESET CHECKBOX ---
+        document.getElementById('pkgPopular').checked = false;
+        document.getElementById('pkgPopularHidden').value = "false";
+        
+        document.getElementById('modalTitle').innerHTML = '<i class="fas fa-plus-circle me-2"></i>Thêm Mới Gói Dịch vụ';
+        new bootstrap.Modal(document.getElementById('editPackageModal')).show();
+    }
+</script>
 
 </body>
 </html>
