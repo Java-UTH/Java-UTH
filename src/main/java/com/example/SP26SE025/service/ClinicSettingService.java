@@ -25,7 +25,6 @@ public class ClinicSettingService {
         if (existingProfile.isPresent()) {
             return existingProfile.get();
         } else {
-            // Nếu chưa có (ví dụ lần đầu vào bằng clinic@example.com) -> TẠO MỚI LUÔN
             ClinicProfile newProfile = new ClinicProfile();
             newProfile.setUsernameLink(username);
             newProfile.setClinicName("Phòng khám Mới"); // Tên mặc định
