@@ -18,20 +18,20 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    // @GetMapping
-    // public String listUsers(Model model) {
-    //     List<User> users = userService.findAll();
-    //     model.addAttribute("users", users);
-    //     return "admin/users";
-    // }
+    @GetMapping
+    public String listUsers(Model model) {
+        List<User> users = userService.findAll();
+        model.addAttribute("users", users);
+        return "admin/users";
+    }
 
 
-    // @GetMapping("/new")
-    // public String showCreateForm(Model model) {
-    //     model.addAttribute("user", new User());
-    //     model.addAttribute("roles", Role.values());
-    //     return "admin/userManager/newUserForm";
-    // }
+    @GetMapping("/new")
+    public String showCreateForm(Model model) {
+        model.addAttribute("user", new User());
+        model.addAttribute("roles", Role.values());
+        return "admin/userManager/newUserForm";
+    }
 
     @PostMapping
     public String updateUser(@ModelAttribute User updatedUser) {
