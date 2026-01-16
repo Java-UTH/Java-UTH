@@ -3,7 +3,11 @@ package com.example.SP26SE025.controller;
 import com.example.SP26SE025.dtos.NotificationDTO;
 import com.example.SP26SE025.dtos.UserProfileDTO;
 import com.example.SP26SE025.entity.Notification;
+import com.example.SP26SE025.entity.ServicePackage;
+import com.example.SP26SE025.entity.Subscription; // Import Subscription Entity
 import com.example.SP26SE025.entity.User;
+import com.example.SP26SE025.repository.ServicePackageRepository;
+import com.example.SP26SE025.repository.SubscriptionRepository; // Import Subscription Repository
 import com.example.SP26SE025.service.NotificationService;
 import com.example.SP26SE025.service.UserService;
 import jakarta.validation.Valid;
@@ -18,10 +22,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.security.Principal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalDateTime; // Import thời gian
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -38,6 +40,13 @@ public class CustomerController {
     @Autowired
     private com.example.SP26SE025.repository.UserRepository userRepository;
 
+    @Autowired
+    private ServicePackageRepository packageRepository;
+
+    // 1. Inject SubscriptionRepository để lưu lịch sử mua
+    @Autowired
+    private SubscriptionRepository subscriptionRepository;
+
     // --- 1. DASHBOARD ---
     @GetMapping("/customer/home")
     public String customerHome(Model model, Principal principal) {
@@ -50,23 +59,18 @@ public class CustomerController {
         return "customer/home"; 
     }
 
-    // --- 2. [FR-8] QUẢN LÝ HỒ SƠ ---
+    // --- 2. QUẢN LÝ HỒ SƠ ---
     @GetMapping("/customer/profile")
     public String showProfile(Model model) {
-        // Lấy user hiện tại từ Security Context
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String email = auth.getName();
-        
-        User user = userService.findByEmail(email);
+        User user = userService.findByEmail(auth.getName());
         
         if (user == null) {
-            // Nếu không tìm thấy user, sử dụng dữ liệu mặc định
             user = new User();
             user.setFullName("Người dùng mới");
-            user.setEmail(email);
+            user.setEmail(auth.getName());
         }
 
-        // Chuyển đổi từ User Entity sang UserProfileDTO
         UserProfileDTO userProfile = new UserProfileDTO();
         userProfile.setFullName(user.getFullName());
         userProfile.setEmail(user.getEmail());
@@ -84,32 +88,24 @@ public class CustomerController {
     @PostMapping("/customer/profile/update")
     public String updateProfile(@Valid @ModelAttribute UserProfileDTO userProfile, BindingResult result, Model model,
                                @RequestParam(value = "avatarFile", required = false) MultipartFile avatarFile) {
-        // Kiểm tra lỗi validation
         if (result.hasErrors()) {
-            System.out.println(">>> Validation errors: " + result.getErrorCount());
             model.addAttribute("userProfile", userProfile);
             return "customer/profile";
         }
 
-        // Lấy user hiện tại từ Security Context
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String email = auth.getName();
-        
-        User user = userService.findByEmail(email);
+        User user = userService.findByEmail(auth.getName());
         
         if (user != null) {
-            // Xử lý upload avatar nếu có
             if (avatarFile != null && !avatarFile.isEmpty()) {
                 try {
                     String avatarPath = uploadAvatar(avatarFile, user.getId());
                     user.setAvatarPath(avatarPath);
-                    System.out.println(">>> Avatar uploaded: " + avatarPath);
                 } catch (Exception e) {
-                    System.out.println(">>> LỖI upload avatar: " + e.getMessage());
+                    System.out.println("Lỗi upload avatar: " + e.getMessage());
                 }
             }
 
-            // Cập nhật thông tin từ DTO sang Entity
             user.setFullName(userProfile.getFullName());
             user.setPhoneNumber(userProfile.getPhone());
             user.setDob(userProfile.getDob());
@@ -117,15 +113,8 @@ public class CustomerController {
             user.setHypertension(userProfile.getHypertension());
             user.setMedicalHistory(userProfile.getMedicalHistory());
             
-            // Lưu vào database - gọi updateProfile với userId
             userService.updateProfile(user.getId(), user);
-            
-            System.out.println(">>> Đã cập nhật profile cho user: " + email);
-        } else {
-            System.out.println(">>> LỖI: Không tìm thấy user để cập nhật: " + email);
         }
-        
-        // Quay lại trang profile kèm thông báo thành công
         return "redirect:/customer/profile?success";
     }
 
@@ -135,98 +124,94 @@ public class CustomerController {
         return "redirect:/customer/profile";
     }
 
-    /**
-     * Upload avatar file
-     */
     private String uploadAvatar(MultipartFile file, Long userId) throws Exception {
-        // Lưu file vào thư mục uploads trong target/classes (nơi Spring Boot chạy)
         String uploadDir = System.getProperty("user.dir") + "/target/classes/static/images/uploads";
         File uploadFolder = new File(uploadDir);
+        if (!uploadFolder.exists()) uploadFolder.mkdirs();
+
+        String originalFilename = file.getOriginalFilename();
+        String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+        String newFilename = userId + "_" + UUID.randomUUID().toString() + fileExtension;
         
-        System.out.println(">>> Uploading to: " + uploadDir);
+        File destFile = new File(uploadDir, newFilename);
+        file.transferTo(destFile);
         
-        if (!uploadFolder.exists()) {
-            boolean created = uploadFolder.mkdirs();
-            System.out.println(">>> Upload folder created: " + created);
-        }
-
-        // Kiểm tra loại file
-        String contentType = file.getContentType();
-        if (contentType == null || !contentType.startsWith("image/")) {
-            throw new Exception("File phải là ảnh");
-        }
-
-        // Kiểm tra kích thước file
-        if (file.getSize() > 10 * 1024 * 1024) { // 10MB
-            throw new Exception("File quá lớn, tối đa 10MB");
-        }
-
-        try {
-            // Tạo tên file unique
-            String originalFilename = file.getOriginalFilename();
-            if (originalFilename == null || originalFilename.isEmpty()) {
-                throw new Exception("Tên file không hợp lệ");
-            }
-            
-            String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
-            String newFilename = userId + "_" + UUID.randomUUID().toString() + fileExtension;
-            
-            // Lưu file
-            File destFile = new File(uploadDir, newFilename);
-            file.transferTo(destFile);
-            
-            System.out.println(">>> Avatar saved: " + newFilename);
-            
-            // Trả về đường dẫn tương đối để hiển thị
-            return "/images/uploads/" + newFilename;
-        } catch (Exception e) {
-            System.out.println(">>> ERROR uploading file: " + e.getMessage());
-            e.printStackTrace();
-            throw new Exception("Lỗi upload ảnh: " + e.getMessage());
-        }
+        return "/images/uploads/" + newFilename;
     }
 
-    // --- 3. [FR-9] THÔNG BÁO ---
+    // --- 3. THÔNG BÁO ---
     @GetMapping("/customer/notifications")
     public String showNotifications(Model model) {
-        // Lấy user hiện tại từ Security Context
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String email = auth.getName();
-        
-        User user = userService.findByEmail(email);
+        User user = userService.findByEmail(auth.getName());
         
         if (user != null) {
-            // Lấy tất cả notifications từ database
             List<Notification> notifs = notificationService.getAllNotifications(user);
-            
-            // Chuyển đổi Entity sang DTO để hiển thị
             List<NotificationDTO> notifDTOs = notifs.stream()
-                .map(notif -> new NotificationDTO(
-                    notif.getTitle(),
-                    notif.getMessage(),
-                    notif.getType(),
-                    notif.getCreatedAt(),
-                    notif.isRead()
-                ))
+                .map(notif -> new NotificationDTO(notif.getTitle(), notif.getMessage(), notif.getType(), notif.getCreatedAt(), notif.isRead()))
                 .collect(Collectors.toList());
-            
             model.addAttribute("notifications", notifDTOs);
         } else {
             model.addAttribute("notifications", new ArrayList<>());
         }
-        
         return "customer/notifications";
     }
     
-    // --- Các trang Placeholder khác ---
+    // ==========================================
+    // --- 4. GÓI DỊCH VỤ (PACKAGES) - ĐÃ CẬP NHẬT ---
+    // ==========================================
+
+    @GetMapping("/customer/packages")
+    public String showPackagesPage(Model model) {
+        // Lấy danh sách gói ĐANG HOẠT ĐỘNG từ DB và truyền vào Model
+        model.addAttribute("packages", packageRepository.findByIsActiveTrue());
+        return "customer/packages"; 
+    }
+
+    // --- XỬ LÝ MUA GÓI ---
+    @GetMapping("/customer/packages/buy")
+    public String buyPackage(@RequestParam(name = "planId") Long planId) {
+        
+        // 1. Lấy User hiện tại
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = userService.findByEmail(auth.getName());
+
+        // 2. Lấy thông tin Gói
+        ServicePackage pkg = packageRepository.findById(planId).orElse(null);
+
+        if (currentUser != null && pkg != null) {
+            // 3. Tạo bản ghi Đăng ký (Subscription)
+            Subscription sub = new Subscription();
+            sub.setUser(currentUser);
+            sub.setPlanName(pkg.getPackageName()); // Lưu tên gói tại thời điểm mua
+            sub.setPrice(pkg.getPrice());          // Lưu giá tại thời điểm mua
+            sub.setStartDate(LocalDateTime.now());
+            sub.setStatus("ACTIVE"); 
+
+            // Tính ngày hết hạn (Ví dụ đơn giản: Gói năm thì +1 năm, còn lại +1 tháng)
+            if (pkg.getPeriod() != null && pkg.getPeriod().toLowerCase().contains("năm")) {
+                sub.setEndDate(LocalDateTime.now().plusYears(1));
+            } else {
+                sub.setEndDate(LocalDateTime.now().plusMonths(1));
+            }
+
+            // 4. Lưu vào DB
+            subscriptionRepository.save(sub);
+            
+            System.out.println(">>> Đã lưu đăng ký thành công cho: " + currentUser.getFullName());
+        }
+
+        return "redirect:/customer/home?success=bought";
+    }
+
+    // --- 5. CÁC TRANG PLACEHOLDER & REDIRECT ---
     @GetMapping("/customer/reports/analysis")
     public String showAnalysis(Model model) { 
         model.addAttribute("historyList", new ArrayList<>());
         return "customer/analysis_report"; 
     }
     
-    // Điều hướng tạm các link chưa làm để không lỗi 404
-    @GetMapping({"/customer/upload", "/customer/doctor-chat", "/customer/packages", "/test-services/customer"})
+    @GetMapping({"/customer/upload", "/customer/doctor-chat", "/test-services/customer"})
     public String temporaryRedirect() {
         return "redirect:/customer/home";
     }
