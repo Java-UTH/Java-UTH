@@ -31,5 +31,3 @@ public class UserUpdateRequest {
         this.role = role;
     }
 }
-
-
