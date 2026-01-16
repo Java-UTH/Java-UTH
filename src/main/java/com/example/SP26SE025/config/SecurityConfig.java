@@ -114,6 +114,8 @@ public class SecurityConfig {
                 .failureUrl("/login?error=true")
                 .permitAll()
             )
+
+            /////////
             
              .oauth2Login(oauth2 -> oauth2
                  .loginPage("/login")
@@ -127,7 +129,12 @@ public class SecurityConfig {
                      response.sendRedirect("/login?oauth2_error=true");
                  })
              )
+
+             //////////
            
+
+
+             /////////
             .logout(logout -> logout
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout=true")
