@@ -2,7 +2,11 @@ package com.example.SP26SE025.controller;
 
 import com.example.SP26SE025.dtos.DoctorRegistrationDto;
 import com.example.SP26SE025.entity.ClinicProfile;
+import com.example.SP26SE025.entity.ServicePackage; // [QUAN TRỌNG] Nhớ import Entity này
+import com.example.SP26SE025.entity.Subscription;
 import com.example.SP26SE025.entity.User;
+import com.example.SP26SE025.repository.ServicePackageRepository;
+import com.example.SP26SE025.repository.SubscriptionRepository;
 import com.example.SP26SE025.service.ClinicAdminService;
 import com.example.SP26SE025.service.ClinicSettingService; 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException; 
+import java.util.List;
 
 @Controller
 @RequestMapping("/clinic")
@@ -24,6 +29,12 @@ public class ClinicController {
 
     @Autowired
     private ClinicSettingService clinicSettingService;
+
+    @Autowired
+    private ServicePackageRepository packageRepository;
+
+    @Autowired
+    private SubscriptionRepository subscriptionRepository;
 
     // --- CÁC TRANG CƠ BẢN ---
     @GetMapping("/home")
@@ -41,13 +52,13 @@ public class ClinicController {
         return "clinic/report_tracking";
     }
 
-    @GetMapping("/reports/summary")
-    public String showStatistics() {
-        return "clinic/statistics";
-    }
+    // @GetMapping("/reports/summary")
+    // public String showStatistics() {
+    //     return "clinic/statistics";
+    // }
 
     // ========================================================================
-    // [FR-23] QUẢN LÝ TÀI KHOẢN (BÁC SĨ / BỆNH NHÂN)
+    // QUẢN LÝ TÀI KHOẢN (BÁC SĨ / BỆNH NHÂN)
     // ========================================================================
     
     @GetMapping("/admin/users")
@@ -55,21 +66,15 @@ public class ClinicController {
                                  @RequestParam(value = "keyword", required = false) String keyword,
                                  @RequestParam(value = "tab", defaultValue = "doctors") String activeTab) {
         
-        // Logic: Nếu đang tìm kiếm thì tự động chuyển sang tab Bệnh nhân
         if (keyword != null && !keyword.isEmpty()) {
             activeTab = "patients";
         }
 
-        // 1. Lấy danh sách Bác sĩ
         model.addAttribute("doctorsList", clinicAdminService.getAllDoctors());
-        
-        // 2. Lấy danh sách Bệnh nhân (Có lọc theo từ khóa)
         model.addAttribute("patientsList", clinicAdminService.getAllPatients(keyword));
-        
-        // 3. Các dữ liệu phụ trợ cho giao diện
         model.addAttribute("newDoctor", new DoctorRegistrationDto());
-        model.addAttribute("keyword", keyword); // Để hiện lại chữ vừa gõ trong ô tìm kiếm
-        model.addAttribute("activeTab", activeTab); // Để biết tab nào đang sáng
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("activeTab", activeTab);
 
         return "clinic/user_management";
     }
@@ -80,14 +85,12 @@ public class ClinicController {
         return "redirect:/clinic/admin/users?success";
     }
 
-    // Xử lý Xóa User (Dùng chung cho cả Bác sĩ và Bệnh nhân)
     @GetMapping("/admin/users/delete/{id}")
     public String deleteDoctor(@PathVariable Long id) {
         clinicAdminService.deleteUser(id);
         return "redirect:/clinic/admin/users?deleted";
     }
 
-    // Xử lý Cập nhật User (Dùng chung)
     @PostMapping("/admin/users/update")
     public String updateDoctor(@ModelAttribute User user) {
         clinicAdminService.updateUser(user);
@@ -95,14 +98,72 @@ public class ClinicController {
     }
 
     // ========================================================================
-    // GÓI DỊCH VỤ (SUBSCRIPTION)
+    // QUẢN LÝ GÓI DỊCH VỤ & THỐNG KÊ (ĐÃ SỬA LỖI 404)
     // ========================================================================
     
     @GetMapping("/subscription")
-    public String showSubscriptionPage() {
+    public String showSubscriptionPage(Model model) {
+        // 1. [MỚI] Lấy danh sách gói dịch vụ để hiển thị 3 cột trên cùng
+        model.addAttribute("packages", packageRepository.findAll());
+
+        // 2. Lấy danh sách người đăng ký
+        List<Subscription> subscriptions = subscriptionRepository.findAll();
+        model.addAttribute("subscriptions", subscriptions);
+
+        // 3. Tính toán thống kê
+        long totalSubscribers = subscriptions.size();
+        double totalRevenue = subscriptions.stream()
+                .mapToDouble(sub -> sub.getPrice() != null ? sub.getPrice() : 0.0)
+                .sum();
+        long expiringSoonCount = subscriptions.stream()
+                .filter(sub -> "EXPIRING_SOON".equals(sub.getStatus())) 
+                .count();
+
+        model.addAttribute("totalSubscribers", totalSubscribers);
+        model.addAttribute("totalRevenue", totalRevenue);
+        model.addAttribute("expiringSoonCount", expiringSoonCount);
+
         return "clinic/subscription";
     }
 
+    // --- [FIX 404] HÀM XỬ LÝ LƯU GÓI DỊCH VỤ ---
+    @PostMapping("/subscription/update")
+    public String updatePackage(@RequestParam(required = false) Long id, @ModelAttribute ServicePackage pkg) {
+        
+        if (id != null) {
+            // --- TRƯỜNG HỢP SỬA (UPDATE) ---
+            ServicePackage existingPkg = packageRepository.findById(id).orElse(null);
+            if (existingPkg != null) {
+                existingPkg.setPackageName(pkg.getPackageName());
+                existingPkg.setPrice(pkg.getPrice());
+                existingPkg.setPeriod(pkg.getPeriod());
+                existingPkg.setFeatures(pkg.getFeatures());
+                existingPkg.setPopular(pkg.isPopular());
+                // existingPkg.setDescription(pkg.getDescription()); 
+                
+                packageRepository.save(existingPkg);
+            }
+        } else {
+            // --- TRƯỜNG HỢP TẠO MỚI (CREATE) ---
+            pkg.setActive(true); // Mặc định gói mới sẽ Active
+            packageRepository.save(pkg);
+        }
+        
+        return "redirect:/clinic/subscription?success=saved";
+    }
+
+    // --- HÀM XỬ LÝ ẨN/HIỆN GÓI (Cho nút Ngừng cung cấp) ---
+    @GetMapping("/subscription/toggle/{id}")
+    public String togglePackage(@PathVariable Long id) {
+        ServicePackage pkg = packageRepository.findById(id).orElse(null);
+        if (pkg != null) {
+            pkg.setActive(!pkg.isActive());
+            packageRepository.save(pkg);
+        }
+        return "redirect:/clinic/subscription?success=toggled";
+    }
+
+    // --- GIẢ LẬP MUA (Giữ nguyên) ---
     @GetMapping("/subscription/purchase")
     public String initiatePurchase(@RequestParam String plan) {
         System.out.println("Người dùng muốn mua gói: " + plan);
