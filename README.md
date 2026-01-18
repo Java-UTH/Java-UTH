@@ -16,7 +16,7 @@
   <a href="#tong-quan">Tổng Quan</a> •
   <a href="#tinh-nang">Tính Năng</a> •
   <a href="#cong-nghe">Công Nghệ</a> •
-  <a href="#cau-truc">Cài Đặt</a> •
+  <a href="#cau-truc">Cấu trúc dự án</a> •
   <a href="#doi-ngu">Đội Ngũ</a>
 </p>
 
