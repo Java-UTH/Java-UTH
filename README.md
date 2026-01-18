@@ -16,7 +16,7 @@
   <a href="#tong-quan">Tổng Quan</a> •
   <a href="#tinh-nang">Tính Năng</a> •
   <a href="#cong-nghe">Công Nghệ</a> •
-  <a href="#cau-truc">Cấu trúc dự án</a> •
+  <a href="#cau-truc">Cài Trúc Dự Án</a> •
   <a href="#doi-ngu">Đội Ngũ</a>
 </p>
 
@@ -67,9 +67,9 @@ Hệ thống được chia thành 4 phân hệ chính phục vụ các đối t�
 | Phân hệ | Công nghệ |
 | :--- | :--- |
 | **Backend** | ![Java](https://img.shields.io/badge/Java-Spring%20Boot-red) |
-| **AI Core** | ![Python](https://img.shields.io/badge/Python-PyTorch-yellow) |
+| **AI Core** | ![Python](https://img.shields.io/badge/Python-PyTorch-yellow) ![FastAPI](https://img.shields.io/badge/FastAPI-API-009688) |
 | **Frontend** | ![Thymeleaf](https://img.shields.io/badge/Thymeleaf-Server%20Side-green) ![HTML](https://img.shields.io/badge/HTML-5-orange) ![CSS](https://img.shields.io/badge/CSS-3-blue) ![JavaScript](https://img.shields.io/badge/JavaScript-ES6-yellow) |
-| **Database** | ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Relational-336791) ![MongoDB](https://img.shields.io/badge/MongoDB-NoSQL-47A248) |
+| **Database** | ![SQL Server](https://img.shields.io/badge/SQL%20Server-Relational-CC2927) ![MySQL](https://img.shields.io/badge/MySQL-Relational-4479A1) |
 | **Cloud/Infra** | ![Render](https://img.shields.io/badge/Render-Deployment-46E3B7) |
 
 ---
