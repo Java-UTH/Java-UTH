@@ -11,16 +11,18 @@ function loadClinics() {
                 tbody.innerHTML += `
                 <tr>
                     <td>${c.id}</td>
-                    <td>${c.name}</td>
-                    <td>${c.address}</td>
-                    <td>${c.phone}</td>
-                    <td>${c.status}</td>
+                    <td>${c.clinicName}</td>
+                    <td>${c.address ?? ""}</td>
+                    <td>${c.phone ?? ""}</td>
+                    <td>${c.verificationStatus}</td>
                     <td>
-                        ${c.status === "PENDING" ? 
-                            `<button onclick="approveClinic(${c.id})">Approve</button>` : ""
+                        ${c.verificationStatus === "PENDING" ? 
+                            `<button onclick="approveClinic(${c.id})">Approve</button>` 
+                            : ""
                         }
-                        ${c.status === "APPROVED" ?
-                            `<button onclick="suspendClinic(${c.id})">Suspend</button>` : ""
+                        ${c.verificationStatus === "FULFILLED" ? 
+                            `<button onclick="rejectClinic(${c.id})">Reject</button>` 
+                            : ""
                         }
                     </td>
                 </tr>`;
@@ -35,8 +37,8 @@ function approveClinic(id) {
     }).then(loadClinics);
 }
 
-function suspendClinic(id) {
-    fetch(`/admin/api/clinics/${id}/suspend`, {
+function rejectClinic(id) {
+    fetch(`/admin/api/clinics/${id}/reject`, {
         method: "PUT",
         credentials: "include"
     }).then(loadClinics);

@@ -213,11 +213,28 @@
                     <h6 class="fw-bold mb-0 text-dark" th:text="${clinicProfile.clinicName != null ? clinicProfile.clinicName : 'Phòng khám mới'}">Phòng khám A</h6>
                     <div class="text-muted small mb-2">ID: <span th:text="${clinicProfile.id}">CL-8821</span></div>
                     
-                    <span class="status-badge" 
-                          th:classappend="${clinicProfile.verificationStatus == 'VERIFIED' ? 'status-verified' : (clinicProfile.verificationStatus == 'PENDING' ? 'status-pending' : 'status-unverified')}">
-                        <i class="fas me-1" th:classappend="${clinicProfile.verificationStatus == 'VERIFIED' ? 'fa-check' : (clinicProfile.verificationStatus == 'PENDING' ? 'fa-clock' : 'fa-exclamation-triangle')}"></i>
-                        <span th:text="${clinicProfile.verificationStatus == 'VERIFIED' ? 'Đã Xác Minh' : (clinicProfile.verificationStatus == 'PENDING' ? 'Đang Chờ Duyệt' : 'Chưa Xác Minh')}"></span>
-                    </span>
+                    <span class="status-badge"
+      th:classappend="${clinicProfile.verificationStatus.name() == 'FULFILLED'
+          ? 'status-verified'
+          : (clinicProfile.verificationStatus.name() == 'PENDING'
+          ? 'status-pending'
+          : 'status-unverified')}">
+
+    <i class="fas me-1"
+       th:classappend="${clinicProfile.verificationStatus.name() == 'FULFILLED'
+           ? 'fa-check'
+           : (clinicProfile.verificationStatus.name() == 'PENDING'
+           ? 'fa-clock'
+           : 'fa-exclamation-triangle')}"></i>
+
+    <span th:text="${clinicProfile.verificationStatus.name() == 'FULFILLED'
+        ? 'Đã Xác Minh'
+        : (clinicProfile.verificationStatus.name() == 'PENDING'
+        ? 'Đang Chờ Duyệt'
+        : 'Chưa Xác Minh')}">
+    </span>
+</span>
+
                 </div>
 
                 <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
@@ -229,6 +246,7 @@
                     </button>
                 </div>
             </div>
+            
 
             <div class="col-md-9 settings-content">
                 
