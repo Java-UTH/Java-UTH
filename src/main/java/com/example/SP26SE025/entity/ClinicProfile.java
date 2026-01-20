@@ -35,8 +35,9 @@ public class ClinicProfile {
     private String businessLicenseUrl;
     private String medicalLicenseUrl;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "verification_status")
-    private String verificationStatus = "PENDING";
+    private VerificationStatus verificationStatus = VerificationStatus.PENDING;
 
     public ClinicProfile() {}
 
@@ -66,6 +67,6 @@ public class ClinicProfile {
     public void setBusinessLicenseUrl(String url) { this.businessLicenseUrl = url; }
     public String getMedicalLicenseUrl() { return medicalLicenseUrl; }
     public void setMedicalLicenseUrl(String url) { this.medicalLicenseUrl = url; }
-    public String getVerificationStatus() { return verificationStatus; }
-    public void setVerificationStatus(String status) { this.verificationStatus = status; }
+    public VerificationStatus getVerificationStatus() { return verificationStatus; }
+    public void setVerificationStatus(VerificationStatus status) { this.verificationStatus = status; }
 }
