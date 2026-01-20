@@ -7,85 +7,98 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        .health-card { transition: transform 0.2s; border-radius: 15px; }
-        .health-card:hover { transform: scale(1.02); }
-        .table img { border-radius: 8px; object-fit: cover; border: 1px solid #dee2e6; }
-        .ai-badge { font-size: 0.8rem; padding: 3px 8px; border-radius: 10px; margin-bottom: 5px; display: inline-block; }
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --glass-bg: rgba(255, 255, 255, 0.9);
+        }
+        body { background: #f4f7f9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .hero-section { background: var(--primary-gradient); color: white; padding: 40px 0; margin-bottom: 30px; border-radius: 0 0 30px 30px; }
+        .card { border: none; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: transform 0.3s ease; }
+        .card:hover { transform: translateY(-5px); }
+        .ai-result-json { display: none; }
+        .status-badge { padding: 5px 12px; border-radius: 20px; font-weight: 600; font-size: 0.85rem; }
+        .status-high { background: #fee2e2; color: #dc2626; }
+        .status-low { background: #dcfce7; color: #16a34a; }
+        .table img { border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
     </style>
 </head>
-<body class="bg-light">
-    <div class="container py-5">
-        <h1 class="text-center mb-5 text-primary fw-bold">Trung tâm Phân tích Sức khỏe</h1>
+<body>
+    <div class="hero-section text-center">
+        <div class="container">
+            <h1 class="fw-bold"><i class="fas fa-microscope me-3"></i>Trung tâm Phân tích Võng mạc AI</h1>
+            <p class="lead opacity-75">Tải lên ảnh chụp võng mạc để nhận kết quả chẩn đoán tức thì từ mô hình trí tuệ nhân tạo.</p>
+        </div>
+    </div>
 
+    <div class="container pb-5">
         <div class="row g-4">
-            <div class="col-md-5">
-                <div class="card shadow-sm mb-4 health-card">
-                    <div class="card-header bg-primary text-white fw-bold py-3">
-                        <i class="fas fa-cloud-upload-alt me-2"></i>Tải lên ảnh phân tích
-                    </div>
-                    <div class="card-body p-4">
-                        <form th:action="@{/customer/reports/upload}" method="post" enctype="multipart/form-data">
-                            <div class="mb-3">
-                                <input type="file" name="file" class="form-control form-control-lg" required>
-                                <div class="form-text mt-2 text-muted small">Hỗ trợ định dạng: JPG, PNG, WEBP.</div>
-                            </div>
-                            <button type="submit" class="btn btn-success btn-lg w-100 fw-bold">
-                                Phân tích bằng AI <i class="fas fa-robot ms-2"></i>
-                            </button>
-                        </form>
-                    </div>
-                </div>
-
-                <div class="card shadow-sm health-card">
-                    <div class="card-header bg-info text-white fw-bold">
-                        <i class="fas fa-chart-line me-2"></i>Xu hướng sức khỏe của bạn
-                    </div>
-                    <div class="card-body">
-                        <canvas id="healthChart" height="200"></canvas>
-                    </div>
+            <!-- Form Upload -->
+            <div class="col-lg-4">
+                <div class="card p-4 h-100">
+                    <h5 class="fw-bold mb-4 text-primary"><i class="fas fa-upload me-2"></i>Tải lên hình ảnh</h5>
+                    <form th:action="@{/customer/reports/upload}" method="post" enctype="multipart/form-data">
+                        <div class="mb-4 text-center">
+                            <label for="fileInput" class="form-label d-block p-4 border-dashed rounded-3 bg-light cursor-pointer" style="border: 2px dashed #cbd5e0;">
+                                <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3 d-block"></i>
+                                <span class="text-muted">Nhấn để chọn hoặc kéo thả ảnh vào đây</span>
+                                <input type="file" name="file" id="fileInput" class="form-control d-none" required onchange="showPreview(event)">
+                            </label>
+                            <img id="preview" class="mt-3 img-fluid rounded d-none" style="max-height: 200px;">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 btn-lg rounded-pill fw-bold">
+                            Bắt đầu phân tích AI <i class="fas fa-bolt ms-2"></i>
+                        </button>
+                    </form>
                 </div>
             </div>
 
-            <div class="col-md-7">
-                <div class="card shadow-sm border-0">
-                    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center py-3">
-                        <span class="fw-bold"><i class="fas fa-history me-2"></i>Lịch sử bản ghi phân tích</span>
-                        <a th:href="@{/customer/reports/export}" class="btn btn-outline-light btn-sm">
-                            <i class="fas fa-file-pdf me-1"></i> Tải báo cáo PDF
-                        </a>
+            <!-- History Table -->
+            <div class="col-lg-8">
+                <div class="card h-100">
+                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                        <h5 class="fw-bold mb-0 text-dark"><i class="fas fa-history me-2"></i>Lịch sử phân tích</h5>
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
                             <table class="table table-hover align-middle mb-0">
-                                <thead class="table-light">
+                                <thead class="bg-light text-muted">
                                     <tr>
-                                        <th class="ps-3">Ngày</th>
-                                        <th>Ảnh</th>
-                                        <th>Kết quả AI (FR-3)</th>
+                                        <th class="ps-4">Ngày thực hiện</th>
+                                        <th>Hình ảnh</th>
+                                        <th>Kết quả chẩn đoán</th>
+                                        <th class="text-end pe-4">Thao tác</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr th:each="item : ${historyList}">
-                                        <td class="ps-3 fw-bold text-muted" th:text="${#temporals.format(item.createdAt, 'dd/MM/yyyy')}"></td>
-                                        <td>
-                                            <a th:href="${item.imageUrl}" target="_blank">
-                                                <img th:src="${item.imageUrl}" style="width: 70px; height: 50px;">
-                                            </a>
+                                        <td class="ps-4">
+                                            <div class="fw-bold text-dark" th:text="${#temporals.format(item.createdAt, 'HH:mm dd/MM/yyyy')}"></div>
+                                            <small class="text-muted">ID: #<span th:text="${item.id}"></span></small>
                                         </td>
                                         <td>
-                                            <div th:if="${item.aiResult.contains('dấu hiệu')}" class="ai-badge bg-danger-subtle text-danger border border-danger">
-                                                <i class="fas fa-exclamation-triangle me-1"></i> Cảnh báo bệnh lý
+                                            <img th:src="${item.imageUrl}" width="80" height="60" class="object-fit-cover shadow-sm">
+                                        </td>
+                                        <td>
+                                            <div class="ai-display" th:attr="data-json=${item.aiResult}">
+                                                <span class="loading-text small text-muted">Đang tải...</span>
                                             </div>
-                                            <div th:unless="${item.aiResult.contains('dấu hiệu')}" class="ai-badge bg-success-subtle text-success border border-success">
-                                                <i class="fas fa-check-circle me-1"></i> Bình thường
+                                        </td>
+                                        <td class="text-end pe-4">
+                                            <div class="btn-group">
+                                                <button class="btn btn-outline-info btn-sm rounded-circle me-2" title="Xem chi tiết" 
+                                                        th:onclick="'viewDetails(' + ${item.id} + ')'">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <a th:href="@{'/customer/reports/export/' + ${item.id}}" class="btn btn-outline-danger btn-sm rounded-circle" title="Tải PDF">
+                                                    <i class="fas fa-file-pdf"></i>
+                                                </a>
                                             </div>
-                                            <p class="mb-0 text-dark small" th:text="${item.aiResult}"></p>
                                         </td>
                                     </tr>
                                     <tr th:if="${#lists.isEmpty(historyList)}">
-                                        <td colspan="3" class="text-center py-5 text-muted">
-                                            <i class="fas fa-folder-open fa-3x mb-3 d-block"></i>
-                                            Chưa có dữ liệu lịch sử. Hãy tải lên ảnh đầu tiên!
+                                        <td colspan="4" class="text-center py-5">
+                                            <img src="https://cdni.iconscout.com/illustration/premium/thumb/no-data-found-8867280-7223932.png" height="120" class="mb-3 opacity-50">
+                                            <p class="text-muted">Bạn chưa thực hiện phân tích nào.</p>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -97,29 +110,97 @@
         </div>
     </div>
 
+    <!-- Modal Xem Chi Tiết -->
+    <div class="modal fade" id="detailModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
+                <div class="modal-header bg-primary text-white" style="border-radius: 20px 20px 0 0;">
+                    <h5 class="fw-bold mb-0">Chi tiết phân tích AI</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div id="modalContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Vẽ biểu đồ thực tế hơn cho FR-4
-        const ctx = document.getElementById('healthChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4'],
-                datasets: [{
-                    label: 'Chỉ số sức khỏe tổng quát (%)',
-                    data: [65, 78, 72, 85],
-                    borderColor: '#0dcaf0',
-                    backgroundColor: 'rgba(13, 202, 240, 0.1)',
-                    fill: true,
-                    tension: 0.4,
-                    pointRadius: 5
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: false, min: 50, max: 100 } }
+        function showPreview(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            reader.onload = function() {
+                const img = document.getElementById('preview');
+                img.src = reader.result;
+                img.classList.remove('d-none');
+            }
+            reader.readAsDataURL(file);
+        }
+
+        document.querySelectorAll('.ai-display').forEach(div => {
+            try {
+                const json = JSON.parse(div.dataset.json);
+                if (json.error) {
+                    div.innerHTML = `<span class="text-danger small"><i class="fas fa-exclamation-circle me-1"></i> ${json.error}</span>`;
+                } else if (json.analysis) {
+                    const risk = json.analysis.overall_risk;
+                    const badgeClass = risk === 'HIGH' ? 'status-high' : 'status-low';
+                    div.innerHTML = `
+                        <span class="status-badge ${badgeClass} mb-1 d-inline-block">${risk} RISK</span>
+                        <div class="small text-truncate" style="max-width: 200px;">${json.analysis.clinical_impression}</div>
+                    `;
+                } else {
+                    div.innerHTML = `<span class="text-muted small">${div.dataset.json.substring(0, 30)}...</span>`;
+                }
+            } catch (e) {
+                div.innerHTML = `<span class="text-muted small">${div.dataset.json}</span>`;
             }
         });
+
+        function viewDetails(id) {
+            const row = Array.from(document.querySelectorAll('tbody tr')).find(r => r.innerText.includes('ID: #' + id));
+            const jsonStr = row.querySelector('.ai-display').dataset.json;
+            const json = JSON.parse(jsonStr);
+            
+            let html = `
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <img src="${row.querySelector('img').src}" class="img-fluid rounded shadow-sm mb-3">
+                        <div class="alert alert-info">Hình ảnh gốc tải lên</div>
+                    </div>
+                    <div class="col-md-6">
+                        <h4 class="fw-bold text-primary mb-3">Kết luận lâm sàng</h4>
+                        <div class="p-3 bg-light rounded-3 mb-4">
+                            <p class="mb-2"><strong>Mức độ rủi ro:</strong> 
+                                <span class="status-badge ${json.analysis.overall_risk === 'HIGH' ? 'status-high' : 'status-low'}">
+                                    ${json.analysis.overall_risk}
+                                </span>
+                            </p>
+                            <p class="mb-2"><strong>Nhận định:</strong> ${json.analysis.clinical_impression}</p>
+                            <p class="mb-0 text-success"><strong>Khuyến nghị:</strong> ${json.analysis.recommendation}</p>
+                        </div>
+                        
+                        <h5 class="fw-bold mb-3">Dự đoán chi tiết (%)</h5>
+                        ${json.predictions.map(p => `
+                            <div class="mb-2">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="small fw-semibold">${p.display_name}</span>
+                                    <span class="small">${p.probability * 100}%</span>
+                                </div>
+                                <div class="progress" style="height: 6px;">
+                                    <div class="progress-bar ${p.detected ? 'bg-danger' : 'bg-success'}" 
+                                         style="width: ${p.probability * 100}%"></div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('modalContent').innerHTML = html;
+            new bootstrap.Modal(document.getElementById('detailModal')).show();
+        }
     </script>
 </body>
 </html>
