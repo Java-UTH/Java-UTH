@@ -16,6 +16,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
     
     Optional<User> findByUsername(String username);
     
+    boolean existsByUsername(String username);
+    
+    boolean existsByEmail(String email);
+    
+    boolean existsByPhoneNumber(String phoneNumber);
+
     // Tìm user theo Role (Để lấy danh sách Bác sĩ)
     List<User> findByRole(Role role);
 }
