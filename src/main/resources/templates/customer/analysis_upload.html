@@ -59,15 +59,25 @@
     <div class="hero-section text-center position-relative">
         <a th:href="@{/customer/home}" class="btn-back"><i class="fas fa-arrow-left me-2"></i> Quay lại Dashboard</a>
         <div class="container text-center">
-            <h1 class="fw-bold display-5"><i class="fas fa-cloud-upload-alt me-3"></i>Tải ảnh Đáy mắt</h1>
-            <p class="lead opacity-75">Hệ thống AI sẽ phân tích ngay lập tức sau khi bạn tải ảnh lên.</p>
+            <h1 class="fw-bold display-5"><i class="fas fa-microscope me-3"></i>Trung tâm Phân tích AI</h1>
+            <p class="lead opacity-75">Tải lên ảnh chụp võng mạc (Fundus) để nhận chẩn đoán tức thì.</p>
         </div>
     </div>
 
     <div class="container pb-5">
         <div class="row justify-content-center">
-            <div class="col-lg-6">
-                <div class="card p-5 mt-n5">
+            <div class="col-lg-8">
+                <!-- Warning Alert -->
+                <div class="alert alert-warning border-0 shadow-sm rounded-4 mb-4 p-3 d-flex align-items-center">
+                    <i class="fas fa-exclamation-triangle fa-2x me-3 text-warning"></i>
+                    <div>
+                        <strong class="d-block">Lưu ý quan trọng:</strong>
+                        Mô hình AI hiện tại chỉ hỗ trợ phân tích <strong>Võng mạc (Fundus)</strong>. Ảnh chụp bên ngoài
+                        mắt (như đau mắt đỏ, viêm nhiễm bề mặt) sẽ không cho kết quả chính xác.
+                    </div>
+                </div>
+
+                <div class="card p-5">
                     <form th:action="@{/customer/reports/upload}" method="post" enctype="multipart/form-data">
                         <div class="mb-4 text-center">
                             <label for="fileInput"
