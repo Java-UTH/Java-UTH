@@ -36,7 +36,7 @@ public class CustomerController {
 
     @Autowired
     private NotificationService notificationService;
-    
+
     @Autowired
     private com.example.SP26SE025.repository.UserRepository userRepository;
 
@@ -56,7 +56,7 @@ public class CustomerController {
                 model.addAttribute("currentUser", user);
             }
         }
-        return "customer/home"; 
+        return "customer/home";
     }
 
     // --- 2. QUẢN LÝ HỒ SƠ ---
@@ -64,7 +64,7 @@ public class CustomerController {
     public String showProfile(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findByEmail(auth.getName());
-        
+
         if (user == null) {
             user = new User();
             user.setFullName("Người dùng mới");
@@ -87,7 +87,7 @@ public class CustomerController {
 
     @PostMapping("/customer/profile/update")
     public String updateProfile(@Valid @ModelAttribute UserProfileDTO userProfile, BindingResult result, Model model,
-                               @RequestParam(value = "avatarFile", required = false) MultipartFile avatarFile) {
+            @RequestParam(value = "avatarFile", required = false) MultipartFile avatarFile) {
         if (result.hasErrors()) {
             model.addAttribute("userProfile", userProfile);
             return "customer/profile";
@@ -95,7 +95,7 @@ public class CustomerController {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findByEmail(auth.getName());
-        
+
         if (user != null) {
             if (avatarFile != null && !avatarFile.isEmpty()) {
                 try {
@@ -112,7 +112,7 @@ public class CustomerController {
             user.setDiabetesType(userProfile.getDiabetesType());
             user.setHypertension(userProfile.getHypertension());
             user.setMedicalHistory(userProfile.getMedicalHistory());
-            
+
             userService.updateProfile(user.getId(), user);
         }
         return "redirect:/customer/profile?success";
@@ -127,15 +127,16 @@ public class CustomerController {
     private String uploadAvatar(MultipartFile file, Long userId) throws Exception {
         String uploadDir = System.getProperty("user.dir") + "/target/classes/static/images/uploads";
         File uploadFolder = new File(uploadDir);
-        if (!uploadFolder.exists()) uploadFolder.mkdirs();
+        if (!uploadFolder.exists())
+            uploadFolder.mkdirs();
 
         String originalFilename = file.getOriginalFilename();
         String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
         String newFilename = userId + "_" + UUID.randomUUID().toString() + fileExtension;
-        
+
         File destFile = new File(uploadDir, newFilename);
         file.transferTo(destFile);
-        
+
         return "/images/uploads/" + newFilename;
     }
 
@@ -144,19 +145,20 @@ public class CustomerController {
     public String showNotifications(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findByEmail(auth.getName());
-        
+
         if (user != null) {
             List<Notification> notifs = notificationService.getAllNotifications(user);
             List<NotificationDTO> notifDTOs = notifs.stream()
-                .map(notif -> new NotificationDTO(notif.getTitle(), notif.getMessage(), notif.getType(), notif.getCreatedAt(), notif.isRead()))
-                .collect(Collectors.toList());
+                    .map(notif -> new NotificationDTO(notif.getTitle(), notif.getMessage(), notif.getType(),
+                            notif.getCreatedAt(), notif.isRead()))
+                    .collect(Collectors.toList());
             model.addAttribute("notifications", notifDTOs);
         } else {
             model.addAttribute("notifications", new ArrayList<>());
         }
         return "customer/notifications";
     }
-    
+
     // ==========================================
     // --- 4. GÓI DỊCH VỤ (PACKAGES) - ĐÃ CẬP NHẬT ---
     // ==========================================
@@ -165,13 +167,13 @@ public class CustomerController {
     public String showPackagesPage(Model model) {
         // Lấy danh sách gói ĐANG HOẠT ĐỘNG từ DB và truyền vào Model
         model.addAttribute("packages", packageRepository.findByIsActiveTrue());
-        return "customer/packages"; 
+        return "customer/packages";
     }
 
     // --- XỬ LÝ MUA GÓI ---
     @GetMapping("/customer/packages/buy")
     public String buyPackage(@RequestParam(name = "planId") Long planId) {
-        
+
         // 1. Lấy User hiện tại
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = userService.findByEmail(auth.getName());
@@ -184,9 +186,9 @@ public class CustomerController {
             Subscription sub = new Subscription();
             sub.setUser(currentUser);
             sub.setPlanName(pkg.getPackageName()); // Lưu tên gói tại thời điểm mua
-            sub.setPrice(pkg.getPrice());          // Lưu giá tại thời điểm mua
+            sub.setPrice(pkg.getPrice()); // Lưu giá tại thời điểm mua
             sub.setStartDate(LocalDateTime.now());
-            sub.setStatus("ACTIVE"); 
+            sub.setStatus("ACTIVE");
 
             // Tính ngày hết hạn (Ví dụ đơn giản: Gói năm thì +1 năm, còn lại +1 tháng)
             if (pkg.getPeriod() != null && pkg.getPeriod().toLowerCase().contains("năm")) {
@@ -197,7 +199,7 @@ public class CustomerController {
 
             // 4. Lưu vào DB
             subscriptionRepository.save(sub);
-            
+
             System.out.println(">>> Đã lưu đăng ký thành công cho: " + currentUser.getFullName());
         }
 
@@ -205,13 +207,8 @@ public class CustomerController {
     }
 
     // --- 5. CÁC TRANG PLACEHOLDER & REDIRECT ---
-    @GetMapping("/customer/reports/analysis")
-    public String showAnalysis(Model model) { 
-        model.addAttribute("historyList", new ArrayList<>());
-        return "customer/analysis_report"; 
-    }
-    
-    @GetMapping({"/customer/upload", "/customer/doctor-chat", "/test-services/customer"})
+
+    @GetMapping({ "/customer/upload", "/customer/doctor-chat", "/test-services/customer" })
     public String temporaryRedirect() {
         return "redirect:/customer/home";
     }
