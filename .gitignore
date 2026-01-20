@@ -1,9 +1,0 @@
-target/
-*.class
-.settings/
-.classpath
-.project
-.DS_Store
-*.log
-src/main/resources/static/images/uploads/*
-!src/main/resources/static/images/uploads/.gitkeep
