@@ -70,7 +70,7 @@ public class SecurityConfig {
             .authenticationProvider(authenticationProvider())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/home", "/login", "/register",
-                    "/css/**", "/js/**", "/images/**", "/fonts/**",
+                    "/css/**", "/js/**", "/images/**", "/fonts/**","/clinicRegister",
                     "/authenticate", "/oauth2/**", "/login/oauth2/**")
                 .permitAll()
                 // Phân quyền truy cập các đường dẫn
