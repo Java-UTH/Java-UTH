@@ -19,22 +19,22 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Service to handle image upload and AI analysis workflow
- * Orchestrates validation -> AI-Service call -> result storage (FR-2, FR-3)
+ * Dịch vụ xử lý tải lên hình ảnh và quy trình phân tích AI
+ * Điều phối xác thực -> gọi AI-Service -> lưu trữ kết quả (FR-2, FR-3)
  */
 @Service
 public class ImageUploadService {
 
     private static final Logger logger = LoggerFactory.getLogger(ImageUploadService.class);
 
-    // Supported image formats
+    // Các định dạng ảnh được hỗ trợ
     private static final Set<String> ALLOWED_FORMATS = new HashSet<>(
             Arrays.asList("image/jpeg", "image/png", "image/jpg", "image/bmp", "image/tiff"));
 
-    // Maximum file size: 50MB
+    // Kích thước tệp tối đa: 50MB
     private static final long MAX_FILE_SIZE = 50 * 1024 * 1024;
 
-    // Temporary upload directory for processing - use system temp dir
+    // Thư mục tải lên tạm thời để xử lý - sử dụng thư mục temp hệ thống
     private static final String TEMP_UPLOAD_DIR = System.getProperty("java.io.tmpdir") + File.separator
             + "ai-service-uploads" + File.separator;
 
@@ -44,20 +44,24 @@ public class ImageUploadService {
     @Autowired
     private ReportService reportService;
 
+    @Autowired
+    private AiInferenceService aiInferenceService; // Phase 1: Save to database
+
     private ObjectMapper objectMapper = new ObjectMapper();
 
     /**
-     * Upload and analyze retinal image
-     * Flow: Validate -> Save temp -> Call AI-Service -> Parse response -> Save
-     * analysis
+     * Tải lên và phân tích hình ảnh võng mạc
+     * Quy trình: Xác thực -> Lưu tạm -> Gọi AI-Service -> Phân tích phản hồi -> Lưu
+     * kết quả
      * 
-     * @param imageFile MultipartFile from frontend
-     * @param user      User performing the upload (can be null for test mode)
-     * @param testId    Test/analysis ID (for tracking)
-     * @param patientId Patient ID (for tracking)
-     * @return AI analysis response
-     * @throws InvalidImageException if image is invalid
-     * @throws AiServiceException    if AI-Service call fails
+     * @param imageFile MultipartFile từ frontend
+     * @param user      Người dùng thực hiện tải lên (có thể là null cho chế độ
+     *                  test)
+     * @param testId    ID bài kiểm tra/phân tích (để theo dõi)
+     * @param patientId ID bệnh nhân (để theo dõi)
+     * @return Phản hồi phân tích AI
+     * @throws InvalidImageException nếu ảnh không hợp lệ
+     * @throws AiServiceException    nếu lệnh gọi AI-Service không thành công
      */
     public AiResponseDto uploadAndAnalyzeImage(MultipartFile imageFile, User user, String testId, String patientId) {
         String userId = (user != null) ? String.valueOf(user.getId()) : "ANONYMOUS";
@@ -65,29 +69,24 @@ public class ImageUploadService {
 
         try {
             // Step 1: Validate image file
-            validateImageFile(imageFile);
+            // Bước 1: Xác thực tệp ảnh
 
-            // Step 2: Save to temporary location
+            // Bước 2: Lưu vào vị trí tạm thời
             File tempImageFile = saveTemporaryImage(imageFile);
             logger.info("Image saved to temp location: {}", tempImageFile.getAbsolutePath());
 
             try {
-                // Step 3: Call AI-Service for analysis
+                // Bước 3: Gọi AI-Service để phân tích
                 AiResponseDto aiResponse = aiServiceClient.analyzRetinalImage(tempImageFile, testId, patientId);
                 logger.info("Received AI analysis for testId: {}", testId);
 
-                // Step 4: Save analysis result to database (only if user exists)
-                String aiResultJson = objectMapper.writeValueAsString(aiResponse);
-                if (user != null) {
-                    saveAnalysisRecord(imageFile, user, aiResultJson);
-                } else {
-                    logger.info("Skipping database save for anonymous request (testId: {})", testId);
-                }
+                // Bước 4: Lưu kết quả phân tích vào cơ sở dữ liệu
+                saveAnalysisRecord(imageFile, user, aiResponse);
 
                 return aiResponse;
 
             } finally {
-                // Clean up temporary file
+                // Dọn sạch tệp tạm thời
                 cleanupTemporaryFile(tempImageFile);
             }
 
@@ -104,10 +103,10 @@ public class ImageUploadService {
     }
 
     /**
-     * Validate image file (format, size, etc.)
+     * Xác thực tệp ảnh (định dạng, kích thước, v.v.)
      * 
-     * @param imageFile File to validate
-     * @throws InvalidImageException if validation fails
+     * @param imageFile Tệp cần xác thực
+     * @throws InvalidImageException nếu xác thực không thành công
      */
     private void validateImageFile(MultipartFile imageFile) throws InvalidImageException {
         if (imageFile == null || imageFile.isEmpty()) {
@@ -132,11 +131,11 @@ public class ImageUploadService {
     }
 
     /**
-     * Save image to temporary location for processing
+     * Lưu ảnh vào vị trí tạm thời để xử lý
      * 
-     * @param imageFile MultipartFile to save
-     * @return File reference to saved image
-     * @throws IOException if save fails
+     * @param imageFile MultipartFile để lưu
+     * @return Tham chiếu tệp đến ảnh đã lưu
+     * @throws IOException nếu lưu không thành công
      */
     private File saveTemporaryImage(MultipartFile imageFile) throws IOException {
         File tempDir = new File(TEMP_UPLOAD_DIR);
@@ -154,9 +153,9 @@ public class ImageUploadService {
     }
 
     /**
-     * Clean up temporary image file
+     * Dọn sạch tệp ảnh tạm thời
      * 
-     * @param tempFile Temporary file to delete
+     * @param tempFile Tệp tạm thời để xóa
      */
     private void cleanupTemporaryFile(File tempFile) {
         if (tempFile != null && tempFile.exists()) {
@@ -170,30 +169,21 @@ public class ImageUploadService {
     }
 
     /**
-     * Save analysis record to database
-     * Uses existing ReportService infrastructure
+     * Lưu bản ghi phân tích vào cơ sở dữ liệu
+     * Sử dụng AiInferenceService để lưu trữ cả AnalysisRecord và InferenceMetadata
      * 
-     * @param imageFile    Original uploaded file
-     * @param user         User who uploaded
-     * @param aiResultJson Full AI response JSON
+     * @param imageFile  Tệp gốc được tải lên
+     * @param user       Người dùng tải lên
+     * @param aiResponse Phản hồi phân tích AI
      */
-    private void saveAnalysisRecord(MultipartFile imageFile, User user, String aiResultJson) {
+    private void saveAnalysisRecord(MultipartFile imageFile, User user, AiResponseDto aiResponse) {
         try {
-            // Create new AnalysisRecord
-            AnalysisRecord record = new AnalysisRecord();
+            aiInferenceService.saveInferenceResult(imageFile, user, aiResponse,
+                    "TEST_" + System.currentTimeMillis(),
+                    (user != null) ? String.valueOf(user.getId()) : "ANONYMOUS");
 
-            String fileName = System.currentTimeMillis() + "_" + imageFile.getOriginalFilename();
-            record.setImageName(fileName);
-            record.setImageUrl("/images/uploads/" + fileName);
-            record.setUser(user);
-            record.setAiResult(aiResultJson);
-
-            // Save to database using repository
-            // Note: We're not using ReportService.saveAnalysis() because it generates mock
-            // results
-            // Instead, we directly use the repository to save our real AI results
-
-            logger.info("Analysis record saved for user: {}", user.getId());
+            String userId = (user != null) ? String.valueOf(user.getId()) : "ANONYMOUS";
+            logger.info("Analysis record saved for user: {}", userId);
         } catch (Exception e) {
             logger.error("Failed to save analysis record: {}", e.getMessage(), e);
             throw new RuntimeException("Failed to save analysis: " + e.getMessage(), e);
@@ -201,9 +191,9 @@ public class ImageUploadService {
     }
 
     /**
-     * Check if AI-Service is currently available
+     * Kiểm tra xem AI-Service có sẵn sàng hay không
      * 
-     * @return true if AI-Service is healthy
+     * @return true nếu AI-Service khỏe mạnh
      */
     public boolean isAiServiceAvailable() {
         return aiServiceClient.isAiServiceHealthy();

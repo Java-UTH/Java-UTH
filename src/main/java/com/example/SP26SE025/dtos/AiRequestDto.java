@@ -1,8 +1,8 @@
 package com.example.SP26SE025.dtos;
 
 /**
- * DTO for uploading image to AI-Service
- * Contains metadata needed by AI microservice for tracking and diagnostics
+ * DTO cho việc tải lên hình ảnh lên AI-Service
+ * Chứa siêu dữ liệu cần thiết bởi vi dịch vụ AI cho theo dõi và chẩn đoán
  */
 public class AiRequestDto {
 

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
 
 /**
- * DTO for AI model information in metadata
+ * DTO cho thông tin mô hình AI trong siêu dữ liệu
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AiModelInfoDto {

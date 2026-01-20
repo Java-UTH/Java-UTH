@@ -3,7 +3,7 @@ package com.example.SP26SE025.dtos;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
- * DTO for input image metadata in AI-Service response
+ * DTO cho siêu dữ liệu hình ảnh đầu vào trong phản hồi AI-Service
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AiInputDto {

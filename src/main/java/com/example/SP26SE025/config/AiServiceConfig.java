@@ -9,8 +9,8 @@ import org.springframework.web.client.RestTemplate;
 import java.time.Duration;
 
 /**
- * Configuration for AI-Service (FastAPI) integration
- * Provides RestTemplate bean for HTTP communication with AI microservice
+ * Cấu hình cho AI-Service (FastAPI) integration
+ * Cung cấp RestTemplate bean để giao tiếp HTTP với AI microservice
  */
 @Configuration
 public class AiServiceConfig {
@@ -25,8 +25,8 @@ public class AiServiceConfig {
     private boolean enabled;
 
     /**
-     * Create RestTemplate bean configured for AI-Service calls
-     * Includes timeout and connection settings
+     * Tạo RestTemplate bean cấu hình cho gọi AI-Service
+     * Bao gồm timeout và cài đặt kết nối
      */
     @Bean
     public RestTemplate aiServiceRestTemplate(RestTemplateBuilder builder) {

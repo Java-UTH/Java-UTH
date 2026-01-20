@@ -5,8 +5,8 @@ import java.util.Map;
 import java.util.List;
 
 /**
- * DTO for complete AI-Service response (FR-3 AI Output)
- * Maps JSON response from FastAPI /predict endpoint
+ * DTO cho phản hồi AI-Service hoàn chỉnh (FR-3 Đầu ra AI)
+ * Ánh xạ phản hồi JSON từ điểm cuối /predict của FastAPI
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AiResponseDto {

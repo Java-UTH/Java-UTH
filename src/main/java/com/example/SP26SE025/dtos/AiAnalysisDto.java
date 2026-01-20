@@ -5,8 +5,8 @@ import java.util.Map;
 import java.util.List;
 
 /**
- * DTO for AI-Service analysis response wrapper (FR-3 AI Output)
- * Contains analysis results, predictions, and metadata
+ * DTO cho trình nhân phân tích phản hồi của AI-Service (FR-3 Đầu ra AI)
+ * Chứa kết quả phân tích, dự đoán và siêu dữ liệu
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AiAnalysisDto {

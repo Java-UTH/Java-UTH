@@ -1,11 +1,12 @@
 package com.example.SP26SE025.exception;
 
 /**
- * Exception thrown when uploaded image is invalid (format, size, corrupted)
+ * Ngoại lệ được năng khi hình ảnh tải lên không hợp lệ (định dạng, kích thước,
+ * hư hạng)
  */
 public class InvalidImageException extends RuntimeException {
 
-    private String reason; // e.g., "INVALID_FORMAT", "FILE_TOO_LARGE", "CORRUPTED"
+    private String reason; // vờ dụ: "INVALID_FORMAT", "FILE_TOO_LARGE", "CORRUPTED"
 
     public InvalidImageException(String message) {
         super(message);

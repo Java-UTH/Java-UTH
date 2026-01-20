@@ -20,8 +20,8 @@ import org.springframework.web.client.RestTemplate;
 import java.io.File;
 
 /**
- * Client service for calling AI-Service (FastAPI) microservice
- * Handles image uploads and prediction requests (FR-3 AI Output)
+ * Dịch vụ client gọi AI-Service (FastAPI) microservice
+ * Xử lý upload ảnh và yêu cầu dự đoán (FR-3 AI Output)
  */
 @Service
 public class AiServiceClient {
@@ -35,13 +35,13 @@ public class AiServiceClient {
     private AiServiceConfig aiServiceConfig;
 
     /**
-     * Send retinal image to AI-Service for analysis
+     * Gửi ảnh võng mạc tới AI-Service để phân tích
      * 
-     * @param imageFile Image file to analyze
-     * @param testId    Test/analysis record ID (for tracking)
-     * @param patientId Patient ID (for tracking)
-     * @return AI analysis response with predictions
-     * @throws AiServiceException if AI service is unavailable or returns error
+     * @param imageFile Tệp ảnh để phân tích
+     * @param testId    ID bài test/phân tích (để theo dõi)
+     * @param patientId ID bệnh nhân (để theo dõi)
+     * @return Phản hồi phân tích AI với predictions
+     * @throws AiServiceException nếu AI service không sẵn sàng hoặc trả về lỗi
      */
     public AiResponseDto analyzRetinalImage(File imageFile, String testId, String patientId) {
         if (!aiServiceConfig.isEnabled()) {
@@ -105,12 +105,12 @@ public class AiServiceClient {
     }
 
     /**
-     * Get heatmap visualization for specific diagnosis condition
+     * Lấy biểu đồ nhiệt cho điều kiện chẩn đoán cụ thể
      * 
-     * @param imageFile  Image file to analyze
-     * @param classIndex Index of condition to visualize (0-6)
-     * @return Binary image data (JPEG with heatmap overlay)
-     * @throws AiServiceException if AI service is unavailable or returns error
+     * @param imageFile  Tệp ảnh để phân tích
+     * @param classIndex Chỉ số bệnh để trực quan hóa (0-6)
+     * @return Dữ liệu ảnh nhị phân (JPEG với heatmap overlay)
+     * @throws AiServiceException nếu AI service không sẵn sàng hoặc trả về lỗi
      */
     public byte[] getPredictionHeatmap(File imageFile, int classIndex) {
         if (!aiServiceConfig.isEnabled()) {

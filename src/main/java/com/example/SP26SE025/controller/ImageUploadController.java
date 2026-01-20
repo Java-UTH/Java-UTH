@@ -19,8 +19,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * REST API Controller for image upload and analysis
- * Endpoints for uploading retinal images and triggering AI analysis (FR-2,
+ * Bộ điều khiển API REST cho tải lên và phân tích hình ảnh
+ * Các điểm cuối cho tải lên hình ảnh váng mắc và kích hoạt phân tích AI (FR-2,
  * FR-3)
  */
 @RestController
@@ -33,15 +33,15 @@ public class ImageUploadController {
     private ImageUploadService imageUploadService;
 
     /**
-     * Upload retinal image for AI analysis
+     * Tải lên hình ảnh võng mạc để phân tích AI
      * 
      * POST /api/reports/upload
      * 
-     * @param imageFile      Retinal image file (JPEG, PNG, BMP, TIFF)
-     * @param testId         Test/analysis ID (optional, for tracking)
-     * @param patientId      Patient ID (optional, for tracking)
-     * @param authentication Current user authentication
-     * @return AI analysis response with predictions
+     * @param imageFile      Tệp hình ảnh võng mạc (JPEG, PNG, BMP, TIFF)
+     * @param testId         ID bài kiểm tra/phân tích (tùy chọn, để theo dõi)
+     * @param patientId      ID bệnh nhân (tùy chọn, để theo dõi)
+     * @param authentication Xác thực người dùng hiện tại
+     * @return Phản hồi phân tích AI với các dự đoán
      */
     @PostMapping("/upload")
     public ResponseEntity<?> uploadImage(
@@ -53,29 +53,29 @@ public class ImageUploadController {
         logger.info("Upload image request received. Filename: {}", imageFile.getOriginalFilename());
 
         try {
-            // Get current user (handle case when authentication is null)
+            // Lấy người dùng hiện tại (xử lý trường hợp xác thực là null)
             User user = null;
             if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
                 CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
                 user = userDetails.getUser();
             }
 
-            // Generate IDs if not provided
+            // Tạo ID nếu chưa có
             if (testId == null || testId.isEmpty()) {
                 testId = "TEST_" + System.currentTimeMillis();
             }
             if (patientId == null || patientId.isEmpty()) {
-                // If no authenticated user, use test ID as patient ID
+                // Nếu không có người dùng xác thực, sử dụng ID đằng kín làm ID bệnh nhân
                 patientId = (user != null) ? String.valueOf(user.getId()) : testId + "_PAT";
             }
 
-            // Upload and analyze (user can be null for test mode)
+            // Tải lên và phân tích (người dùng có thể là null cho chế độ test)
             AiResponseDto aiResponse = imageUploadService.uploadAndAnalyzeImage(
                     imageFile, user, testId, patientId);
 
             logger.info("Image analysis completed. Status: {}", aiResponse.getStatus());
 
-            // Prepare response
+            // Chuẩn bị phản hồi
             Map<String, Object> response = new HashMap<>();
             response.put("status", "success");
             response.put("message", "Image analysis completed successfully");
@@ -121,11 +121,11 @@ public class ImageUploadController {
     }
 
     /**
-     * Check AI-Service health status
+     * Kiểm tra trạng thái sức khỏe của AI-Service
      * 
      * GET /api/reports/health
      * 
-     * @return Health status of AI-Service
+     * @return Trạng thái sức khỏe của AI-Service
      */
     @GetMapping("/health")
     public ResponseEntity<?> checkAiServiceHealth() {

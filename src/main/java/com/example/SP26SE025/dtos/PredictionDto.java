@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
 
 /**
- * DTO for AI-Service prediction response for a single disease condition
+ * DTO cho phản hồi dự đoán của AI-Service cho một điều kiện bệnh
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PredictionDto {

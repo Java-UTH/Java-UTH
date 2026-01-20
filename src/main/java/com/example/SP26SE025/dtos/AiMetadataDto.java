@@ -4,7 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Map;
 
 /**
- * DTO for AI-Service metadata (model version, thresholds, inference time)
+ * DTO cho siêu dữ liệu AI-Service (phiên bản mô hình, ngưỡng, thời gian suy
+ * luận)
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AiMetadataDto {

@@ -1,8 +1,8 @@
 package com.example.SP26SE025.exception;
 
 /**
- * Exception thrown when AI-Service is unavailable, times out, or returns an
- * error
+ * Ngoại lệ được năng khi AI-Service không sẵn sàng, hết thời gian hoặc trả về
+ * lỗi
  */
 public class AiServiceException extends RuntimeException {
 

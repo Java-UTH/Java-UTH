@@ -9,24 +9,24 @@ import java.util.Optional;
 import java.util.List;
 
 /**
- * Repository for InferenceMetadata entity
- * Manages AI inference tracking and feedback data (FR-14/15, FR-19)
+ * Kho lưu trữ cho thực thể InferenceMetadata
+ * Quản lý theo dõi suy luận AI và dữ liệu phản hồi (FR-14/15, FR-19)
  */
 @Repository
 public interface InferenceMetadataRepository extends JpaRepository<InferenceMetadata, Long> {
 
     /**
-     * Find inference metadata by inference ID from AI-Service
+     * Tìm siêu dữ liệu suy luận theo ID suy luận từ AI-Service
      */
     Optional<InferenceMetadata> findByInferenceId(String inferenceId);
 
     /**
-     * Find inference metadata by associated analysis record
+     * Tìm siêu dữ liệu suy luận theo bản ghi phân tích liên kết
      */
     Optional<InferenceMetadata> findByAnalysisRecord(AnalysisRecord analysisRecord);
 
     /**
-     * Find all inferences awaiting doctor review
+     * Tìm tất cả suy luận chờ nhận xét của bác sĩ
      */
     List<InferenceMetadata> findByDoctorReviewedFalse();
 
