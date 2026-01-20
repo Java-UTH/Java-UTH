@@ -38,17 +38,29 @@ public class AnalysisController {
 
     @GetMapping("/analysis")
     public String showAnalysis(Model model, Principal principal) {
+        return "redirect:/customer/reports/history";
+    }
+
+    @GetMapping("/upload")
+    public String showUploadForm(Model model, Principal principal) {
+        User user = userService.findByEmail(principal.getName());
+        model.addAttribute("currentUser", user);
+        return "customer/analysis_upload";
+    }
+
+    @GetMapping("/history")
+    public String showHistory(Model model, Principal principal) {
         User user = userService.findByEmail(principal.getName());
         List<AnalysisRecord> history = reportService.getHistory(user);
         model.addAttribute("historyList", history);
-        return "customer/analysis_report";
+        return "customer/analysis_history";
     }
 
     @PostMapping("/upload")
     public String uploadImage(@RequestParam("file") MultipartFile file, Principal principal) throws IOException {
         User user = userService.findByEmail(principal.getName());
         reportService.saveAnalysis(file, user);
-        return "redirect:/customer/reports/analysis?success";
+        return "redirect:/customer/reports/history?success";
     }
 
     @GetMapping("/visualize/{id}")

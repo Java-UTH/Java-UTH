@@ -208,7 +208,7 @@ public class CustomerController {
 
     // --- 5. CÁC TRANG PLACEHOLDER & REDIRECT ---
 
-    @GetMapping({ "/customer/upload", "/customer/doctor-chat", "/test-services/customer" })
+    @GetMapping({ "/customer/doctor-chat", "/test-services/customer" })
     public String temporaryRedirect() {
         return "redirect:/customer/home";
     }
