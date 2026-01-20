@@ -104,6 +104,17 @@ SP26SE025/
 │       │   ├── service/
 │       │   └── SP26SE025Application.java
 │       └── resources/
+│           ├── static/
+│           ├── templates/
+│           │   ├── admin/
+│           │   ├── clinic/
+│           │   ├── customer/
+│           │   ├── doctor/
+│           │   ├── index.html
+│           │   ├── login-view-admin.html
+│           │   ├── login-view.html
+│           │   └── register.html
+│           └── application.properties
 ├── mvnw
 ├── mvnw.cmd
 ├── pom.xml

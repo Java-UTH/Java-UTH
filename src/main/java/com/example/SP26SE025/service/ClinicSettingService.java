@@ -1,10 +1,12 @@
 package com.example.SP26SE025.service;
 
 import com.example.SP26SE025.entity.ClinicProfile;
+import com.example.SP26SE025.entity.VerificationStatus;
 import com.example.SP26SE025.repository.ClinicProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.Optional;
@@ -12,60 +14,131 @@ import java.util.Optional;
 @Service
 public class ClinicSettingService {
 
-    @Autowired private ClinicProfileRepository clinicProfileRepository;
-    // Không cần UserRepository nữa vì ta đã cắt đứt quan hệ
+    @Autowired
+    private ClinicProfileRepository clinicProfileRepository;
 
-    private final String UPLOAD_DIR = "src/main/resources/static/uploads/verification/";
+    private static final String UPLOAD_DIR =
+            "src/main/resources/static/uploads/verification/";
 
-    // 1. Lấy thông tin Profile (Logic mới: Dựa vào username string)
+    /**
+     * 🔹 LẤY PROFILE
+     * ❌ KHÔNG TỰ TẠO
+     */
     public ClinicProfile getProfile(String username) {
-        // Tìm xem username này đã có hồ sơ chưa
-        Optional<ClinicProfile> existingProfile = clinicProfileRepository.findByUsernameLink(username);
 
-        if (existingProfile.isPresent()) {
-            return existingProfile.get();
-        } else {
-            ClinicProfile newProfile = new ClinicProfile();
-            newProfile.setUsernameLink(username);
-            newProfile.setClinicName("Phòng khám Mới"); // Tên mặc định
-            return clinicProfileRepository.save(newProfile);
-        }
+    Optional<ClinicProfile> optional =
+            clinicProfileRepository.findByUsernameLink(username);
+
+    if (optional.isPresent()) {
+        return optional.get();
     }
 
-    // 2. Cập nhật thông tin chung
+    // 👉 CHƯA CÓ → TẠO MỚI
+    ClinicProfile profile = new ClinicProfile();
+    profile.setUsernameLink(username);
+    profile.setClinicName("Phòng khám mới");
+    profile.setVerificationStatus(VerificationStatus.PENDING);
+
+    return clinicProfileRepository.save(profile);
+}
+
+
+    /**
+     * 🔹 TẠO PROFILE LẦN ĐẦU (gọi khi clinic vào setting)
+     */
+    public ClinicProfile createProfileIfNotExist(String username) {
+
+        Optional<ClinicProfile> existing =
+                clinicProfileRepository.findByUsernameLink(username);
+
+        if (existing.isPresent()) {
+            return existing.get();
+        }
+
+        ClinicProfile profile = new ClinicProfile();
+        profile.setUsernameLink(username);
+        profile.setClinicName("Phòng khám mới");
+        profile.setVerificationStatus(VerificationStatus.PENDING);
+
+        return clinicProfileRepository.save(profile);
+    }
+
+    /**
+     * 🔹 CẬP NHẬT THÔNG TIN CHUNG
+     */
     public void updateGeneralInfo(String username, ClinicProfile updatedInfo) {
+
         ClinicProfile profile = getProfile(username);
+
         profile.setClinicName(updatedInfo.getClinicName());
         profile.setRepresentativeName(updatedInfo.getRepresentativeName());
         profile.setAddress(updatedInfo.getAddress());
         profile.setPhone(updatedInfo.getPhone());
         profile.setWebsite(updatedInfo.getWebsite());
         profile.setDescription(updatedInfo.getDescription());
+
         clinicProfileRepository.save(profile);
     }
 
-    // 3. Upload hồ sơ
-    public void uploadVerificationDocs(String username, String taxId, MultipartFile file1, MultipartFile file2) throws IOException {
+    /**
+     * 🔹 UPLOAD HỒ SƠ XÁC MINH
+     */
+    public void uploadVerificationDocs(
+            String username,
+            String taxId,
+            MultipartFile businessFile,
+            MultipartFile medicalFile
+    ) throws IOException {
+
         ClinicProfile profile = getProfile(username);
         profile.setTaxId(taxId);
+
         Files.createDirectories(Paths.get(UPLOAD_DIR));
 
-        if (!file1.isEmpty()) {
-            String fileName = System.currentTimeMillis() + "_1_" + file1.getOriginalFilename();
-            Files.write(Paths.get(UPLOAD_DIR + fileName), file1.getBytes());
-            profile.setBusinessLicenseUrl("/uploads/verification/" + fileName);
+        if (businessFile != null && !businessFile.isEmpty()) {
+            String fileName =
+                    System.currentTimeMillis() + "_business_" +
+                            businessFile.getOriginalFilename();
+
+            Files.write(
+                    Paths.get(UPLOAD_DIR + fileName),
+                    businessFile.getBytes()
+            );
+
+            profile.setBusinessLicenseUrl(
+                    "/uploads/verification/" + fileName
+            );
         }
-        if (!file2.isEmpty()) {
-            String fileName = System.currentTimeMillis() + "_2_" + file2.getOriginalFilename();
-            Files.write(Paths.get(UPLOAD_DIR + fileName), file2.getBytes());
-            profile.setMedicalLicenseUrl("/uploads/verification/" + fileName);
+
+        if (medicalFile != null && !medicalFile.isEmpty()) {
+            String fileName =
+                    System.currentTimeMillis() + "_medical_" +
+                            medicalFile.getOriginalFilename();
+
+            Files.write(
+                    Paths.get(UPLOAD_DIR + fileName),
+                    medicalFile.getBytes()
+            );
+
+            profile.setMedicalLicenseUrl(
+                    "/uploads/verification/" + fileName
+            );
         }
-        profile.setVerificationStatus("PENDING");
+
+        // ⭐ Khi upload → quay về PENDING
+        profile.setVerificationStatus(VerificationStatus.PENDING);
+
         clinicProfileRepository.save(profile);
     }
-    
-    // 4. Đổi pass (Giữ nguyên logic cũ hoặc tạm bỏ qua nếu chưa cần)
-    public boolean changePassword(String username, String currentPass, String newPass) {
-        return true; // Tạm thời return true để test giao diện
+
+    /**
+     * 🔹 ĐỔI MẬT KHẨU (chưa dùng)
+     */
+    public boolean changePassword(
+            String username,
+            String currentPass,
+            String newPass
+    ) {
+        return true;
     }
 }
