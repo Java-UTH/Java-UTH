@@ -125,7 +125,7 @@ public class CustomerController {
     }
 
     private String uploadAvatar(MultipartFile file, Long userId) throws Exception {
-        String uploadDir = System.getProperty("user.dir") + "/target/classes/static/images/uploads";
+        String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/images/uploads";
         File uploadFolder = new File(uploadDir);
         if (!uploadFolder.exists())
             uploadFolder.mkdirs();
