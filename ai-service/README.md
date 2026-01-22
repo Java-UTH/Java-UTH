@@ -83,13 +83,13 @@ pip install torch torchvision fastapi uvicorn python-multipart pillow pandas num
 ### Chạy server ở chế độ development:
 
 ```bash
-uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
+uvicorn src.main:app --reload
 ```
 
 ### Chạy server ở chế độ production:
 
 ```bash
-uvicorn src.main:app --host 0.0.0.0 --port 8000
+uvicorn src.main:app --host
 ```
 
 Sau khi khởi động, server sẽ chạy tại:
