@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -32,7 +33,7 @@ public class AiInferenceService {
     private static final Logger logger = LoggerFactory.getLogger(AiInferenceService.class);
 
     // Thư mục tải lên để lưu trữ ảnh
-    private static final String UPLOAD_DIR = "src/main/resources/static/images/ai-uploads/";
+    private static final String UPLOAD_DIR = System.getProperty("user.dir") + File.separator + "uploads" + File.separator;
 
     @Autowired
     private AnalysisRecordRepository analysisRecordRepository;

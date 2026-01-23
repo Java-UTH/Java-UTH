@@ -28,7 +28,7 @@ public class ReportService {
     @Autowired
     private RestTemplate restTemplate;
 
-    private final String UPLOAD_DIR = "src/main/resources/static/images/uploads/";
+    private final String UPLOAD_DIR = System.getProperty("user.dir") + File.separator + "uploads" + File.separator;
     private final String AI_SERVICE_URL = "http://localhost:8000/predict";
 
     public AnalysisRecord saveAnalysis(MultipartFile file, User user) throws IOException {
