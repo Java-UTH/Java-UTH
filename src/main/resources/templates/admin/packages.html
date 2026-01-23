@@ -14,6 +14,7 @@
     <a href="http://localhost:8080/admin/clinics">Clinics</a>
     <a href="http://localhost:8080/admin/packages">Packages</a>
     <a href="http://localhost:8080/admin/ai">AI Management</a>
+    <a href="http://localhost:8080/admin/notifications">Notifications</a>
     <a href="http://localhost:8080/admin/reports">Reports</a>
 </div>
 <div class="main">
@@ -27,38 +28,18 @@
                 <th>ID</th>
                 <th>Package Name</th>
                 <th>Price</th>
-                <th>Credits</th>
-                <th>Duration</th>
+                <th>Period</th>
+                <th>Features</th>
+                <th>Status</th>
                 <th>Action</th>
             </tr>
         </thead>
-        <tbody>
-            <tr>
-                <td>PK01</td>
-                <td>Basic</td>
-                <td>500,000 VND</td>
-                <td>100 images</td>
-                <td>30 days</td>
-                <td>
-                    <button>Edit</button>
-                    <button class="danger">Delete</button>
-                </td>
-            </tr>
-            <tr>
-                <td>PK02</td>
-                <td>Premium</td>
-                <td>2,000,000 VND</td>
-                <td>500 images</td>
-                <td>90 days</td>
-                <td>
-                    <button>Edit</button>
-                    <button class="danger">Delete</button>
-                </td>
-            </tr>
+        <tbody id="packageTableBody">
+            <!-- JS render -->
         </tbody>
     </table>
 </div>
 
-<script src="../../static/admin/js/packages.js"></script>
+<script src="/admin/js/packages.js"></script>
 </body>
 </html>
