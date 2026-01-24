@@ -133,7 +133,7 @@
 
             <div class="d-flex justify-content-between small opacity-75 mb-4">
                 <span>Tiến trình: <span id="progressPercent">0</span>%</span>
-                <span>Thời gian còn lại: <span id="timer">60</span>s</span>
+                <span>Thời gian còn lại: <span id="timer">30</span>s</span>
             </div>
 
             <div class="mt-4 p-3 rounded-4"
@@ -211,29 +211,44 @@
 
             overlay.classList.remove('d-none');
 
-            let timeLeft = 60;
+            let timeLeft = 30; // Giảm xuống 30 giây
+            let totalTime = 30;
             let progress = 0;
             let isAjaxFinished = false;
 
             // Start Progress Animation
             const interval = setInterval(() => {
-                timeLeft--;
-                progress = Math.round(((60 - timeLeft) / 60) * 100);
+                // Nếu dữ liệu đã về, chúng ta có thể trừ thời gian nhanh hơn (tăng tốc độ về đích)
+                if (isAjaxFinished) {
+                    timeLeft -= 2;
+                } else {
+                    timeLeft--;
+                }
+
+                if (timeLeft < 0) timeLeft = 0;
+
+                progress = Math.round(((totalTime - timeLeft) / totalTime) * 100);
+                if (progress > 100) progress = 100;
 
                 progressBar.style.width = progress + '%';
                 progressPercent.innerText = progress;
-                timerText.innerText = timeLeft;
+                timerText.innerText = Math.ceil(timeLeft > 0 ? timeLeft : 0);
 
                 // Update messages
-                if (timeLeft % 7 === 0) {
-                    statusText.innerText = statusMessages[Math.floor(Math.random() * statusMessages.length)];
-                    scanningModule.innerText = scanningModules[Math.floor(Math.random() * scanningModules.length)];
+                if (Math.round(timeLeft) % 7 === 0) {
+                    if (!isAjaxFinished) {
+                        statusText.innerText = statusMessages[Math.floor(Math.random() * statusMessages.length)];
+                        scanningModule.innerText = scanningModules[Math.floor(Math.random() * scanningModules.length)];
+                    }
                 }
 
                 if (timeLeft <= 0) {
                     clearInterval(interval);
                     if (isAjaxFinished) {
-                        window.location.href = '/customer/reports/history?success';
+                        statusText.innerText = "Hoàn tất! Đang mở báo cáo...";
+                        setTimeout(() => {
+                            window.location.href = '/customer/reports/history?success';
+                        }, 1000);
                     } else {
                         statusText.innerText = "Đang hoàn tất những bước cuối cùng...";
                         progressBar.style.width = '100%';
@@ -250,18 +265,9 @@
             })
                 .then(response => {
                     isAjaxFinished = true;
-                    statusText.innerText = "Phân tích hoàn tất! Đang tạo báo cáo...";
-                    progressBar.style.width = '100%';
-                    progressPercent.innerText = '100';
-
-                    if (timeLeft <= 0) {
-                        window.location.href = '/customer/reports/history?success';
-                    } else {
-                        // If finished early, wait a bit then redirect
-                        setTimeout(() => {
-                            window.location.href = '/customer/reports/history?success';
-                        }, 1500);
-                    }
+                    // Khi AJAX xong, chúng ta không chuyển hướng ngay mà để thanh tiến trình hoàn tất
+                    // Có thể tăng tốc độ đếm ngược ở đây nếu muốn "nhanh" hơn một chút
+                    statusText.innerText = "Đã nhận được dữ liệu phân tích. Đang tổng hợp báo cáo y khoa...";
                 })
                 .catch(error => {
                     console.error('Error:', error);
