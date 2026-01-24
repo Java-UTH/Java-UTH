@@ -10,4 +10,5 @@ public interface ServicePackageRepository extends JpaRepository<ServicePackage, 
     // Lấy tất cả gói (Dùng cho Admin quản lý)
     // Lấy gói đang hoạt động (Dùng cho Khách hàng xem)
     List<ServicePackage> findByIsActiveTrue();
+    List<ServicePackage> findAll();
 }
