@@ -115,6 +115,7 @@ SP26SE025/
 │           │   ├── login-view.html
 │           │   └── register.html
 │           └── application.properties
+├── uploads
 ├── mvnw
 ├── mvnw.cmd
 ├── pom.xml
