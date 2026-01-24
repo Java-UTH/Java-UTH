@@ -6,6 +6,7 @@
     <title>Tải ảnh Đáy mắt - AURA</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         :root {
             --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -148,6 +149,24 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Hiện thông báo thành công nếu có tham số success
+        if (window.location.search.includes('success')) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Hoàn tất phân tích!',
+                text: 'Hệ thống AI đã phân tích xong và lưu kết quả vào lịch sử.',
+                timer: 3000,
+                timerProgressBar: true,
+                showConfirmButton: false,
+                background: '#fff',
+                iconColor: '#38ef7d',
+                customClass: {
+                    title: 'fw-bold text-dark',
+                    content: 'text-muted'
+                }
+            });
+        }
+
         function showPreview(event) {
             const file = event.target.files[0];
             const reader = new FileReader();
@@ -231,13 +250,27 @@
             })
                 .then(response => {
                     isAjaxFinished = true;
+                    statusText.innerText = "Phân tích hoàn tất! Đang tạo báo cáo...";
+                    progressBar.style.width = '100%';
+                    progressPercent.innerText = '100';
+
                     if (timeLeft <= 0) {
                         window.location.href = '/customer/reports/history?success';
+                    } else {
+                        // If finished early, wait a bit then redirect
+                        setTimeout(() => {
+                            window.location.href = '/customer/reports/history?success';
+                        }, 1500);
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('Có lỗi xảy ra trong quá trình phân tích. Vui lòng thử lại.');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi phân tích',
+                        text: 'Có lỗi xảy ra trong quá trình kết nối với AI. Vui lòng thử lại.',
+                        confirmButtonColor: '#667eea'
+                    });
                     overlay.classList.add('d-none');
                     clearInterval(interval);
                 });
