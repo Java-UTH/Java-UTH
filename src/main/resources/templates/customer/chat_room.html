@@ -103,10 +103,19 @@
         }
 
         .timestamp {
-            font-size: 0.7rem;
-            opacity: 0.7;
-            margin-top: 5px;
+            font-size: 0.75rem;
+            opacity: 0.6;
+            margin-top: 4px;
             display: block;
+        }
+
+        #realTimeClock {
+            font-weight: 500;
+            color: #0072ff;
+            background: rgba(0, 114, 255, 0.1);
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
         }
     </style>
 </head>
@@ -119,11 +128,14 @@
                 <img th:src="${doctor.avatarPath != null ? doctor.avatarPath : 'https://cdn-icons-png.flaticon.com/512/3774/3774299.png'}"
                     class="me-3">
                 <div>
-                    <h6 class="fw-bold mb-0" th:text="${'Bác sĩ ' + doctor.fullName}">Bác sĩ Chi Thanh</h6>
+                    <h6 class="fw-bold mb-0"
+                        th:text="${doctor.fullName != null ? 'Bác sĩ ' + doctor.fullName : 'Bác sĩ (Chưa đặt tên)'}">Bác
+                        sĩ Chi Thanh</h6>
                     <small class="text-success"><i class="fas fa-circle fa-xs"></i> Đang trực tuyến</small>
                 </div>
             </div>
-            <div class="header-actions">
+            <div class="header-actions d-flex align-items-center">
+                <div id="realTimeClock" class="me-3"></div>
                 <button class="btn btn-light rounded-circle shadow-sm me-2"><i
                         class="fas fa-phone-alt text-primary"></i></button>
                 <button class="btn btn-light rounded-circle shadow-sm"><i
@@ -134,7 +146,7 @@
         <div class="chat-messages" id="chatMessages">
             <div th:each="msg : ${history}" th:class="${msg.sender.id == currentUser.id ? 'msg sent' : 'msg received'}">
                 <span th:text="${msg.content}"></span>
-                <small class="timestamp" th:text="${#temporals.format(msg.timestamp, 'HH:mm')}"></small>
+                <small class="timestamp" th:text="${#temporals.format(msg.timestamp, 'dd/MM/yyyy HH:mm')}"></small>
             </div>
         </div>
 
@@ -188,11 +200,29 @@
             const container = document.getElementById('chatMessages');
             const div = document.createElement('div');
             div.className = 'msg ' + type;
-            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            div.innerHTML = `<span>${content}</span><small class="timestamp">${time}</small>`;
+            const now = new Date();
+            const timeStr = now.toLocaleDateString('vi-VN') + ' ' + now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+            div.innerHTML = `<span>${content}</span><small class="timestamp">${timeStr}</small>`;
             container.appendChild(div);
             container.scrollTop = container.scrollHeight;
         }
+
+        function updateClock() {
+            const now = new Date();
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'numeric',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            };
+            document.getElementById('realTimeClock').innerText = now.toLocaleDateString('vi-VN', options);
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock();
 
         document.getElementById('chatForm').addEventListener('submit', function (e) {
             e.preventDefault();

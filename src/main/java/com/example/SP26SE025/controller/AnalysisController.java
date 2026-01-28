@@ -57,9 +57,21 @@ public class AnalysisController {
     }
 
     @PostMapping("/upload")
-    public String uploadImage(@RequestParam("file") MultipartFile file, Principal principal) throws IOException {
+    public String uploadImage(@RequestParam("file") MultipartFile file, Principal principal, Model model)
+            throws IOException {
         User user = userService.findByEmail(principal.getName());
-        reportService.saveAnalysis(file, user);
+        AnalysisRecord record = reportService.saveAnalysis(file, user);
+
+        // Check if AI detected invalid image
+        String aiResult = record.getAiResult();
+        if (aiResult != null && (aiResult.contains("\"is_retinal_image\":false") ||
+                aiResult.contains("\"is_retinal_image\": false") ||
+                aiResult.contains("error"))) {
+            // Delete the invalid record
+            reportService.deleteById(record.getId());
+            return "redirect:/customer/reports/upload?invalidImage=true";
+        }
+
         return "redirect:/customer/reports/history?success";
     }
 

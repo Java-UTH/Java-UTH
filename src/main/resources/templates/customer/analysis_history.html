@@ -43,9 +43,14 @@
             color: #dc2626;
         }
 
+        .status-medium {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
         .status-low {
-            background: #dcfce7;
-            color: #16a34a;
+            background: #d1fae5;
+            color: #059669;
         }
 
         .table img {
@@ -185,9 +190,25 @@
                     div.innerHTML = `<span class="text-danger small"><i class="fas fa-exclamation-circle me-1"></i> ${json.error}</span>`;
                 } else if (json.analysis) {
                     const risk = json.analysis.overall_risk;
-                    const badgeClass = risk === 'HIGH' ? 'status-high' : 'status-low';
+                    const isNormal = json.analysis.normal;
+
+                    let badgeClass, badgeText, badgeIcon;
+                    if (isNormal || risk === 'LOW') {
+                        badgeClass = 'status-low';
+                        badgeText = 'BÌNH THƯỜNG';
+                        badgeIcon = '<i class="fas fa-check-circle me-1"></i>';
+                    } else if (risk === 'MEDIUM') {
+                        badgeClass = 'status-medium';
+                        badgeText = 'CẢNH BÁO';
+                        badgeIcon = '<i class="fas fa-exclamation-triangle me-1"></i>';
+                    } else {
+                        badgeClass = 'status-high';
+                        badgeText = 'NGUỴ CƠ CAO';
+                        badgeIcon = '<i class="fas fa-exclamation-circle me-1"></i>';
+                    }
+
                     div.innerHTML = `
-                        <span class="status-badge ${badgeClass} mb-1 d-inline-block">${risk} RISK</span>
+                        <span class="status-badge ${badgeClass} mb-1 d-inline-block">${badgeIcon}${badgeText}</span>
                         <div class="small text-truncate" style="max-width: 250px;">${json.analysis.clinical_impression}</div>
                     `;
                 } else {
@@ -203,6 +224,27 @@
             const jsonStr = row.querySelector('.ai-display').dataset.json;
             const json = JSON.parse(jsonStr);
 
+            const risk = json.analysis.overall_risk;
+            const isNormal = json.analysis.normal;
+
+            let badgeClass, badgeText, badgeIcon, borderClass;
+            if (isNormal || risk === 'LOW') {
+                badgeClass = 'status-low';
+                badgeText = 'BÌNH THƯỜNG';
+                badgeIcon = '<i class="fas fa-check-circle me-1"></i>';
+                borderClass = 'border-success';
+            } else if (risk === 'MEDIUM') {
+                badgeClass = 'status-medium';
+                badgeText = 'CẢNH BÁO';
+                badgeIcon = '<i class="fas fa-exclamation-triangle me-1"></i>';
+                borderClass = 'border-warning';
+            } else {
+                badgeClass = 'status-high';
+                badgeText = 'NGUỴ CƠ CAO';
+                badgeIcon = '<i class="fas fa-exclamation-circle me-1"></i>';
+                borderClass = 'border-danger';
+            }
+
             let html = `
                 <div class="row">
                     <div class="col-md-5 text-center">
@@ -212,13 +254,13 @@
                     <div class="col-md-7">
                         <div class="d-flex align-items-center mb-3">
                             <h4 class="fw-bold text-dark mb-0 me-3">Chẩn đoán</h4>
-                            <span class="status-badge ${json.analysis.overall_risk === 'HIGH' ? 'status-high' : 'status-low'}">
-                                ${json.analysis.overall_risk} RISK
+                            <span class="status-badge ${badgeClass}">
+                                ${badgeIcon}${badgeText}
                             </span>
                         </div>
-                        <div class="p-3 bg-light rounded-4 mb-4 border-start border-4 ${json.analysis.overall_risk === 'HIGH' ? 'border-danger' : 'border-success'}">
+                        <div class="p-3 bg-light rounded-4 mb-4 border-start border-4 ${borderClass}">
                             <p class="mb-2"><strong>Nhận định:</strong> ${json.analysis.clinical_impression}</p>
-                            <p class="mb-0 text-success fw-bold"><strong>Khuyến nghị:</strong> ${json.analysis.recommendation}</p>
+                            <p class="mb-0 ${isNormal || risk === 'LOW' ? 'text-success' : 'text-danger'} fw-bold"><strong>Khuyến nghị:</strong> ${json.analysis.recommendation}</p>
                         </div>
                         
                         <h6 class="fw-bold mb-3 text-secondary">Tỉ lệ xác suất dự đoán (%)</h6>

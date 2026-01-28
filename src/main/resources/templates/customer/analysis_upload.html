@@ -167,8 +167,33 @@
             });
         }
 
+        // Hiện thông báo lỗi nếu ảnh không hợp lệ
+        if (window.location.search.includes('invalidImage')) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Không đúng định dạng ảnh mắt',
+                html: '<p>Hình ảnh bạn tải lên <strong>không phải là ảnh võng mạc</strong>.</p>' +
+                    '<p class="text-muted small mt-2">Vui lòng tải lên ảnh chụp đáy mắt (Fundus) hoặc OCT để hệ thống có thể phân tích chính xác.</p>',
+                confirmButtonColor: '#dc2626',
+                confirmButtonText: 'Thử lại'
+            });
+        }
+
         function showPreview(event) {
             const file = event.target.files[0];
+
+            // Validate file type
+            if (!file.type.match('image/(jpeg|jpg|png)')) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Định dạng không hợp lệ',
+                    text: 'Vui lòng chọn file ảnh định dạng JPG hoặc PNG.',
+                    confirmButtonColor: '#667eea'
+                });
+                event.target.value = '';
+                return;
+            }
+
             const reader = new FileReader();
             reader.onload = function () {
                 const img = document.getElementById('preview');
@@ -263,10 +288,23 @@
                 method: 'POST',
                 body: formData
             })
-                .then(response => {
+                .then(response => response.text())
+                .then(data => {
                     isAjaxFinished = true;
-                    // Khi AJAX xong, chúng ta không chuyển hướng ngay mà để thanh tiến trình hoàn tất
-                    // Có thể tăng tốc độ đếm ngược ở đây nếu muốn "nhanh" hơn một chút
+                    // Check if response contains error about invalid image
+                    if (data.includes('invalidImage')) {
+                        clearInterval(interval);
+                        overlay.classList.add('d-none');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Không đúng định dạng ảnh mắt',
+                            html: '<p>Hình ảnh bạn tải lên <strong>không phải là ảnh võng mạc</strong>.</p>' +
+                                '<p class="text-muted small mt-2">Vui lòng tải lên ảnh chụp đáy mắt (Fundus) hoặc OCT.</p>',
+                            confirmButtonColor: '#dc2626',
+                            confirmButtonText: 'Thử lại'
+                        });
+                        return;
+                    }
                     statusText.innerText = "Đã nhận được dữ liệu phân tích. Đang tổng hợp báo cáo y khoa...";
                 })
                 .catch(error => {
