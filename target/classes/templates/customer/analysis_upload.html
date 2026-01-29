@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Tải ảnh Đáy mắt - AURA</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        body {
+            background: #f4f7f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .hero-section {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 60px 0;
+            margin-bottom: 30px;
+            border-radius: 0 0 30px 30px;
+        }
+
+        .card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .border-dashed {
+            border: 2px dashed #cbd5e0;
+            transition: all 0.3s ease;
+        }
+
+        .border-dashed:hover {
+            border-color: #667eea;
+            background: #f0f4ff !important;
+        }
+
+        .btn-back {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .btn-back:hover {
+            color: #f0f0f0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="hero-section text-center position-relative">
+        <a th:href="@{/customer/home}" class="btn-back"><i class="fas fa-arrow-left me-2"></i> Quay lại Dashboard</a>
+        <div class="container text-center">
+            <h1 class="fw-bold display-5"><i class="fas fa-microscope me-3"></i>Trung tâm Phân tích AI</h1>
+            <p class="lead opacity-75">Tải lên ảnh chụp võng mạc (Fundus) để nhận chẩn đoán tức thì.</p>
+        </div>
+    </div>
+
+    <div class="container pb-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <!-- Warning Alert -->
+                <div class="alert alert-warning border-0 shadow-sm rounded-4 mb-4 p-3 d-flex align-items-center">
+                    <i class="fas fa-exclamation-triangle fa-2x me-3 text-warning"></i>
+                    <div>
+                        <strong class="d-block">Lưu ý quan trọng:</strong>
+                        Mô hình AI hiện tại chỉ hỗ trợ phân tích <strong>Võng mạc (Fundus)</strong>. Ảnh chụp bên ngoài
+                        mắt (như đau mắt đỏ, viêm nhiễm bề mặt) sẽ không cho kết quả chính xác.
+                    </div>
+                </div>
+
+                <div class="card p-5">
+                    <form id="analysisForm" th:action="@{/customer/reports/upload}" method="post"
+                        enctype="multipart/form-data">
+                        <div class="mb-4 text-center">
+                            <label for="fileInput"
+                                class="form-label d-block p-5 border-dashed rounded-4 bg-light cursor-pointer">
+                                <i class="fas fa-image fa-4x text-primary mb-3 d-block"></i>
+                                <h4 class="fw-bold">Chọn hình ảnh võng mạc</h4>
+                                <p class="text-muted">Hỗ trợ Fundus, OCT (JPG, PNG)</p>
+                                <input type="file" name="file" id="fileInput" class="form-control d-none" required
+                                    onchange="showPreview(event)">
+                            </label>
+                            <div id="previewContainer" class="mt-4 d-none">
+                                <h6 class="text-start fw-bold mb-2">Xem trước:</h6>
+                                <img id="preview" class="img-fluid rounded-3 shadow-sm" style="max-height: 300px;">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 btn-lg rounded-pill fw-bold py-3 shadow"
+                            id="submitBtn">
+                            BẮT ĐẦU PHÂN TÍCH AI <i class="fas fa-bolt ms-2"></i>
+                        </button>
+                    </form>
+
+                    <div class="text-center mt-4">
+                        <a th:href="@{/customer/reports/history}" class="text-decoration-none text-muted small">
+                            <i class="fas fa-history me-1"></i> Xem lịch sử phân tích của bạn
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Processing Overlay -->
+    <div id="processingOverlay" class="d-none"
+        style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 9999; display: flex; align-items: center; justify-content: center; color: white;">
+        <div class="text-center" style="max-width: 500px; width: 90%;">
+            <div class="mb-5">
+                <div class="spinner-grow text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
+                <div class="spinner-grow text-info" role="status"
+                    style="width: 3rem; height: 3rem; animation-delay: 0.2s;"></div>
+                <div class="spinner-grow text-light" role="status"
+                    style="width: 3rem; height: 3rem; animation-delay: 0.4s;"></div>
+            </div>
+
+            <h2 class="fw-bold mb-3">AI Đang Phân Tích...</h2>
+            <p id="statusText" class="lead text-info mb-4">Đang khởi tạo hệ thống chẩn đoán...</p>
+
+            <div class="progress mb-3" style="height: 12px; border-radius: 10px; background: rgba(255,255,255,0.1);">
+                <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
+                    role="progressbar" style="width: 0%; border-radius: 10px; transition: none;"></div>
+            </div>
+
+            <div class="d-flex justify-content-between small opacity-75 mb-4">
+                <span>Tiến trình: <span id="progressPercent">0</span>%</span>
+                <span>Thời gian còn lại: <span id="timer">30</span>s</span>
+            </div>
+
+            <div class="mt-4 p-3 rounded-4"
+                style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+                <small class="text-muted d-block mb-2">HỆ THỐNG ĐANG QUÉT:</small>
+                <div id="scanningModule" class="fw-bold text-uppercase tracking-wider"
+                    style="letter-spacing: 2px; color: #00d2ff;">
+                    VASCULAR NETWORK
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Hiện thông báo thành công nếu có tham số success
+        if (window.location.search.includes('success')) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Hoàn tất phân tích!',
+                text: 'Hệ thống AI đã phân tích xong và lưu kết quả vào lịch sử.',
+                timer: 3000,
+                timerProgressBar: true,
+                showConfirmButton: false,
+                background: '#fff',
+                iconColor: '#38ef7d',
+                customClass: {
+                    title: 'fw-bold text-dark',
+                    content: 'text-muted'
+                }
+            });
+        }
+
+        // Hiện thông báo lỗi nếu ảnh không hợp lệ
+        if (window.location.search.includes('invalidImage')) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Không đúng định dạng ảnh mắt',
+                html: '<p>Hình ảnh bạn tải lên <strong>không phải là ảnh võng mạc</strong>.</p>' +
+                    '<p class="text-muted small mt-2">Vui lòng tải lên ảnh chụp đáy mắt (Fundus) hoặc OCT để hệ thống có thể phân tích chính xác.</p>',
+                confirmButtonColor: '#dc2626',
+                confirmButtonText: 'Thử lại'
+            });
+        }
+
+        function showPreview(event) {
+            const file = event.target.files[0];
+
+            // Validate file type
+            if (!file.type.match('image/(jpeg|jpg|png)')) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Định dạng không hợp lệ',
+                    text: 'Vui lòng chọn file ảnh định dạng JPG hoặc PNG.',
+                    confirmButtonColor: '#667eea'
+                });
+                event.target.value = '';
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function () {
+                const img = document.getElementById('preview');
+                const container = document.getElementById('previewContainer');
+                img.src = reader.result;
+                container.classList.remove('d-none');
+            }
+            reader.readAsDataURL(file);
+        }
+
+        const statusMessages = [
+            "Đang tải dữ liệu hình ảnh...",
+            "Đang thực hiện phân tách các lớp võng mạc...",
+            "Đang nhận diện các tổn thương vi mạch...",
+            "Phát hiện xuất huyết và xuất tiết...",
+            "Đang phân tích mạng lưới mạch máu...",
+            "Đang so sánh với cơ sở dữ liệu bệnh lý...",
+            "Đang đánh giá mức độ rủi ro tổng thể...",
+            "Đang tổng hợp báo cáo y khoa..."
+        ];
+
+        const scanningModules = [
+            "RETINAL LAYERS", "VASCULAR NETWORK", "MACULAR REGION", "OPTIC DISC",
+            "MICROANEURYSMS", "EXUDATES", "HEMORRHAGES", "NERVE FIBER"
+        ];
+
+        document.getElementById('analysisForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const fileInput = document.getElementById('fileInput');
+            if (!fileInput.files || fileInput.files.length === 0) return;
+
+            const form = this;
+            const overlay = document.getElementById('processingOverlay');
+            const progressBar = document.getElementById('progressBar');
+            const progressPercent = document.getElementById('progressPercent');
+            const timerText = document.getElementById('timer');
+            const statusText = document.getElementById('statusText');
+            const scanningModule = document.getElementById('scanningModule');
+
+            overlay.classList.remove('d-none');
+
+            let timeLeft = 30; // Giảm xuống 30 giây
+            let totalTime = 30;
+            let progress = 0;
+            let isAjaxFinished = false;
+
+            // Start Progress Animation
+            const interval = setInterval(() => {
+                // Nếu dữ liệu đã về, chúng ta có thể trừ thời gian nhanh hơn (tăng tốc độ về đích)
+                if (isAjaxFinished) {
+                    timeLeft -= 2;
+                } else {
+                    timeLeft--;
+                }
+
+                if (timeLeft < 0) timeLeft = 0;
+
+                progress = Math.round(((totalTime - timeLeft) / totalTime) * 100);
+                if (progress > 100) progress = 100;
+
+                progressBar.style.width = progress + '%';
+                progressPercent.innerText = progress;
+                timerText.innerText = Math.ceil(timeLeft > 0 ? timeLeft : 0);
+
+                // Update messages
+                if (Math.round(timeLeft) % 7 === 0) {
+                    if (!isAjaxFinished) {
+                        statusText.innerText = statusMessages[Math.floor(Math.random() * statusMessages.length)];
+                        scanningModule.innerText = scanningModules[Math.floor(Math.random() * scanningModules.length)];
+                    }
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(interval);
+                    if (isAjaxFinished) {
+                        statusText.innerText = "Hoàn tất! Đang mở báo cáo...";
+                        setTimeout(() => {
+                            window.location.href = '/customer/reports/history?success';
+                        }, 1000);
+                    } else {
+                        statusText.innerText = "Đang hoàn tất những bước cuối cùng...";
+                        progressBar.style.width = '100%';
+                        progressPercent.innerText = '99';
+                    }
+                }
+            }, 1000);
+
+            // AJAX Submission
+            const formData = new FormData(form);
+            fetch(form.action, {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.text())
+                .then(data => {
+                    isAjaxFinished = true;
+                    // Check if response contains error about invalid image
+                    if (data.includes('invalidImage')) {
+                        clearInterval(interval);
+                        overlay.classList.add('d-none');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Không đúng định dạng ảnh mắt',
+                            html: '<p>Hình ảnh bạn tải lên <strong>không phải là ảnh võng mạc</strong>.</p>' +
+                                '<p class="text-muted small mt-2">Vui lòng tải lên ảnh chụp đáy mắt (Fundus) hoặc OCT.</p>',
+                            confirmButtonColor: '#dc2626',
+                            confirmButtonText: 'Thử lại'
+                        });
+                        return;
+                    }
+                    statusText.innerText = "Đã nhận được dữ liệu phân tích. Đang tổng hợp báo cáo y khoa...";
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi phân tích',
+                        text: 'Có lỗi xảy ra trong quá trình kết nối với AI. Vui lòng thử lại.',
+                        confirmButtonColor: '#667eea'
+                    });
+                    overlay.classList.add('d-none');
+                    clearInterval(interval);
+                });
+        });
+    </script>
+</body>
+
+</html>

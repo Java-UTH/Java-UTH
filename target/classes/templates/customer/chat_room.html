@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Chat với Bác sĩ - AURA</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <style>
+        body {
+            background: #f0f2f5;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 1000px;
+            margin: 20px auto;
+            width: 95%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: #fff;
+            padding: 15px 25px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: #fafafa;
+        }
+
+        .msg {
+            max-width: 70%;
+            padding: 12px 18px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .msg.sent {
+            align-self: flex-end;
+            background: #0072ff;
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .msg.received {
+            align-self: flex-start;
+            background: #e4e6eb;
+            color: #050505;
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-input-area {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #eee;
+        }
+
+        .input-group {
+            background: #f0f2f5;
+            border-radius: 30px;
+            padding: 5px 15px;
+            border: none;
+        }
+
+        .input-group input {
+            background: transparent;
+            border: none;
+            padding: 10px;
+            font-size: 0.95rem;
+        }
+
+        .input-group input:focus {
+            box-shadow: none;
+        }
+
+        .doctor-info img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .timestamp {
+            font-size: 0.75rem;
+            opacity: 0.6;
+            margin-top: 4px;
+            display: block;
+        }
+
+        #realTimeClock {
+            font-weight: 500;
+            color: #0072ff;
+            background: rgba(0, 114, 255, 0.1);
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="d-flex align-items-center doctor-info">
+                <a th:href="@{/customer/chat}" class="me-3 text-dark"><i class="fas fa-chevron-left"></i></a>
+                <img th:src="${doctor.avatarPath != null ? doctor.avatarPath : 'https://cdn-icons-png.flaticon.com/512/3774/3774299.png'}"
+                    class="me-3">
+                <div>
+                    <h6 class="fw-bold mb-0"
+                        th:text="${doctor.fullName != null ? 'Bác sĩ ' + doctor.fullName : 'Bác sĩ (Chưa đặt tên)'}">Bác
+                        sĩ Chi Thanh</h6>
+                    <small class="text-success"><i class="fas fa-circle fa-xs"></i> Đang trực tuyến</small>
+                </div>
+            </div>
+            <div class="header-actions d-flex align-items-center">
+                <div id="realTimeClock" class="me-3"></div>
+                <button class="btn btn-light rounded-circle shadow-sm me-2"><i
+                        class="fas fa-phone-alt text-primary"></i></button>
+                <button class="btn btn-light rounded-circle shadow-sm"><i
+                        class="fas fa-video text-primary"></i></button>
+            </div>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+            <div th:each="msg : ${history}" th:class="${msg.sender.id == currentUser.id ? 'msg sent' : 'msg received'}">
+                <span th:text="${msg.content}"></span>
+                <small class="timestamp" th:text="${#temporals.format(msg.timestamp, 'dd/MM/yyyy HH:mm')}"></small>
+            </div>
+        </div>
+
+        <div class="chat-input-area">
+            <form id="chatForm">
+                <div class="input-group">
+                    <button type="button" class="btn text-muted"><i class="fas fa-paperclip"></i></button>
+                    <input type="text" id="messageInput" class="form-control" placeholder="Nhập tin nhắn..."
+                        autocomplete="off">
+                    <button type="submit" class="btn text-primary"><i class="fas fa-paper-plane fa-lg"></i></button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const currentUser = /*[[${ currentUser }]]*/ {};
+        const doctor = /*[[${ doctor }]]*/ {};
+        let stompClient = null;
+
+        function connect() {
+            const socket = new SockJS('/ws-chat');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function (frame) {
+                console.log('Connected: ' + frame);
+                // Đăng ký nhận tin nhắn cá nhân (Spring tự động map /user/queue/messages cho session hiện tại)
+                stompClient.subscribe('/user/queue/messages', function (msg) {
+                    const message = JSON.parse(msg.body);
+                    if (message.sender.id === doctor.id) {
+                        appendMessage(message.content, 'received');
+                    }
+                });
+            });
+        }
+        /*]]>*/
+
+        function sendMessage(content) {
+            if (content && stompClient) {
+                const chatRequest = {
+                    senderId: currentUser.id,
+                    recipientId: doctor.id,
+                    content: content
+                };
+                stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatRequest));
+                appendMessage(content, 'sent');
+            }
+        }
+
+        function appendMessage(content, type) {
+            const container = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = 'msg ' + type;
+            const now = new Date();
+            const timeStr = now.toLocaleDateString('vi-VN') + ' ' + now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+            div.innerHTML = `<span>${content}</span><small class="timestamp">${timeStr}</small>`;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function updateClock() {
+            const now = new Date();
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'numeric',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            };
+            document.getElementById('realTimeClock').innerText = now.toLocaleDateString('vi-VN', options);
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        document.getElementById('chatForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const input = document.getElementById('messageInput');
+            if (input.value.trim()) {
+                sendMessage(input.value.trim());
+                input.value = '';
+            }
+        });
+
+        // Tự động kéo xuống cuối
+        const container = document.getElementById('chatMessages');
+        container.scrollTop = container.scrollHeight;
+
+        connect();
+    </script>
+</body>
+
+</html>

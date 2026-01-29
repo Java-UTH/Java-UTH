@@ -62,4 +62,5 @@ public class AdminClinicController {
         // ❌ KHÔNG bật user
         return ResponseEntity.ok("Clinic suspended");
     }
+    
 }

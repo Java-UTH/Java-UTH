@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Service Packages</title>
+
+    <link rel="stylesheet" href="/admin/css/base.css">
+    <link rel="stylesheet" href="/admin/css/packages.css">
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>ADMIN</h2>
+    <a href="/admin/home">Dashboard</a>
+    <a href="/admin/users">Users</a>
+    <a href="/admin/doctors">Doctors</a>
+    <a href="/admin/clinics">Clinics</a>
+    <a href="/admin/packages" class="active">Packages</a>
+    <a href="/admin/ai">AI Management</a>
+    <a href="/admin/notifications">Notifications</a>
+    <a href="/admin/reports">Reports</a>
+</div>
+
+<div class="main">
+    <h1>Service Packages</h1>
+
+    <button onclick="addPackage()">+ Add Package</button>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Package Name</th>
+                <th>Price</th>
+                <th>Period</th>
+                <th>Features</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="packageTableBody">
+            <!-- JS render -->
+        </tbody>
+    </table>
+</div>
+
+<script src="/admin/js/packages.js"></script>
+</body>
+</html>
