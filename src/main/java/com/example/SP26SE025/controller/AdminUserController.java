@@ -33,7 +33,7 @@ public class AdminUserController {
     @PutMapping("/{id}/toggle")
     public ResponseEntity<?> toggle(@PathVariable Long id) {
         User u = userRepository.findById(id).orElseThrow();
-        // u.setActive(!u.isActive()); // ✅ TOGGLE THẬT
+        u.setEnabled(!u.isEnabled());
         userRepository.save(u);
         return ResponseEntity.ok().build();
     }

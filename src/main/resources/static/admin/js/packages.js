@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", loadPackages);
 
-// ================= LOAD =================
+// ========= LOAD =========
 function loadPackages() {
     fetch("/admin/api/packages", { credentials: "include" })
         .then(res => res.json())
@@ -12,45 +12,32 @@ function loadPackages() {
                 tbody.innerHTML += `
                 <tr>
                     <td>${p.id}</td>
-
-                    <td>
-                        <input value="${p.packageName || ''}">
+                    <td><input value="${p.packageName || ''}"></td>
+                    <td><input type="number" value="${p.price || 0}"></td>
+                    <td><input value="${p.period || ''}"></td>
+                    <td><input value="${p.features || ''}"></td>
+                    <td style="text-align:center">
+                        <input type="checkbox" ${p.active ? "checked" : ""} >
                     </td>
-
-                    <td>
-                        <input type="number" value="${p.price || 0}">
-                    </td>
-
-                    <td>
-                        <input value="${p.period || ''}">
-                    </td>
-
-                    <td>
-                        <input value="${p.features || ''}">
-                    </td>
-
-                    <td>
-                        <input type="checkbox" ${p.active ? "checked" : ""}>
-                    </td>
-
                     <td>
                         <button onclick="savePackage(${p.id}, this)">Save</button>
-                        <button class="danger" onclick="togglePackage(${p.id})">
-                            ${p.active ? "Disable" : "Enable"}
+                        </button>
+                        <button class="danger" onclick="deletePackage(${p.id})">
+                            Delete
                         </button>
                     </td>
                 </tr>`;
             });
-        });
+        })
+        .catch(() => alert("Không tải được package"));
 }
 
-// ================= ADD =================
+// ========= ADD =========
 function addPackage() {
     const data = {
         packageName: "New Package",
         price: 0,
         period: "/month",
-        description: "",
         features: "",
         active: true
     };
@@ -61,14 +48,11 @@ function addPackage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
     })
-    .then(res => {
-        if (!res.ok) throw new Error();
-        loadPackages();
-    })
+    .then(() => loadPackages())
     .catch(() => alert("Lỗi thêm package"));
 }
 
-// ================= UPDATE =================
+// ========= UPDATE =========
 function savePackage(id, btn) {
     const row = btn.closest("tr");
     const inputs = row.querySelectorAll("input");
@@ -87,15 +71,11 @@ function savePackage(id, btn) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
     })
-    .then(res => {
-        if (!res.ok) throw new Error();
-        alert("Cập nhật thành công");
-        loadPackages();
-    })
+    .then(() => loadPackages())
     .catch(() => alert("Lỗi cập nhật package"));
 }
 
-// ================= TOGGLE ACTIVE =================
+// ========= TOGGLE =========
 function togglePackage(id) {
     fetch(`/admin/api/packages/${id}/toggle`, {
         method: "PUT",
@@ -103,4 +83,16 @@ function togglePackage(id) {
     })
     .then(() => loadPackages())
     .catch(() => alert("Lỗi bật/tắt package"));
+}
+
+// ========= DELETE =========
+function deletePackage(id) {
+    if (!confirm("Bạn có chắc muốn xóa package này không?")) return;
+
+    fetch(`/admin/api/packages/${id}`, {
+        method: "DELETE",
+        credentials: "include"
+    })
+    .then(() => loadPackages())
+    .catch(() => alert("Lỗi xóa package"));
 }

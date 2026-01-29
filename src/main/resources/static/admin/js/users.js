@@ -13,7 +13,7 @@ function loadUsers() {
                     <td>${u.id}</td>
 
                     <td>
-                        <input type="text" value="${u.fullName || ''}">
+                        <input type="text" value="${u.username || ''}">
                     </td>
 
                     <td>
