@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <title>Clinic Management</title>
 
-    <!-- CSS -->
-    <link rel="stylesheet" th:href="@{/admin/css/base.css}">
-    <link rel="stylesheet" th:href="@{/admin/css/clinics.css}">
+    <link rel="stylesheet" href="/admin/css/base.css">
+    <link rel="stylesheet" href="/admin/css/clinics.css">
 </head>
 <body>
 
@@ -18,7 +17,7 @@
     <a href="/admin/clinics" class="active">Clinics</a>
     <a href="/admin/packages">Packages</a>
     <a href="/admin/ai-management">AI Management</a>
-    <a href="http://localhost:8080/admin/notifications">Notifications</a>
+    <a href="/admin/notifications">Notifications</a>
     <a href="/admin/reports">Reports</a>
 </div>
 
@@ -27,25 +26,22 @@
 
     <table>
         <thead>
-            <tr>
-                <th>ID</th>
-                <th>Clinic Name</th>
-                <th>Address</th>
-                <th>Phone</th>
-                <th>Action</th>
-                <th>Status</th>
-            </tr>
+        <tr>
+            <th>ID</th>
+            <th>Clinic Name</th>
+            <th>Address</th>
+            <th>Phone</th>
+            <th>Action</th>
+            <th>Status</th>
+        </tr>
         </thead>
 
-        <!-- 🔴 KHÔNG HARD-CODE -->
         <tbody id="clinicTable">
-            <!-- JS render -->
+        <!-- JS render -->
         </tbody>
     </table>
 </div>
 
-<!-- JS -->
 <script src="/admin/js/clinics.js"></script>
-
 </body>
 </html>

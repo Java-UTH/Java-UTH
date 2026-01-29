@@ -121,6 +121,12 @@
             <version>7.2.5</version>
             <type>pom</type>
         </dependency>
+
+        <!-- WebSocket for Chat -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

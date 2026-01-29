@@ -86,4 +86,8 @@ public class ReportService {
     public AnalysisRecord getById(Long id) {
         return analysisRecordRepository.findById(id).orElse(null);
     }
+
+    public void deleteById(Long id) {
+        analysisRecordRepository.deleteById(id);
+    }
 }
