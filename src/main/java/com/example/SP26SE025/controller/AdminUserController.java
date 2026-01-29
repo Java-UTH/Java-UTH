@@ -33,38 +33,40 @@ public class AdminUserController {
     @PutMapping("/{id}/toggle")
     public ResponseEntity<?> toggle(@PathVariable Long id) {
         User u = userRepository.findById(id).orElseThrow();
-        // u.setActive(!u.isActive()); // ✅ TOGGLE THẬT
+
+        Boolean current = Boolean.TRUE.equals(u.isEnabled());
+        u.setEnabled(!current);
+
         userRepository.save(u);
         return ResponseEntity.ok().build();
     }
 
     // ================= UPDATE FULL INFO =================
- @PutMapping("/{id}")
-public ResponseEntity<?> updateUser(
-        @PathVariable Long id,
-        @RequestBody UserUpdateRequest req) {
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateUser(
+            @PathVariable Long id,
+            @RequestBody UserUpdateRequest req) {
 
-    User u = userRepository.findById(id).orElseThrow();
+        User u = userRepository.findById(id).orElseThrow();
 
-    u.setFullName(req.getFullName());
-    u.setEmail(req.getEmail());
+        u.setFullName(req.getFullName());
+        u.setEmail(req.getEmail());
 
-    if (req.getRole() == null) {
-        return ResponseEntity.badRequest().body("Role is required");
+        if (req.getRole() == null) {
+            return ResponseEntity.badRequest().body("Role is required");
+        }
+
+        try {
+            Role role = Role.valueOf(req.getRole().toUpperCase().trim());
+            u.setRole(role);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body("Invalid role value: " + req.getRole());
+        }
+
+        userRepository.save(u);
+        return ResponseEntity.ok().build();
     }
-
-    try {
-        Role role = Role.valueOf(req.getRole().toUpperCase().trim());
-        u.setRole(role);
-    } catch (IllegalArgumentException e) {
-        return ResponseEntity.badRequest()
-                .body("Invalid role value: " + req.getRole());
-    }
-
-    userRepository.save(u);
-    return ResponseEntity.ok().build();
-}
-
 
     // ================= DELETE USER =================
     @DeleteMapping("/{id}")
