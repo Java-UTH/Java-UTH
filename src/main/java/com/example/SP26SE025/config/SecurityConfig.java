@@ -64,31 +64,32 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
-                .sessionManagement(sess -> sess
-                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
-                .authenticationProvider(authenticationProvider())
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/home", "/login", "/register",
-                                "/css/**", "/js/**", "/images/**", "/fonts/**", "/clinicRegister",
-                                "/authenticate", "/oauth2/**", "/login/oauth2/**", "/ws-chat/**")
-                        .permitAll()
-                        // Phân quyền truy cập các đường dẫn
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/clinic/**").hasRole("CLINIC")
-                        .requestMatchers("/doctor/**").hasRole("DOCTOR") // Thêm quyền cho Doctor
-                        .requestMatchers("/staff/**").hasRole("STAFF")
-                        .requestMatchers("/customer/**", "/profile", "/test-services/**", "/menstrual_cycle/**")
-                        .hasRole("CUSTOMER")
-                        .requestMatchers("/authenticateAdmin", "/loginAdmin").permitAll()
-                        .anyRequest().authenticated())
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .loginProcessingUrl("/authenticate")
-
-                        .successHandler((request, response, authentication) -> {
-                            var authorities = authentication.getAuthorities();
-                            String redirectUrl = "/login?error=true"; // Mặc định nếu lỗi
+            .csrf(csrf -> csrf.disable())
+            .sessionManagement(sess -> sess
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+            .authenticationProvider(authenticationProvider())
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/", "/home", "/login", "/register",
+                    "/css/**", "/js/**", "/images/**", "/fonts/**","/clinicRegister",
+                    "/authenticate", "/oauth2/**", "/login/oauth2/**")
+                .permitAll()
+                // Phân quyền truy cập các đường dẫn
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/clinic/**").hasRole("CLINIC")
+                .requestMatchers("/doctor/**").hasRole("DOCTOR") // Thêm quyền cho Doctor
+                .requestMatchers("/staff/**").hasRole("STAFF")
+                .requestMatchers("/customer/**", "/profile", "/test-services/**", "/menstrual_cycle/**")
+                .hasRole("CUSTOMER")
+                .requestMatchers("/authenticateAdmin", "/loginAdmin").permitAll()
+                .anyRequest().authenticated()
+            )
+           .formLogin(form -> form
+                .loginPage("/login")
+                .loginProcessingUrl("/authenticate")
+                
+                .successHandler((request, response, authentication) -> {
+                    var authorities = authentication.getAuthorities();
+                    String redirectUrl = "/login?error=true"; // Mặc định nếu lỗi
 
                             for (var authority : authorities) {
                                 String roleName = authority.getAuthority();
@@ -110,26 +111,30 @@ public class SecurityConfig {
                             response.sendRedirect(redirectUrl);
                         })
 
-                        .failureUrl("/login?error=true")
-                        .permitAll())
-
-                .oauth2Login(oauth2 -> oauth2
-                        .loginPage("/login")
-                        .userInfoEndpoint(userInfo -> userInfo
-                                .userService(customOAuth2UserService()))
-                        .successHandler((request, response, authentication) -> {
-                            response.sendRedirect("/customer/home");
-                        })
-                        .failureHandler((request, response, exception) -> {
-                            response.sendRedirect("/login?oauth2_error=true");
-                        }))
-
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout=true")
-                        .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID")
-                        .permitAll());
+                .failureUrl("/login?error=true")
+                .permitAll()
+            )
+            
+             .oauth2Login(oauth2 -> oauth2
+                 .loginPage("/login")
+                .userInfoEndpoint(userInfo -> userInfo
+                  .userService(customOAuth2UserService())
+                )
+                .successHandler((request, response, authentication) -> {
+                     response.sendRedirect("/customer/home");
+                 })
+                 .failureHandler((request, response, exception) -> {
+                     response.sendRedirect("/login?oauth2_error=true");
+                 })
+             )
+           
+            .logout(logout -> logout
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login?logout=true")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
+                .permitAll()
+            );
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
