@@ -39,32 +39,31 @@ public class AdminUserController {
     }
 
     // ================= UPDATE FULL INFO =================
- @PutMapping("/{id}")
-public ResponseEntity<?> updateUser(
-        @PathVariable Long id,
-        @RequestBody UserUpdateRequest req) {
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateUser(
+            @PathVariable Long id,
+            @RequestBody UserUpdateRequest req) {
 
-    User u = userRepository.findById(id).orElseThrow();
+        User u = userRepository.findById(id).orElseThrow();
 
-    u.setFullName(req.getFullName());
-    u.setEmail(req.getEmail());
+        u.setFullName(req.getFullName());
+        u.setEmail(req.getEmail());
 
-    if (req.getRole() == null) {
-        return ResponseEntity.badRequest().body("Role is required");
+        if (req.getRole() == null) {
+            return ResponseEntity.badRequest().body("Role is required");
+        }
+
+        try {
+            Role role = Role.valueOf(req.getRole().toUpperCase().trim());
+            u.setRole(role);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body("Invalid role value: " + req.getRole());
+        }
+
+        userRepository.save(u);
+        return ResponseEntity.ok().build();
     }
-
-    try {
-        Role role = Role.valueOf(req.getRole().toUpperCase().trim());
-        u.setRole(role);
-    } catch (IllegalArgumentException e) {
-        return ResponseEntity.badRequest()
-                .body("Invalid role value: " + req.getRole());
-    }
-
-    userRepository.save(u);
-    return ResponseEntity.ok().build();
-}
-
 
     // ================= DELETE USER =================
     @DeleteMapping("/{id}")
