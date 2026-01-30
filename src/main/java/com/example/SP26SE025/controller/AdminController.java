@@ -78,15 +78,6 @@ public class AdminController {
         model.addAttribute("pageCss", "/css/ai.css");
         return "admin/ai-management";
     }
-
-    // ================= REPORTS =================
-    @GetMapping("/admin/reports")
-    public String reports(Model model) {
-        model.addAttribute("title", "Reports");
-        model.addAttribute("content", "admin/reports :: content");
-        model.addAttribute("pageCss", "/css/reports.css");
-        return "admin/reports";
-    }
     @GetMapping("/admin/notifications")
     public String notifications(Model model) {
         model.addAttribute("title", "Notifications");

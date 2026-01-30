@@ -12,16 +12,20 @@ function loadPackages() {
                 tbody.innerHTML += `
                 <tr>
                     <td>${p.id}</td>
-                    <td><input value="${p.packageName || ''}"></td>
+                    <td><input value="${p.packageName || ""}"></td>
                     <td><input type="number" value="${p.price || 0}"></td>
-                    <td><input value="${p.period || ''}"></td>
-                    <td><input value="${p.features || ''}"></td>
+                    <td><input value="${p.period || ""}"></td>
+                    <td><input value="${p.features || ""}"></td>
                     <td style="text-align:center">
-                        <input type="checkbox" ${p.active ? "checked" : ""} >
+                        <label class="switch">
+                            <input type="checkbox"
+                                   ${p.active ? "checked" : ""}
+                                   onchange="changeStatus(${p.id}, this.checked)">
+                            <span class="slider"></span>
+                        </label>
                     </td>
                     <td>
                         <button onclick="savePackage(${p.id}, this)">Save</button>
-                        </button>
                         <button class="danger" onclick="deletePackage(${p.id})">
                             Delete
                         </button>
@@ -75,14 +79,18 @@ function savePackage(id, btn) {
     .catch(() => alert("Lỗi cập nhật package"));
 }
 
-// ========= TOGGLE =========
-function togglePackage(id) {
-    fetch(`/admin/api/packages/${id}/toggle`, {
+// ========= STATUS ENABLE / DISABLE =========
+function changeStatus(id, isActive) {
+    const url = isActive
+        ? `/admin/api/packages/${id}/enable`
+        : `/admin/api/packages/${id}/disable`;
+
+    fetch(url, {
         method: "PUT",
         credentials: "include"
     })
     .then(() => loadPackages())
-    .catch(() => alert("Lỗi bật/tắt package"));
+    .catch(() => alert("Lỗi đổi trạng thái"));
 }
 
 // ========= DELETE =========

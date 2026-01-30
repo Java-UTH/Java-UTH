@@ -87,7 +87,7 @@ public class User {
     }
 
     public String getFullName() {
-        return fullName != null ? fullName : (username != null ? username : "Unknown");
+        return fullName != null ? fullName : (username != null ? username : "");
     }
 
     public void setFullName(String fullName) {

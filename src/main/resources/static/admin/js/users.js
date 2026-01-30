@@ -23,9 +23,6 @@ function loadUsers() {
                     <td>
                         <select>
                             <option value="CUSTOMER" ${u.role === "CUSTOMER" ? "selected" : ""}>CUSTOMER</option>
-                            <option value="CONSULTANT" ${u.role === "CONSULTANT" ? "selected" : ""}>CONSULTANT</option>
-                            <option value="STAFF" ${u.role === "STAFF" ? "selected" : ""}>STAFF</option>
-                            <option value="MANAGER" ${u.role === "MANAGER" ? "selected" : ""}>MANAGER</option>
                             <option value="DOCTOR" ${u.role === "DOCTOR" ? "selected" : ""}>DOCTOR</option>
                             <option value="CLINIC" ${u.role === "CLINIC" ? "selected" : ""}>CLINIC</option>
                             <option value="ADMIN" ${u.role === "ADMIN" ? "selected" : ""}>ADMIN</option>
